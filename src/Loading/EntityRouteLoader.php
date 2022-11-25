@@ -17,8 +17,8 @@ class EntityRouteLoader
         $this->actionLoaders = [
             new EntityCreateActionRouteLoader(),
             new EntityDeleteActionRouteLoader(),
-            new EntityEditActionRouteLoader(),
-            new EntityShowActionRouteLoader(),
+            new EntityUpdateActionRouteLoader(),
+            new EntityReadActionRouteLoader(),
             new EntityIndexActionRouteLoader(),
         ];
     }

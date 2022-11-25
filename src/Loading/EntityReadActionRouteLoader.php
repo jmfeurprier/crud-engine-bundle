@@ -2,13 +2,13 @@
 
 namespace Jmf\CrudEngine\Loading;
 
-use Jmf\CrudEngine\Action\ShowAction;
+use Jmf\CrudEngine\Controller\ReadAction;
 
-class EntityShowActionRouteLoader extends EntityActionRouteLoaderBase
+class EntityReadActionRouteLoader extends EntityActionRouteLoaderBase
 {
     protected function getActionName(): string
     {
-        return 'show';
+        return 'read';
     }
 
     protected function getMethods(): array
@@ -20,6 +20,6 @@ class EntityShowActionRouteLoader extends EntityActionRouteLoaderBase
 
     protected function getActionClass(): string
     {
-        return ShowAction::class;
+        return ReadAction::class;
     }
 }

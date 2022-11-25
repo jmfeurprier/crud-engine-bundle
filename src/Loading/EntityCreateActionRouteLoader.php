@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Loading;
 
-use Jmf\CrudEngine\Action\CreateAction;
+use Jmf\CrudEngine\Controller\CreateAction;
 
 class EntityCreateActionRouteLoader extends EntityActionRouteLoaderBase
 {

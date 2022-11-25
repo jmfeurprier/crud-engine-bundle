@@ -1,58 +1,61 @@
 <?php
 
-namespace Jmf\CrudEngine\Action;
+namespace Jmf\CrudEngine\Controller;
 
-use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectRepository;
-use RuntimeException;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
-class IndexAction extends AbstractController
+class IndexAction
 {
-    private EntityManagerInterface $entityManager;
+    use WithViewTrait;
+
+    private ManagerRegistry $managerRegistry;
 
     private IndexActionHelperInterface $defaultActionHelper;
 
-    private ObjectRepository $entityRepository;
+    private Request $request;
 
     private array $actionProperties;
 
     private IndexActionHelperInterface $actionHelper;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        Environment $twigEnvironment,
+        ManagerRegistry $managerRegistry,
         IndexActionHelperDefault $defaultActionHelper
     ) {
-        $this->entityManager = $entityManager;
+        $this->twigEnvironment     = $twigEnvironment;
+        $this->managerRegistry     = $managerRegistry;
         $this->defaultActionHelper = $defaultActionHelper;
     }
 
+    /**
+     * @throws CrudEngineInvalidActionHelperException
+     */
     public function __invoke(
         Request $request,
         string $entityClass,
         array $actionProperties,
-        ContainerInterface $container // @xxx
-    ): Response {
+        ContainerInterface $container
+    ): Response
+    {
+        $this->request          = $request;
         $this->actionProperties = $actionProperties;
         $this->actionHelper     = $this->getActionHelper($container);
-        $this->entityRepository = $this->entityManager->getRepository($entityClass);
+        $entityRepository       = $this->managerRegistry->getRepository($entityClass);
 
         $this->hookPre($request);
 
-        $viewParameters = array_merge(
-            $this->getViewParameters($request),
-            [
-                'entities' => $this->getEntities($this->entityRepository),
-            ]
-        );
-
         return $this->render(
-            $this->getViewPath(),
-            $viewParameters
+            [
+                'entities' => $this->getEntities($entityRepository),
+            ]
         );
     }
 
@@ -81,13 +84,14 @@ class IndexAction extends AbstractController
         return $this->actionHelper->getEntities($entityRepository);
     }
 
-    private function getViewPath(): string
+    protected function getViewContext(array $defaults): array
     {
-        return $this->actionProperties['viewPath'];
-    }
-
-    private function getViewParameters(Request $request): array
-    {
-        return $this->actionHelper->getViewParameters($request);
+        return array_merge(
+            $this->actionHelper->getViewParameters($this->request),
+            $this->mapViewVariables(
+                $this->actionProperties,
+                $defaults
+            )
+        );
     }
 }

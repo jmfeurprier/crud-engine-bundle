@@ -2,13 +2,13 @@
 
 namespace Jmf\CrudEngine\Loading;
 
-use Jmf\CrudEngine\Action\EditAction;
+use Jmf\CrudEngine\Controller\UpdateAction;
 
-class EntityEditActionRouteLoader extends EntityActionRouteLoaderBase
+class EntityUpdateActionRouteLoader extends EntityActionRouteLoaderBase
 {
     protected function getActionName(): string
     {
-        return 'edit';
+        return 'update';
     }
 
     protected function getMethods(): array
@@ -21,6 +21,6 @@ class EntityEditActionRouteLoader extends EntityActionRouteLoaderBase
 
     protected function getActionClass(): string
     {
-        return EditAction::class;
+        return UpdateAction::class;
     }
 }

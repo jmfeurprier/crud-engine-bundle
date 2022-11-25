@@ -1,0 +1,29 @@
+services:
+
+    _defaults:
+        autoconfigure: true
+        autowire:      true
+
+    Jmf\CrudEngine\:
+        resource: '../../'
+
+    Jmf\CrudEngine\Controller\CreateAction:
+        arguments:
+            $defaultActionHelper: '@Jmf\CrudEngine\Controller\CreateActionHelperDefault'
+        tags: ['controller.service_arguments']
+
+    Jmf\CrudEngine\Controller\DeleteAction:
+        tags: ['controller.service_arguments']
+
+    Jmf\CrudEngine\Controller\IndexAction:
+        arguments:
+            $defaultActionHelper: '@Jmf\CrudEngine\Controller\IndexActionHelperDefault'
+        tags: ['controller.service_arguments']
+
+    Jmf\CrudEngine\Controller\ReadAction:
+        arguments:
+            $defaultActionHelper: '@Jmf\CrudEngine\Controller\ReadActionHelperDefault'
+        tags: ['controller.service_arguments']
+
+    Jmf\CrudEngine\Controller\UpdateAction:
+        tags: ['controller.service_arguments']

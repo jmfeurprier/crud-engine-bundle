@@ -1,12 +1,12 @@
 <?php
 
-namespace Jmf\CrudEngine\Action;
+namespace Jmf\CrudEngine\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class ShowActionHelperDefault implements ShowActionHelperInterface
+class ReadActionHelperDefault implements ReadActionHelperInterface
 {
-    public function getViewParameters(
+    public function getViewVariables(
         Request $request,
         object $entity
     ): array {

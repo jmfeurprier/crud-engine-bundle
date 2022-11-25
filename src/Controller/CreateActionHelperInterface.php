@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmf\CrudEngine\Action;
+namespace Jmf\CrudEngine\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 

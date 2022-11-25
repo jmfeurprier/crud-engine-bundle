@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Loading;
 
-use Jmf\CrudEngine\Action\IndexAction;
+use Jmf\CrudEngine\Controller\IndexAction;
 
 class EntityIndexActionRouteLoader extends EntityActionRouteLoaderBase
 {

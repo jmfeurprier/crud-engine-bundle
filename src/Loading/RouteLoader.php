@@ -13,10 +13,10 @@ class RouteLoader implements RouteLoaderInterface
 
     public function __construct(
         EntityRouteLoader $entityRouteLoader,
-        array $entityProperties
+        array $entities
     ) {
         $this->entityRouteLoader = $entityRouteLoader;
-        $this->entityProperties  = $entityProperties;
+        $this->entityProperties  = $entities;
     }
 
     public function load(): RouteCollection

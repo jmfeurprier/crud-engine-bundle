@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Loading;
 
-use Jmf\CrudEngine\Action\DeleteAction;
+use Jmf\CrudEngine\Controller\DeleteAction;
 
 class EntityDeleteActionRouteLoader extends EntityActionRouteLoaderBase
 {
