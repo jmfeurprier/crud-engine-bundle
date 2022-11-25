@@ -16,7 +16,7 @@ class IndexActionHelperDefault implements IndexActionHelperInterface
         return $entityRepository->findAll();
     }
 
-    public function getViewParameters(Request $request): array
+    public function getViewVariables(Request $request): array
     {
         return [];
     }

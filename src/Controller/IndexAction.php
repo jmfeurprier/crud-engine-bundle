@@ -87,7 +87,7 @@ class IndexAction
     protected function getViewContext(array $defaults): array
     {
         return array_merge(
-            $this->actionHelper->getViewParameters($this->request),
+            $this->actionHelper->getViewVariables($this->request),
             $this->mapViewVariables(
                 $this->actionProperties,
                 $defaults

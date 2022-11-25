@@ -11,5 +11,5 @@ interface IndexActionHelperInterface
 
     public function getEntities(ObjectRepository $entityRepository): array;
 
-    public function getViewParameters(Request $request): array;
+    public function getViewVariables(Request $request): array;
 }
