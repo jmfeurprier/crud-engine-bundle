@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface IndexActionHelperInterface
 {
-    public function hookPre(Request $request): void;
+    public function hookBeforeRender(Request $request): void;
 
     public function getEntities(ObjectRepository $entityRepository): array;
 

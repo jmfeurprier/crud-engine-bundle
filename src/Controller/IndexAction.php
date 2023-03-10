@@ -28,7 +28,7 @@ class IndexAction
     public function __construct(
         Environment $twigEnvironment,
         ManagerRegistry $managerRegistry,
-        IndexActionHelperDefault $defaultActionHelper
+        IndexActionHelperInterface $defaultActionHelper
     ) {
         $this->twigEnvironment     = $twigEnvironment;
         $this->managerRegistry     = $managerRegistry;
@@ -50,7 +50,7 @@ class IndexAction
         $this->actionHelper     = $this->getActionHelper($container);
         $entityRepository       = $this->managerRegistry->getRepository($entityClass);
 
-        $this->hookPre($request);
+        $this->hookBeforeRender($request);
 
         return $this->render(
             [
@@ -74,9 +74,9 @@ class IndexAction
         throw new CrudEngineInvalidActionHelperException(); // @todo
     }
 
-    private function hookPre(Request $request): void
+    private function hookBeforeRender(Request $request): void
     {
-        $this->actionHelper->hookPre($request);
+        $this->actionHelper->hookBeforeRender($request);
     }
 
     private function getEntities(ObjectRepository $entityRepository): array

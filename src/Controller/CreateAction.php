@@ -73,6 +73,8 @@ class CreateAction
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 
+            $this->hookAfterPersist($entity);
+
             return $this->redirectOnSuccess($this->actionProperties, $entity);
         }
 
@@ -121,6 +123,11 @@ class CreateAction
     private function createNewEntity(): object
     {
         return $this->actionHelper->createEntity($this->request, $this->entityClass);
+    }
+
+    private function hookAfterPersist(object $entity): void
+    {
+        $this->actionHelper->hookAfterPersist($this->request, $entity);
     }
 
     protected function getViewContext(array $defaults): array

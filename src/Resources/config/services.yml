@@ -27,3 +27,12 @@ services:
 
     Jmf\CrudEngine\Controller\UpdateAction:
         tags: ['controller.service_arguments']
+
+    Jmf\CrudEngine\Loading\EntityRouteLoader:
+        arguments:
+            $loaders:
+                - '@Jmf\CrudEngine\Loading\EntityCreateActionRouteLoader'
+                - '@Jmf\CrudEngine\Loading\EntityDeleteActionRouteLoader'
+                - '@Jmf\CrudEngine\Loading\EntityIndexActionRouteLoader'
+                - '@Jmf\CrudEngine\Loading\EntityReadActionRouteLoader'
+                - '@Jmf\CrudEngine\Loading\EntityUpdateActionRouteLoader'

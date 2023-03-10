@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class IndexActionHelperDefault implements IndexActionHelperInterface
 {
-    public function hookPre(Request $request): void
+    public function hookBeforeRender(Request $request): void
     {
     }
 

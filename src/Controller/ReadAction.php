@@ -33,7 +33,7 @@ class ReadAction
     public function __construct(
         ManagerRegistry $managerRegistry,
         Environment $twigEnvironment,
-        ReadActionHelperDefault $defaultActionHelper
+        ReadActionHelperInterface $defaultActionHelper
     ) {
         $this->managerRegistry     = $managerRegistry;
         $this->twigEnvironment     = $twigEnvironment;

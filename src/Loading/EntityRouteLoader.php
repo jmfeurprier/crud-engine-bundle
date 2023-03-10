@@ -9,18 +9,18 @@ class EntityRouteLoader
     /**
      * @var EntityActionRouteLoaderInterface[]
      */
-    private array $actionLoaders = [];
+    private array $loaders = [];
 
-    public function __construct()
+    public function __construct(array $loaders)
     {
-        // @xxx
-        $this->actionLoaders = [
-            new EntityCreateActionRouteLoader(),
-            new EntityDeleteActionRouteLoader(),
-            new EntityUpdateActionRouteLoader(),
-            new EntityReadActionRouteLoader(),
-            new EntityIndexActionRouteLoader(),
-        ];
+        foreach ($loaders as $loader) {
+            $this->addLoader($loader);
+        }
+    }
+
+    private function addLoader(EntityActionRouteLoaderInterface $loader): void
+    {
+        $this->loaders[] = $loader;
     }
 
     public function load(
@@ -28,8 +28,8 @@ class EntityRouteLoader
         string $entityClass,
         array $entityProperties
     ): void {
-        foreach ($this->actionLoaders as $actionLoader) {
-            $actionLoader->load($routeCollection, $entityClass, $entityProperties);
+        foreach ($this->loaders as $loader) {
+            $loader->load($routeCollection, $entityClass, $entityProperties);
         }
     }
 }
