@@ -20,6 +20,8 @@ class ReadAction
 
     private ReadActionHelperInterface $defaultActionHelper;
 
+    private ContainerInterface $container;
+
     private Request $request;
 
     private array $actionProperties;
@@ -33,24 +35,25 @@ class ReadAction
     public function __construct(
         ManagerRegistry $managerRegistry,
         Environment $twigEnvironment,
-        ReadActionHelperInterface $defaultActionHelper
+        ReadActionHelperInterface $defaultActionHelper,
+        ContainerInterface $container
     ) {
         $this->managerRegistry     = $managerRegistry;
         $this->twigEnvironment     = $twigEnvironment;
         $this->defaultActionHelper = $defaultActionHelper;
+        $this->container           = $container;
     }
 
     public function __invoke(
         Request $request,
         string $id,
         string $entityClass,
-        array $actionProperties,
-        ContainerInterface $container // @xxx
+        array $actionProperties
     ): Response {
         $this->request          = $request;
         $this->actionProperties = $actionProperties;
         $this->entityManager    = $this->managerRegistry->getManagerForClass($entityClass);
-        $this->actionHelper     = $this->getActionHelper($container);
+        $this->actionHelper     = $this->getActionHelper();
         $this->entity           = $this->getEntity($entityClass, $id);
 
         return $this->render(
@@ -79,13 +82,13 @@ class ReadAction
     /**
      * @throws CrudEngineInvalidActionHelperException
      */
-    private function getActionHelper(ContainerInterface $container): ReadActionHelperInterface
+    private function getActionHelper(): ReadActionHelperInterface
     {
         if (!array_key_exists('helperClass', $this->actionProperties)) {
             return $this->defaultActionHelper;
         }
 
-        $actionHelper = $container->get($this->actionProperties['helperClass']);
+        $actionHelper = $this->container->get($this->actionProperties['helperClass']);
 
         if ($actionHelper instanceof ReadActionHelperInterface) {
             return $actionHelper;

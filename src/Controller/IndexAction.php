@@ -19,6 +19,8 @@ class IndexAction
 
     private IndexActionHelperInterface $defaultActionHelper;
 
+    private ContainerInterface $container;
+
     private Request $request;
 
     private array $actionProperties;
@@ -28,11 +30,13 @@ class IndexAction
     public function __construct(
         Environment $twigEnvironment,
         ManagerRegistry $managerRegistry,
-        IndexActionHelperInterface $defaultActionHelper
+        IndexActionHelperInterface $defaultActionHelper,
+        ContainerInterface $container
     ) {
         $this->twigEnvironment     = $twigEnvironment;
         $this->managerRegistry     = $managerRegistry;
         $this->defaultActionHelper = $defaultActionHelper;
+        $this->container           = $container;
     }
 
     /**
@@ -41,12 +45,11 @@ class IndexAction
     public function __invoke(
         Request $request,
         string $entityClass,
-        array $actionProperties,
-        ContainerInterface $container
+        array $actionProperties
     ): Response {
         $this->request          = $request;
         $this->actionProperties = $actionProperties;
-        $this->actionHelper     = $this->getActionHelper($container);
+        $this->actionHelper     = $this->getActionHelper();
         $entityRepository       = $this->managerRegistry->getRepository($entityClass);
 
         $this->hookBeforeRender($request);
@@ -61,13 +64,13 @@ class IndexAction
     /**
      * @throws CrudEngineInvalidActionHelperException
      */
-    private function getActionHelper(ContainerInterface $container): IndexActionHelperInterface
+    private function getActionHelper(): IndexActionHelperInterface
     {
         if (!array_key_exists('helperClass', $this->actionProperties)) {
             return $this->defaultActionHelper;
         }
 
-        $actionHelper = $container->get($this->actionProperties['helperClass']);
+        $actionHelper = $this->container->get($this->actionProperties['helperClass']);
 
         if ($actionHelper instanceof IndexActionHelperInterface) {
             return $actionHelper;

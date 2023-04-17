@@ -26,7 +26,7 @@ class JmfCrudEngineExtension extends Extension
             new FileLocator(__DIR__ . '/../Resources/config')
         );
 
-        $loader->load('services.yml');
+        $loader->load('services.yaml');
 
         $containerBuilder->autowire(RouteLoader::class)
             ->setArgument('$entities', $config['entities'])

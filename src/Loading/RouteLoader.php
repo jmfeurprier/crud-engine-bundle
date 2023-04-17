@@ -19,7 +19,7 @@ class RouteLoader implements RouteLoaderInterface
         $this->entityProperties  = $entities;
     }
 
-    public function load(): RouteCollection
+    public function __invoke(): RouteCollection
     {
         $routeCollection = new RouteCollection();
 

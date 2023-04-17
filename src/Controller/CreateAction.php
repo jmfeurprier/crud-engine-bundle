@@ -27,6 +27,8 @@ class CreateAction
 
     private CreateActionHelperInterface $defaultActionHelper;
 
+    private ContainerInterface $container;
+
     private EntityManagerInterface $entityManager;
 
     private array $actionProperties;
@@ -42,13 +44,15 @@ class CreateAction
         UrlGeneratorInterface $urlGenerator,
         Environment $twigEnvironment,
         ManagerRegistry $managerRegistry,
-        CreateActionHelperInterface $defaultActionHelper
+        CreateActionHelperInterface $defaultActionHelper,
+        ContainerInterface $container
     ) {
         $this->formFactory         = $formFactory;
         $this->urlGenerator        = $urlGenerator;
         $this->twigEnvironment     = $twigEnvironment;
         $this->managerRegistry     = $managerRegistry;
         $this->defaultActionHelper = $defaultActionHelper;
+        $this->container           = $container;
     }
 
     /**
@@ -59,10 +63,9 @@ class CreateAction
     public function __invoke(
         Request $request,
         array $actionProperties,
-        ContainerInterface $container,
         string $entityClass
     ): Response {
-        $this->init($request, $actionProperties, $container, $entityClass);
+        $this->init($request, $actionProperties, $entityClass);
 
         $entity = $this->createNewEntity();
         $form   = $this->getForm($this->actionProperties, $entity);
@@ -92,12 +95,11 @@ class CreateAction
     private function init(
         Request $request,
         array $actionProperties,
-        ContainerInterface $container,
         string $entityClass
     ): void {
         $this->request          = $request;
         $this->actionProperties = $actionProperties;
-        $this->actionHelper     = $this->getActionHelper($container);
+        $this->actionHelper     = $this->getActionHelper();
         $this->entityManager    = $this->managerRegistry->getManagerForClass($entityClass);
         $this->entityClass      = $entityClass;
     }
@@ -105,13 +107,13 @@ class CreateAction
     /**
      * @throws CrudEngineInvalidActionHelperException
      */
-    private function getActionHelper(ContainerInterface $container): CreateActionHelperInterface
+    private function getActionHelper(): CreateActionHelperInterface
     {
         if (!array_key_exists('helperClass', $this->actionProperties)) {
             return $this->defaultActionHelper;
         }
 
-        $actionHelper = $container->get($this->actionProperties['helperClass']);
+        $actionHelper = $this->container->get($this->actionProperties['helperClass']);
 
         if ($actionHelper instanceof CreateActionHelperInterface) {
             return $actionHelper;

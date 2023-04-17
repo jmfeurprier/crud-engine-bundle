@@ -2,7 +2,6 @@
 
 namespace Jmf\CrudEngine\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 interface CreateActionHelperInterface
