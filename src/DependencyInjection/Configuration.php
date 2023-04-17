@@ -12,11 +12,12 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('jmf_crud_engine');
 
         $treeBuilder->getRootNode()
+            ->fixXmlConfig('entity', 'entities')
             ->children()
                 ->arrayNode('entities')
                     ->info('Properties of CRUD entities.')
                     ->useAttributeAsKey('class')
-                    ->variablePrototype()
+                    ->variablePrototype()->end()
                 ->end()
             ->end()
         ;
