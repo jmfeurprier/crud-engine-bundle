@@ -43,8 +43,7 @@ class IndexAction
         string $entityClass,
         array $actionProperties,
         ContainerInterface $container
-    ): Response
-    {
+    ): Response {
         $this->request          = $request;
         $this->actionProperties = $actionProperties;
         $this->actionHelper     = $this->getActionHelper($container);
@@ -59,6 +58,9 @@ class IndexAction
         );
     }
 
+    /**
+     * @throws CrudEngineInvalidActionHelperException
+     */
     private function getActionHelper(ContainerInterface $container): IndexActionHelperInterface
     {
         if (!array_key_exists('helperClass', $this->actionProperties)) {

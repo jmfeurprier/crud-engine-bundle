@@ -46,8 +46,7 @@ class ReadAction
         string $entityClass,
         array $actionProperties,
         ContainerInterface $container // @xxx
-    ): Response
-    {
+    ): Response {
         $this->request          = $request;
         $this->actionProperties = $actionProperties;
         $this->entityManager    = $this->managerRegistry->getManagerForClass($entityClass);
