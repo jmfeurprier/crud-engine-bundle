@@ -3,7 +3,8 @@
 namespace Jmf\CrudEngine\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectRepository;
+use Jmf\CrudEngine\Controller\Traits\WithContainerTrait;
+use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -13,13 +14,11 @@ use Twig\Environment;
 
 class IndexAction
 {
+    use WithContainerTrait;
+    use WithEntityManagerTrait;
     use WithViewTrait;
 
-    private ManagerRegistry $managerRegistry;
-
     private IndexActionHelperInterface $defaultActionHelper;
-
-    private ContainerInterface $container;
 
     private Request $request;
 
@@ -50,13 +49,12 @@ class IndexAction
         $this->request          = $request;
         $this->actionProperties = $actionProperties;
         $this->actionHelper     = $this->getActionHelper();
-        $entityRepository       = $this->managerRegistry->getRepository($entityClass);
 
         $this->hookBeforeRender($request);
 
         return $this->render(
             [
-                'entities' => $this->getEntities($entityRepository),
+                'entities' => $this->getEntities($entityClass),
             ]
         );
     }
@@ -70,7 +68,7 @@ class IndexAction
             return $this->defaultActionHelper;
         }
 
-        $actionHelper = $this->container->get($this->actionProperties['helperClass']);
+        $actionHelper = $this->getService($this->actionProperties['helperClass']);
 
         if ($actionHelper instanceof IndexActionHelperInterface) {
             return $actionHelper;
@@ -84,8 +82,10 @@ class IndexAction
         $this->actionHelper->hookBeforeRender($request);
     }
 
-    private function getEntities(ObjectRepository $entityRepository): array
+    private function getEntities(string $entityClass): array
     {
+        $entityRepository = $this->getRepository($entityClass);
+
         return $this->actionHelper->getEntities($entityRepository);
     }
 

@@ -2,8 +2,8 @@
 
 namespace Jmf\CrudEngine\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithFormTrait;
 use Jmf\CrudEngine\Controller\Traits\WithRedirectionTrait;
 use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
@@ -16,13 +16,10 @@ use Twig\Environment;
 
 class UpdateAction
 {
-    use WithViewTrait;
+    use WithEntityManagerTrait;
     use WithFormTrait;
     use WithRedirectionTrait;
-
-    private ManagerRegistry $managerRegistry;
-
-    private EntityManagerInterface $entityManager;
+    use WithViewTrait;
 
     private array $actionProperties;
 
@@ -44,7 +41,6 @@ class UpdateAction
         string $entityClass,
         string $id
     ): Response {
-        $this->entityManager    = $this->managerRegistry->getManagerForClass($entityClass);
         $this->actionProperties = $actionProperties;
 
         $entity = $this->getEntity($entityClass, $id);
@@ -53,7 +49,7 @@ class UpdateAction
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
+            $this->getEntityManager($entityClass)->flush();
 
             return $this->redirectOnSuccess($actionProperties, $entity);
         }
@@ -73,7 +69,7 @@ class UpdateAction
         string $entityClass,
         string $id
     ): object {
-        $entity = $this->entityManager->find($entityClass, $id);
+        $entity = $this->getRepository($entityClass)->find($id);
 
         if ($entity) {
             return $entity;

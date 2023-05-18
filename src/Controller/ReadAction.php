@@ -2,8 +2,9 @@
 
 namespace Jmf\CrudEngine\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Jmf\CrudEngine\Controller\Traits\WithContainerTrait;
+use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -14,19 +15,15 @@ use Twig\Environment;
 
 class ReadAction
 {
+    use WithContainerTrait;
+    use WithEntityManagerTrait;
     use WithViewTrait;
 
-    private ManagerRegistry $managerRegistry;
-
     private ReadActionHelperInterface $defaultActionHelper;
-
-    private ContainerInterface $container;
 
     private Request $request;
 
     private array $actionProperties;
-
-    private EntityManagerInterface $entityManager;
 
     private ReadActionHelperInterface $actionHelper;
 
@@ -52,7 +49,6 @@ class ReadAction
     ): Response {
         $this->request          = $request;
         $this->actionProperties = $actionProperties;
-        $this->entityManager    = $this->managerRegistry->getManagerForClass($entityClass);
         $this->actionHelper     = $this->getActionHelper();
         $this->entity           = $this->getEntity($entityClass, $id);
 
@@ -70,7 +66,7 @@ class ReadAction
         string $entityClass,
         string $id
     ): object {
-        $entity = $this->entityManager->find($entityClass, $id);
+        $entity = $this->getRepository($entityClass)->find($id);
 
         if ($entity) {
             return $entity;
@@ -88,7 +84,7 @@ class ReadAction
             return $this->defaultActionHelper;
         }
 
-        $actionHelper = $this->container->get($this->actionProperties['helperClass']);
+        $actionHelper = $this->getService($this->actionProperties['helperClass']);
 
         if ($actionHelper instanceof ReadActionHelperInterface) {
             return $actionHelper;

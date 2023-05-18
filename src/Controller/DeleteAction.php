@@ -2,17 +2,15 @@
 
 namespace Jmf\CrudEngine\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeleteAction
 {
-    private ManagerRegistry $managerRegistry;
-
-    private EntityManagerInterface $entityManager;
+    use WithEntityManagerTrait;
 
     public function __construct(
         ManagerRegistry $managerRegistry
@@ -24,11 +22,11 @@ class DeleteAction
         string $entityClass,
         string $id
     ): Response {
-        $this->entityManager = $this->managerRegistry->getManagerForClass($entityClass);
-        $entity              = $this->getEntity($entityClass, $id);
+        $entityManager = $this->getEntityManager($entityClass);
+        $entity        = $this->getEntity($entityClass, $id);
 
-        $this->entityManager->remove($entity);
-        $this->entityManager->flush();
+        $entityManager->remove($entity);
+        $entityManager->flush();
 
         return new JsonResponse();
     }
@@ -40,7 +38,7 @@ class DeleteAction
         string $entityClass,
         string $id
     ): object {
-        $entity = $this->entityManager->find($entityClass, $id);
+        $entity = $this->getRepository($entityClass)->find($id);
 
         if ($entity) {
             return $entity;

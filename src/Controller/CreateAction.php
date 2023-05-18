@@ -2,8 +2,9 @@
 
 namespace Jmf\CrudEngine\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Jmf\CrudEngine\Controller\Traits\WithContainerTrait;
+use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithFormTrait;
 use Jmf\CrudEngine\Controller\Traits\WithRedirectionTrait;
 use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
@@ -19,17 +20,13 @@ use Twig\Environment;
 
 class CreateAction
 {
+    use WithContainerTrait;
+    use WithEntityManagerTrait;
     use WithFormTrait;
     use WithRedirectionTrait;
     use WithViewTrait;
 
-    private ManagerRegistry $managerRegistry;
-
     private CreateActionHelperInterface $defaultActionHelper;
-
-    private ContainerInterface $container;
-
-    private EntityManagerInterface $entityManager;
 
     private array $actionProperties;
 
@@ -73,8 +70,9 @@ class CreateAction
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($entity);
-            $this->entityManager->flush();
+            $entityManager = $this->getEntityManager($this->entityClass);
+            $entityManager->persist($entity);
+            $entityManager->flush();
 
             $this->hookAfterPersist($entity);
 
@@ -100,7 +98,6 @@ class CreateAction
         $this->request          = $request;
         $this->actionProperties = $actionProperties;
         $this->actionHelper     = $this->getActionHelper();
-        $this->entityManager    = $this->managerRegistry->getManagerForClass($entityClass);
         $this->entityClass      = $entityClass;
     }
 
@@ -113,7 +110,7 @@ class CreateAction
             return $this->defaultActionHelper;
         }
 
-        $actionHelper = $this->container->get($this->actionProperties['helperClass']);
+        $actionHelper = $this->getService($this->actionProperties['helperClass']);
 
         if ($actionHelper instanceof CreateActionHelperInterface) {
             return $actionHelper;

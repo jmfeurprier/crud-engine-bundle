@@ -10,6 +10,7 @@ class CreateActionHelperDefault implements CreateActionHelperInterface
         Request $request,
         string $entityClass
     ): object {
+        // @todo Use doctrine/instantiator here.
         return new $entityClass();
     }
 
