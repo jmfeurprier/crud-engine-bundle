@@ -14,6 +14,9 @@ services:
         tags: [ 'controller.service_arguments' ]
 
     Jmf\CrudEngine\Controller\DeleteAction:
+        arguments:
+            $container:           '@service_container'
+            $defaultActionHelper: '@Jmf\CrudEngine\Controller\DeleteActionHelperDefault'
         tags: [ 'controller.service_arguments' ]
 
     Jmf\CrudEngine\Controller\IndexAction:

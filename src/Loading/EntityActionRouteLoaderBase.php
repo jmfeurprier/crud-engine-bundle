@@ -8,6 +8,12 @@ use Symfony\Component\Routing\RouteCollection;
 
 abstract class EntityActionRouteLoaderBase implements EntityActionRouteLoaderInterface
 {
+    /**
+     * @param class-string         $entityClass
+     * @param array<string, mixed> $entityProperties
+     *
+     * @throws CrudEngineMissingConfigurationException
+     */
     public function load(
         RouteCollection $routeCollection,
         string $entityClass,
@@ -49,6 +55,12 @@ abstract class EntityActionRouteLoaderBase implements EntityActionRouteLoaderInt
 
     abstract protected function getActionClass(): string;
 
+    /**
+     * @param array<string, mixed> $entityProperties
+     * @param class-string         $entityClass
+     *
+     * @throws CrudEngineMissingConfigurationException
+     */
     private function getRouteName(
         array $entityProperties,
         string $entityClass
@@ -68,6 +80,12 @@ abstract class EntityActionRouteLoaderBase implements EntityActionRouteLoaderInt
         );
     }
 
+    /**
+     * @param array<string, mixed> $entityProperties
+     * @param class-string         $entityClass
+     *
+     * @throws CrudEngineMissingConfigurationException
+     */
     private function getRoutePath(
         array $entityProperties,
         string $entityClass

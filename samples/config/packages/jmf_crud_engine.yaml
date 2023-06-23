@@ -1,0 +1,57 @@
+jmf_crud_engine:
+
+    entities:
+        App\Entity\Article:
+            name: 'article'
+            actions:
+                create:
+                    formTypeClass: 'App\Form\ArticleType'
+                    redirection:
+                        route: 'article.read'
+                        parameters:
+                            id: '{{ _entity.id }}'
+                    route:
+                        path: '/articles/create'
+                    view:
+                        path: 'article/create.html.twig'
+                        variables:
+                            entity: 'article'
+                delete:
+                    parameters:
+                        'id': '{{ _entity.id }}'
+                    redirection:
+                        route: 'article.index'
+                    route:
+                        path: '/articles/{id}'
+                index:
+                    route:
+                        path: '/articles'
+                    view:
+                        path: 'article/index.html.twig'
+                        variables:
+                            entities: 'articles'
+                read:
+                    helperClass: 'App\Controller\Article\ReadActionHelper'
+                    parameters:
+                        'id': '{{ _entity.id }}'
+                    route:
+                        path: '/articles/{id}'
+                    view:
+                        path: 'article/read.html.twig'
+                        variables:
+                            entity: 'article'
+                update:
+                    formTypeClass: 'App\Form\ArticleType'
+                    parameters:
+                        'id': '{{ _entity.id }}'
+                    redirection:
+                        route: 'article.read'
+                        parameters:
+                            id: '{{ _entity.id }}'
+                    route:
+                        path: '/articles/{id}/update'
+                    view:
+                        path: 'article/update.html.twig'
+                        variables:
+                            entity: 'article'
+

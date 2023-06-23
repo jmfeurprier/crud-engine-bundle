@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine\DependencyInjection;
 
+use Exception;
 use Jmf\CrudEngine\Loading\RouteLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -11,25 +12,25 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 class JmfCrudEngineExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * @throws Exception
      */
     public function load(
         array $configs,
-        ContainerBuilder $containerBuilder
-    ) {
+        ContainerBuilder $container
+    ): void {
         $configuration = new Configuration();
 
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader(
-            $containerBuilder,
+            $container,
             new FileLocator(__DIR__ . '/../Resources/config')
         );
 
         $loader->load('services.yaml');
 
-        $containerBuilder->autowire(RouteLoader::class)
-            ->setArgument('$entities', $config['entities'])
+        $container->autowire(RouteLoader::class)
+            ->setArgument('$entityProperties', $config['entities'])
             ->addTag('routing.route_loader')
         ;
     }

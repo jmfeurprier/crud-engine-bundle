@@ -11,6 +11,9 @@ class EntityRouteLoader
      */
     private array $loaders = [];
 
+    /**
+     * @param EntityActionRouteLoaderInterface[] $loaders
+     */
     public function __construct(array $loaders)
     {
         foreach ($loaders as $loader) {
@@ -23,6 +26,10 @@ class EntityRouteLoader
         $this->loaders[] = $loader;
     }
 
+    /**
+     * @param class-string         $entityClass
+     * @param array<string, mixed> $entityProperties
+     */
     public function load(
         RouteCollection $routeCollection,
         string $entityClass,

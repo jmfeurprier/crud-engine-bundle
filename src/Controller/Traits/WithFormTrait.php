@@ -11,7 +11,10 @@ trait WithFormTrait
 {
     private FormFactoryInterface $formFactory;
 
+
     /**
+     * @param array<string,mixed> $actionProperties
+     *
      * @throws CrudEngineInvalidConfigurationException
      * @throws CrudEngineMissingConfigurationException
      */
@@ -23,6 +26,8 @@ trait WithFormTrait
     }
 
     /**
+     * @param array<string,mixed> $actionProperties
+     *
      * @throws CrudEngineMissingConfigurationException
      * @throws CrudEngineInvalidConfigurationException
      */

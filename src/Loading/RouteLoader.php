@@ -7,16 +7,13 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteLoader implements RouteLoaderInterface
 {
-    private EntityRouteLoader $entityRouteLoader;
-
-    private array $entityProperties;
-
+    /**
+     * @param array<class-string, array<string, mixed>> $entityProperties
+     */
     public function __construct(
-        EntityRouteLoader $entityRouteLoader,
-        array $entities
+        private readonly EntityRouteLoader $entityRouteLoader,
+        private readonly array $entityProperties
     ) {
-        $this->entityRouteLoader = $entityRouteLoader;
-        $this->entityProperties  = $entities;
     }
 
     public function __invoke(): RouteCollection

@@ -7,12 +7,18 @@ use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithFormTrait;
 use Jmf\CrudEngine\Controller\Traits\WithRedirectionTrait;
 use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
+use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class UpdateAction
 {
@@ -20,8 +26,6 @@ class UpdateAction
     use WithFormTrait;
     use WithRedirectionTrait;
     use WithViewTrait;
-
-    private array $actionProperties;
 
     public function __construct(
         ManagerRegistry $managerRegistry,
@@ -35,14 +39,23 @@ class UpdateAction
         $this->twigEnvironment = $twigEnvironment;
     }
 
+    /**
+     * @param array<string, mixed> $actionProperties
+     * @param class-string         $entityClass
+     *
+     * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineInvalidConfigurationException
+     * @throws CrudEngineMissingConfigurationException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
     public function __invoke(
         Request $request,
         array $actionProperties,
         string $entityClass,
         string $id
     ): Response {
-        $this->actionProperties = $actionProperties;
-
         $entity = $this->getEntity($entityClass, $id);
         $form   = $this->getForm($actionProperties, $entity);
 
@@ -55,6 +68,7 @@ class UpdateAction
         }
 
         return $this->render(
+            $actionProperties,
             [
                 'entity' => $entity,
                 'form'   => $form->createView(),
@@ -63,6 +77,8 @@ class UpdateAction
     }
 
     /**
+     * @param class-string $entityClass
+     *
      * @throws NotFoundHttpException
      */
     private function getEntity(
@@ -78,10 +94,20 @@ class UpdateAction
         throw new NotFoundHttpException();
     }
 
-    protected function getViewContext(array $defaults): array
-    {
+    /**
+     * @param array<string, mixed> $actionProperties
+     * @param array<string, mixed> $defaults
+     *
+     * @return array<string, mixed>
+     *
+     * @throws CrudEngineInvalidConfigurationException
+     */
+    protected function getViewContext(
+        array $actionProperties,
+        array $defaults
+    ): array {
         return $this->mapViewVariables(
-            $this->actionProperties,
+            $actionProperties,
             $defaults
         );
     }
