@@ -2,6 +2,8 @@
 
 namespace Jmf\CrudEngine\DependencyInjection;
 
+use Doctrine\Instantiator\Instantiator;
+use Doctrine\Instantiator\InstantiatorInterface;
 use Exception;
 use Jmf\CrudEngine\Loading\RouteLoader;
 use Symfony\Component\Config\FileLocator;
@@ -32,6 +34,10 @@ class JmfCrudEngineExtension extends Extension
         $container->autowire(RouteLoader::class)
             ->setArgument('$entityProperties', $config['entities'])
             ->addTag('routing.route_loader')
+        ;
+
+        $container->autowire(InstantiatorInterface::class)
+            ->setClass(Instantiator::class)
         ;
     }
 
