@@ -5,7 +5,7 @@
     "type": "library",
     "require": {
         "php": ">=8.1",
-        "doctrine/instantiator": "^1.5",
+        "doctrine/instantiator": "^2.0",
         "doctrine/orm": "^2.0",
         "symfony/form": "^6.0",
         "symfony/framework-bundle": "^6.0",

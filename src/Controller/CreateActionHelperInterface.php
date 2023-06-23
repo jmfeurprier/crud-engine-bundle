@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface CreateActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @template T
+     * @template T of object
      *
      * @param class-string<T> $entityClass
      *
