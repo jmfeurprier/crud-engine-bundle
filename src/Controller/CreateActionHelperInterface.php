@@ -5,14 +5,15 @@ namespace Jmf\CrudEngine\Controller;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @template E of object
+ */
 interface CreateActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @template T of object
+     * @param class-string<E> $entityClass
      *
-     * @param class-string<T> $entityClass
-     *
-     * @return T
+     * @return E
      *
      * @throws CrudEngineInstantiationFailureException
      */
@@ -21,6 +22,9 @@ interface CreateActionHelperInterface extends ActionHelperInterface
         string $entityClass
     ): object;
 
+    /**
+     * @param E $entity
+     */
     public function hookAfterPersist(
         Request $request,
         object $entity

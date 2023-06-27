@@ -23,10 +23,13 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+/**
+ * @template E of object
+ */
 class CreateAction
 {
     /**
-     * @use WithActionHelperTrait<CreateActionHelperInterface>
+     * @use WithActionHelperTrait<CreateActionHelperInterface<E>>
      */
     use WithActionHelperTrait;
     use WithEntityManagerTrait;
@@ -34,6 +37,9 @@ class CreateAction
     use WithRedirectionTrait;
     use WithViewTrait;
 
+    /**
+     * @param CreateActionHelperInterface<E> $defaultActionHelper
+     */
     public function __construct(
         FormFactoryInterface $formFactory,
         UrlGeneratorInterface $urlGenerator,
@@ -52,7 +58,7 @@ class CreateAction
 
     /**
      * @param array<string,mixed> $actionProperties
-     * @param class-string        $entityClass
+     * @param class-string<E>     $entityClass
      *
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInstantiationFailureException

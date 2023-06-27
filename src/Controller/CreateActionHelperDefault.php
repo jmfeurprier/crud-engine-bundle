@@ -7,6 +7,10 @@ use Doctrine\Instantiator\InstantiatorInterface;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @template E of object
+ * @implements CreateActionHelperInterface<E>
+ */
 class CreateActionHelperDefault implements CreateActionHelperInterface
 {
     public function __construct(

@@ -5,16 +5,17 @@ namespace Jmf\CrudEngine\Controller;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @template E of object
+ */
 interface IndexActionHelperInterface extends ActionHelperInterface
 {
     public function hookBeforeRender(Request $request): void;
 
     /**
-     * @template T of object
+     * @param ObjectRepository<E> $entityRepository
      *
-     * @param ObjectRepository<T> $entityRepository
-     *
-     * @return T[]
+     * @return E[]
      */
     public function getEntities(ObjectRepository $entityRepository): array;
 

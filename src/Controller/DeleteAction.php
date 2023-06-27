@@ -13,14 +13,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @template E of object
+ */
 class DeleteAction
 {
     /**
-     * @use WithActionHelperTrait<DeleteActionHelperInterface>
+     * @use WithActionHelperTrait<DeleteActionHelperInterface<E>>
      */
     use WithActionHelperTrait;
     use WithEntityManagerTrait;
 
+    /**
+     * @param DeleteActionHelperInterface<E> $defaultActionHelper
+     */
     public function __construct(
         ManagerRegistry $managerRegistry,
         DeleteActionHelperInterface $defaultActionHelper,
@@ -33,7 +39,7 @@ class DeleteAction
 
     /**
      * @param array<string,mixed> $actionProperties
-     * @param class-string        $entityClass
+     * @param class-string<E>     $entityClass
      *
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
@@ -60,11 +66,9 @@ class DeleteAction
     }
 
     /**
-     * @template T of object
+     * @param class-string<E> $entityClass
      *
-     * @param class-string<T> $entityClass
-     *
-     * @return T
+     * @return E
      *
      * @throws NotFoundHttpException
      */

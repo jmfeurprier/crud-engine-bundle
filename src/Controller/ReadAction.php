@@ -17,10 +17,13 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+/**
+ * @template E of object
+ */
 class ReadAction
 {
     /**
-     * @use WithActionHelperTrait<ReadActionHelperInterface>
+     * @use WithActionHelperTrait<ReadActionHelperInterface<E>>
      */
     use WithActionHelperTrait;
     use WithEntityManagerTrait;
@@ -28,10 +31,19 @@ class ReadAction
 
     private Request $request;
 
+    /**
+     * @var ReadActionHelperInterface<E>
+     */
     private ReadActionHelperInterface $actionHelper;
 
+    /**
+     * @var E
+     */
     private object $entity;
 
+    /**
+     * @param ReadActionHelperInterface<E> $defaultActionHelper
+     */
     public function __construct(
         ManagerRegistry $managerRegistry,
         Environment $twigEnvironment,
@@ -45,7 +57,7 @@ class ReadAction
     }
 
     /**
-     * @param class-string         $entityClass
+     * @param class-string<E>      $entityClass
      * @param array<string, mixed> $actionProperties
      *
      * @throws CrudEngineInvalidActionHelperException
@@ -73,7 +85,9 @@ class ReadAction
     }
 
     /**
-     * @param class-string $entityClass
+     * @param class-string<E> $entityClass
+     *
+     * @return E
      *
      * @throws NotFoundHttpException
      */

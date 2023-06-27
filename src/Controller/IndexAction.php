@@ -16,10 +16,13 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+/**
+ * @template E of object
+ */
 class IndexAction
 {
     /**
-     * @use WithActionHelperTrait<IndexActionHelperInterface>
+     * @use WithActionHelperTrait<IndexActionHelperInterface<E>>
      */
     use WithActionHelperTrait;
     use WithEntityManagerTrait;
@@ -27,8 +30,14 @@ class IndexAction
 
     private Request $request;
 
+    /**
+     * @var IndexActionHelperInterface<E>
+     */
     private IndexActionHelperInterface $actionHelper;
 
+    /**
+     * @param IndexActionHelperInterface<E> $defaultActionHelper
+     */
     public function __construct(
         Environment $twigEnvironment,
         ManagerRegistry $managerRegistry,
@@ -42,7 +51,7 @@ class IndexAction
     }
 
     /**
-     * @param class-string         $entityClass
+     * @param class-string<E>      $entityClass
      * @param array<string, mixed> $actionProperties
      *
      * @throws CrudEngineInvalidActionHelperException
@@ -69,6 +78,9 @@ class IndexAction
         );
     }
 
+    /**
+     * @param IndexActionHelperInterface<E> $actionHelper
+     */
     private function hookBeforeRender(
         IndexActionHelperInterface $actionHelper,
         Request $request
@@ -77,11 +89,10 @@ class IndexAction
     }
 
     /**
-     * @template T of object
+     * @param IndexActionHelperInterface<E> $actionHelper
+     * @param class-string<E>               $entityClass
      *
-     * @param class-string<T> $entityClass
-     *
-     * @return T[]
+     * @return E[]
      */
     private function getEntities(
         IndexActionHelperInterface $actionHelper,
