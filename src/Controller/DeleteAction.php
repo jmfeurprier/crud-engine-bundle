@@ -3,19 +3,22 @@
 namespace Jmf\CrudEngine\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
+use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
+use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
 use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
-use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @template E of object
  */
+#[AsController]
 class DeleteAction
 {
     /**
@@ -30,27 +33,29 @@ class DeleteAction
     public function __construct(
         ManagerRegistry $managerRegistry,
         DeleteActionHelperInterface $defaultActionHelper,
-        ContainerInterface $container
+        ActionHelperResolver $actionHelperResolver,
+        private readonly ActionConfigurationRepository $actionConfigurationRepository,
     ) {
-        $this->managerRegistry     = $managerRegistry;
-        $this->defaultActionHelper = $defaultActionHelper;
-        $this->container           = $container;
+        $this->managerRegistry      = $managerRegistry;
+        $this->defaultActionHelper  = $defaultActionHelper;
+        $this->actionHelperResolver = $actionHelperResolver;
     }
 
     /**
-     * @param array<string,mixed> $actionProperties
-     * @param class-string<E>     $entityClass
+     * @param class-string<E> $entityClass
      *
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
-     * @throws CrudEngineInvalidConfigurationException
      */
     public function __invoke(
-        array $actionProperties,
         string $entityClass,
-        string $id
+        string $id,
     ): Response {
-        $actionHelper = $this->getActionHelper(DeleteActionHelperInterface::class, $actionProperties);
+        $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'delete');
+        $actionHelper        = $this->getActionHelper(
+            DeleteActionHelperInterface::class,
+            $actionConfiguration,
+        );
 
         $entity = $this->getEntity($entityClass, $id);
 
@@ -68,13 +73,13 @@ class DeleteAction
     /**
      * @param class-string<E> $entityClass
      *
-     * @return E
+     * @psalm-return E
      *
      * @throws NotFoundHttpException
      */
     private function getEntity(
         string $entityClass,
-        string $id
+        string $id,
     ): object {
         $entity = $this->getRepository($entityClass)->find($id);
 

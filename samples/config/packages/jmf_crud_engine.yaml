@@ -5,7 +5,7 @@ jmf_crud_engine:
             name: 'article'
             actions:
                 create:
-                    formTypeClass: 'App\Form\ArticleType'
+                    formType: 'App\Form\ArticleType'
                     redirection:
                         route: 'article.read'
                         parameters:
@@ -17,12 +17,12 @@ jmf_crud_engine:
                         variables:
                             entity: 'article'
                 delete:
-                    parameters:
-                        'id': '{{ _entity.id }}'
                     redirection:
                         route: 'article.index'
                     route:
                         path: '/articles/{id}'
+                        parameters:
+                            'id': '{{ _entity.id }}'
                 index:
                     route:
                         path: '/articles'
@@ -31,25 +31,25 @@ jmf_crud_engine:
                         variables:
                             entities: 'articles'
                 read:
-                    helperClass: 'App\Controller\Article\ReadActionHelper'
-                    parameters:
-                        'id': '{{ _entity.id }}'
+                    helper: 'App\Controller\Article\ReadActionHelper'
                     route:
                         path: '/articles/{id}'
+                        parameters:
+                            'id': '{{ _entity.id }}'
                     view:
                         path: 'article/read.html.twig'
                         variables:
                             entity: 'article'
                 update:
-                    formTypeClass: 'App\Form\ArticleType'
-                    parameters:
-                        'id': '{{ _entity.id }}'
+                    formType: 'App\Form\ArticleType'
                     redirection:
                         route: 'article.read'
                         parameters:
                             id: '{{ _entity.id }}'
                     route:
                         path: '/articles/{id}/update'
+                        parameters:
+                            'id': '{{ _entity.id }}'
                     view:
                         path: 'article/update.html.twig'
                         variables:

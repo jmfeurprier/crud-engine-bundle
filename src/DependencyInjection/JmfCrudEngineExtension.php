@@ -5,20 +5,34 @@ namespace Jmf\CrudEngine\DependencyInjection;
 use Doctrine\Instantiator\Instantiator;
 use Doctrine\Instantiator\InstantiatorInterface;
 use Exception;
-use Jmf\CrudEngine\Loading\RouteLoader;
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryFactory;
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryFactoryInterface;
+use Jmf\CrudEngine\Configuration\CacheableActionConfigurationRepositoryFactory;
+use Jmf\CrudEngine\Controller\CreateAction;
+use Jmf\CrudEngine\Controller\DeleteAction;
+use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
+use Jmf\CrudEngine\Controller\IndexAction;
+use Jmf\CrudEngine\Controller\ReadAction;
+use Jmf\CrudEngine\Controller\UpdateAction;
+use Jmf\CrudEngine\Routing\RouteLoader;
+use Override;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class JmfCrudEngineExtension extends Extension
 {
     /**
      * @throws Exception
      */
+    #[Override]
     public function load(
         array $configs,
-        ContainerBuilder $container
+        ContainerBuilder $container,
     ): void {
         $configuration = new Configuration();
 
@@ -31,26 +45,60 @@ class JmfCrudEngineExtension extends Extension
 
         $loader->load('services.yaml');
 
-        $container->autowire(RouteLoader::class)
-            ->setArgument('$entityProperties', $config['entities'])
+        $container->autowire(ActionHelperResolver::class)
+            ->setArgument('$container', new Reference('service_container'))
+        ;
+
+        $container->getDefinition(RouteLoader::class)
             ->addTag('routing.route_loader')
         ;
+
+        $container->autowire(ActionConfigurationRepository::class)
+            ->setFactory(
+                [
+                    new Reference(ActionConfigurationRepositoryFactoryInterface::class),
+                    'make',
+                ]
+            )
+        ;
+
+        if (interface_exists(CacheInterface::class)) {
+            $container->autowire(ActionConfigurationRepositoryFactory::class)
+                ->setArgument('$config', $config['entities'])
+            ;
+
+            $container->autowire(ActionConfigurationRepositoryFactoryInterface::class)
+                ->setClass(CacheableActionConfigurationRepositoryFactory::class)
+                ->setArgument(
+                    '$actionConfigurationRepositoryFactory',
+                    new Reference(ActionConfigurationRepositoryFactory::class),
+                )
+            ;
+        } else {
+            $container->autowire(ActionConfigurationRepositoryFactoryInterface::class)
+                ->setClass(ActionConfigurationRepositoryFactory::class)
+                ->setArgument('$config', $config['entities'])
+            ;
+        }
 
         $container->autowire(InstantiatorInterface::class)
             ->setClass(Instantiator::class)
         ;
     }
 
+    #[Override]
     public function getNamespace(): string
     {
         return '';
     }
 
+    #[Override]
     public function getXsdValidationBasePath(): bool
     {
         return false;
     }
 
+    #[Override]
     public function getAlias(): string
     {
         return 'jmf_crud_engine';

@@ -2,7 +2,8 @@
 
 namespace Jmf\CrudEngine\Controller\Traits;
 
-use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
+use Jmf\CrudEngine\Configuration\ActionConfiguration;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -17,49 +18,45 @@ trait WithRedirectionTrait
     private Environment $twigEnvironment;
 
     /**
-     * @param array<string,mixed> $actionProperties
+     * @throws CrudEngineMissingConfigurationException
+     * @throws LoaderError
+     * @throws SyntaxError
      */
     private function redirectOnSuccess(
-        array $actionProperties,
-        object $entity
+        ActionConfiguration $actionConfiguration,
+        object $entity,
     ): Response {
         return new RedirectResponse(
             $this->urlGenerator->generate(
-                $this->getRedirectRoute($actionProperties),
-                $this->getRedirectRouteParameters($actionProperties, $entity)
+                $this->getRedirectRoute($actionConfiguration),
+                $this->getRedirectRouteParameters($actionConfiguration, $entity)
             )
         );
     }
 
     /**
-     * @param array<string,mixed> $actionProperties
+     * @throws CrudEngineMissingConfigurationException
      */
-    private function getRedirectRoute(array $actionProperties): string
+    private function getRedirectRoute(ActionConfiguration $actionConfiguration): string
     {
-        return $actionProperties['redirection']['route'];
+        return $actionConfiguration->getRedirectionConfiguration()->getRoute();
     }
 
     /**
-     * @param array<string,mixed> $actionProperties
+     * @return array<string, string>
      *
-     * @return array<string, mixed>
-     *
-     * @throws CrudEngineInvalidConfigurationException
+     * @throws CrudEngineMissingConfigurationException
      * @throws LoaderError
      * @throws SyntaxError
      */
     private function getRedirectRouteParameters(
-        array $actionProperties,
-        object $entity
+        ActionConfiguration $actionConfiguration,
+        object $entity,
     ): array {
-        $definitions = $actionProperties['redirection']['parameters'] ?? [];
+        $definitions = $actionConfiguration->getRedirectionConfiguration()->getParameters()->all();
         $parameters  = [];
 
         foreach ($definitions as $key => $definition) {
-            if (!is_string($key)) {
-                throw new CrudEngineInvalidConfigurationException();
-            }
-
             $template = $this->twigEnvironment->createTemplate($definition);
 
             $parameters[$key] = $template->render(

@@ -3,6 +3,10 @@
 namespace Jmf\CrudEngine\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Jmf\CrudEngine\Configuration\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
+use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
+use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperInterface;
 use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithFormTrait;
@@ -11,12 +15,12 @@ use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
-use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Override;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -26,6 +30,7 @@ use Twig\Error\SyntaxError;
 /**
  * @template E of object
  */
+#[AsController]
 class CreateAction
 {
     /**
@@ -38,7 +43,7 @@ class CreateAction
     use WithViewTrait;
 
     /**
-     * @param CreateActionHelperInterface<E> $defaultActionHelper
+     * @psalm-param CreateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
         FormFactoryInterface $formFactory,
@@ -46,24 +51,23 @@ class CreateAction
         Environment $twigEnvironment,
         ManagerRegistry $managerRegistry,
         CreateActionHelperInterface $defaultActionHelper,
-        ContainerInterface $container
+        ActionHelperResolver $actionHelperResolver,
+        private readonly ActionConfigurationRepository $actionConfigurationRepository,
     ) {
-        $this->formFactory         = $formFactory;
-        $this->urlGenerator        = $urlGenerator;
-        $this->twigEnvironment     = $twigEnvironment;
-        $this->managerRegistry     = $managerRegistry;
-        $this->defaultActionHelper = $defaultActionHelper;
-        $this->container           = $container;
+        $this->formFactory          = $formFactory;
+        $this->urlGenerator         = $urlGenerator;
+        $this->twigEnvironment      = $twigEnvironment;
+        $this->managerRegistry      = $managerRegistry;
+        $this->defaultActionHelper  = $defaultActionHelper;
+        $this->actionHelperResolver = $actionHelperResolver;
     }
 
     /**
-     * @param array<string,mixed> $actionProperties
-     * @param class-string<E>     $entityClass
+     * @param class-string<E> $entityClass
      *
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInstantiationFailureException
      * @throws CrudEngineInvalidActionHelperException
-     * @throws CrudEngineInvalidConfigurationException
      * @throws CrudEngineMissingConfigurationException
      * @throws LoaderError
      * @throws RuntimeError
@@ -71,13 +75,16 @@ class CreateAction
      */
     public function __invoke(
         Request $request,
-        array $actionProperties,
-        string $entityClass
+        string $entityClass,
     ): Response {
-        $actionHelper = $this->getActionHelper(CreateActionHelperInterface::class, $actionProperties);
+        $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'create');
+        $actionHelper        = $this->getActionHelper(
+            CreateActionHelperInterface::class,
+            $actionConfiguration,
+        );
 
         $entity = $actionHelper->createEntity($request, $entityClass);
-        $form   = $this->getForm($actionProperties, $entity);
+        $form   = $this->getForm($actionConfiguration, $entity);
 
         $form->handleRequest($request);
 
@@ -88,31 +95,33 @@ class CreateAction
 
             $actionHelper->hookAfterPersist($request, $entity);
 
-            return $this->redirectOnSuccess($actionProperties, $entity);
+            return $this->redirectOnSuccess($actionConfiguration, $entity);
         }
 
         return $this->render(
-            $actionProperties,
+            $actionConfiguration,
             [
                 'entity' => $entity,
                 'form'   => $form->createView(),
-            ]
+            ],
         );
     }
 
     /**
-     * @param array<string, mixed> $actionProperties
      * @param array<string, mixed> $defaults
      *
      * @return array<string, mixed>
+     *
+     * @throws CrudEngineMissingConfigurationException
      */
+    #[Override]
     protected function getViewContext(
-        array $actionProperties,
-        array $defaults
+        ActionConfiguration $actionConfiguration,
+        array $defaults,
     ): array {
         return $this->mapViewVariables(
-            $actionProperties,
-            $defaults
+            $actionConfiguration,
+            $defaults,
         );
     }
 }

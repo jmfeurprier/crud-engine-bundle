@@ -3,14 +3,19 @@
 namespace Jmf\CrudEngine\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Jmf\CrudEngine\Configuration\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
+use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
+use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperInterface;
 use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
-use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -20,6 +25,7 @@ use Twig\Error\SyntaxError;
 /**
  * @template E of object
  */
+#[AsController]
 class ReadAction
 {
     /**
@@ -48,20 +54,20 @@ class ReadAction
         ManagerRegistry $managerRegistry,
         Environment $twigEnvironment,
         ReadActionHelperInterface $defaultActionHelper,
-        ContainerInterface $container
+        ActionHelperResolver $actionHelperResolver,
+        private readonly ActionConfigurationRepository $actionConfigurationRepository,
     ) {
-        $this->managerRegistry     = $managerRegistry;
-        $this->twigEnvironment     = $twigEnvironment;
-        $this->defaultActionHelper = $defaultActionHelper;
-        $this->container           = $container;
+        $this->managerRegistry      = $managerRegistry;
+        $this->twigEnvironment      = $twigEnvironment;
+        $this->defaultActionHelper  = $defaultActionHelper;
+        $this->actionHelperResolver = $actionHelperResolver;
     }
 
     /**
-     * @param class-string<E>      $entityClass
-     * @param array<string, mixed> $actionProperties
+     * @param class-string<E> $entityClass
      *
      * @throws CrudEngineInvalidActionHelperException
-     * @throws CrudEngineInvalidConfigurationException
+     * @throws CrudEngineMissingConfigurationException
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
@@ -70,14 +76,17 @@ class ReadAction
         Request $request,
         string $id,
         string $entityClass,
-        array $actionProperties
     ): Response {
-        $this->request      = $request;
-        $this->actionHelper = $this->getActionHelper(ReadActionHelperInterface::class, $actionProperties);
-        $this->entity       = $this->getEntity($entityClass, $id);
+        $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'read');
+        $this->request       = $request;
+        $this->actionHelper  = $this->getActionHelper(
+            ReadActionHelperInterface::class,
+            $actionConfiguration,
+        );
+        $this->entity        = $this->getEntity($entityClass, $id);
 
         return $this->render(
-            $actionProperties,
+            $actionConfiguration,
             [
                 'entity' => $this->entity,
             ]
@@ -87,13 +96,13 @@ class ReadAction
     /**
      * @param class-string<E> $entityClass
      *
-     * @return E
+     * @psalm-return E
      *
      * @throws NotFoundHttpException
      */
     private function getEntity(
         string $entityClass,
-        string $id
+        string $id,
     ): object {
         $entity = $this->getRepository($entityClass)->find($id);
 
@@ -105,22 +114,22 @@ class ReadAction
     }
 
     /**
-     * @param array<string, mixed> $actionProperties
      * @param array<string, mixed> $defaults
      *
      * @return array<string, mixed>
      *
-     * @throws CrudEngineInvalidConfigurationException
+     * @throws CrudEngineMissingConfigurationException
      */
+    #[Override]
     protected function getViewContext(
-        array $actionProperties,
-        array $defaults
+        ActionConfiguration $actionConfiguration,
+        array $defaults,
     ): array {
         return array_merge(
             $this->actionHelper->getViewVariables($this->request, $this->entity),
             $this->mapViewVariables(
-                $actionProperties,
-                $defaults
+                $actionConfiguration,
+                $defaults,
             )
         );
     }

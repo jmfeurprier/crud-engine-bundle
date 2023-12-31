@@ -2,7 +2,8 @@
 
 namespace Jmf\CrudEngine\Controller\Traits;
 
-use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
+use Jmf\CrudEngine\Configuration\ActionConfiguration;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment as TwigEnvironment;
 use Twig\Error\LoaderError;
@@ -14,64 +15,61 @@ trait WithViewTrait
     private TwigEnvironment $twigEnvironment;
 
     /**
-     * @param array<string, mixed> $actionProperties
      * @param array<string, mixed> $defaults
      *
+     * @throws CrudEngineMissingConfigurationException
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    protected function render(
-        array $actionProperties,
-        array $defaults
+    private function render(
+        ActionConfiguration $actionConfiguration,
+        array $defaults,
     ): Response {
         return new Response(
             $this->twigEnvironment->render(
-                $this->getViewPath($actionProperties),
-                $this->getViewContext($actionProperties, $defaults)
+                $this->getViewPath($actionConfiguration),
+                $this->getViewContext($actionConfiguration, $defaults)
             )
         );
     }
 
     /**
-     * @param array<string, mixed> $actionProperties
+     * @throws CrudEngineMissingConfigurationException
      */
-    protected function getViewPath(array $actionProperties): string
+    private function getViewPath(ActionConfiguration $actionConfiguration): string
     {
-        return $actionProperties['view']['path'];
+        return $actionConfiguration->getViewConfiguration()->getPath();
     }
 
     /**
-     * @param array<string, mixed> $actionProperties
      * @param array<string, mixed> $defaults
      *
      * @return array<string, mixed>
      */
-    abstract protected function getViewContext(
-        array $actionProperties,
-        array $defaults
+    abstract private function getViewContext(
+        ActionConfiguration $actionConfiguration,
+        array $defaults,
     ): array;
 
     /**
-     * @param array<string, mixed> $actionProperties
      * @param array<string, mixed> $defaults
      *
      * @return array<string, mixed>
      *
-     * @throws CrudEngineInvalidConfigurationException
+     * @throws CrudEngineMissingConfigurationException
      */
-    protected function mapViewVariables(
-        array $actionProperties,
-        array $defaults
+    private function mapViewVariables(
+        ActionConfiguration $actionConfiguration,
+        array $defaults,
     ): array {
         $variables = [];
 
         foreach ($defaults as $variable => $value) {
-            $variableName = $actionProperties['view']['variables'][$variable] ?? $variable;
-
-            if (!is_string($variableName)) {
-                throw new CrudEngineInvalidConfigurationException();
-            }
+            $variableName = $actionConfiguration->getViewConfiguration()->getVariables()->tryGet(
+                $variable,
+                $variable,
+            );
 
             $variables[$variableName] = $value;
         }

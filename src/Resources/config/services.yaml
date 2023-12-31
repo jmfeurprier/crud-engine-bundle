@@ -9,36 +9,29 @@ services:
 
     Jmf\CrudEngine\Controller\CreateAction:
         arguments:
-            $container:           '@service_container'
-            $defaultActionHelper: '@Jmf\CrudEngine\Controller\CreateActionHelperDefault'
-        tags: [ 'controller.service_arguments' ]
+            $defaultActionHelper: '@Jmf\CrudEngine\Controller\Helpers\CreateActionHelperDefault'
 
     Jmf\CrudEngine\Controller\DeleteAction:
         arguments:
-            $container:           '@service_container'
-            $defaultActionHelper: '@Jmf\CrudEngine\Controller\DeleteActionHelperDefault'
-        tags: [ 'controller.service_arguments' ]
+            $defaultActionHelper: '@Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperDefault'
 
     Jmf\CrudEngine\Controller\IndexAction:
         arguments:
-            $container:           '@service_container'
-            $defaultActionHelper: '@Jmf\CrudEngine\Controller\IndexActionHelperDefault'
-        tags: [ 'controller.service_arguments' ]
+            $defaultActionHelper: '@Jmf\CrudEngine\Controller\Helpers\IndexActionHelperDefault'
 
     Jmf\CrudEngine\Controller\ReadAction:
         arguments:
-            $container:           '@service_container'
-            $defaultActionHelper: '@Jmf\CrudEngine\Controller\ReadActionHelperDefault'
-        tags: [ 'controller.service_arguments' ]
+            $defaultActionHelper: '@Jmf\CrudEngine\Controller\Helpers\ReadActionHelperDefault'
 
     Jmf\CrudEngine\Controller\UpdateAction:
-        tags: [ 'controller.service_arguments' ]
+        arguments:
+            $defaultActionHelper: '@Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperDefault'
 
-    Jmf\CrudEngine\Loading\EntityRouteLoader:
+    Jmf\CrudEngine\Routing\RouteLoader:
         arguments:
             $loaders:
-                - '@Jmf\CrudEngine\Loading\EntityCreateActionRouteLoader'
-                - '@Jmf\CrudEngine\Loading\EntityDeleteActionRouteLoader'
-                - '@Jmf\CrudEngine\Loading\EntityIndexActionRouteLoader'
-                - '@Jmf\CrudEngine\Loading\EntityReadActionRouteLoader'
-                - '@Jmf\CrudEngine\Loading\EntityUpdateActionRouteLoader'
+                - '@Jmf\CrudEngine\Routing\CreateActionRouteLoader'
+                - '@Jmf\CrudEngine\Routing\DeleteActionRouteLoader'
+                - '@Jmf\CrudEngine\Routing\IndexActionRouteLoader'
+                - '@Jmf\CrudEngine\Routing\ReadActionRouteLoader'
+                - '@Jmf\CrudEngine\Routing\UpdateActionRouteLoader'
