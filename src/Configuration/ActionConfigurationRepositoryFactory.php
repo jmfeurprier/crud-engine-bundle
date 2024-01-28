@@ -15,7 +15,7 @@ readonly class ActionConfigurationRepositoryFactory implements ActionConfigurati
     ) {
     }
 
-    public function make(): ActionConfigurationRepository
+    public function make(): ActionConfigurationRepositoryInterface
     {
         return new ActionConfigurationRepository(
             $this->getActionConfigurations(),

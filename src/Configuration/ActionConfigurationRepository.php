@@ -5,7 +5,7 @@ namespace Jmf\CrudEngine\Configuration;
 use DomainException;
 use Webmozart\Assert\Assert;
 
-class ActionConfigurationRepository
+class ActionConfigurationRepository implements ActionConfigurationRepositoryInterface
 {
     /**
      * @var array<class-string, array<string, ActionConfiguration>>

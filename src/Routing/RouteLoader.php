@@ -3,7 +3,7 @@
 namespace Jmf\CrudEngine\Routing;
 
 use Jmf\CrudEngine\Configuration\ActionConfiguration;
-use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -20,7 +20,7 @@ class RouteLoader implements RouteLoaderInterface
      * @param ActionRouteLoaderInterface[] $loaders
      */
     public function __construct(
-        private readonly ActionConfigurationRepository $actionConfigurationRepository,
+        private readonly ActionConfigurationRepositoryInterface $actionConfigurationRepository,
         iterable $loaders,
     ) {
         Assert::allIsInstanceOf($loaders, ActionRouteLoaderInterface::class);

@@ -17,7 +17,7 @@ readonly class CacheableActionConfigurationRepositoryFactory implements ActionCo
     /**
      * @throws InvalidArgumentException
      */
-    public function make(): ActionConfigurationRepository
+    public function make(): ActionConfigurationRepositoryInterface
     {
         return $this->cache->get(
             $this->getCacheKey(),

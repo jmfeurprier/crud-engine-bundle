@@ -5,16 +5,11 @@ namespace Jmf\CrudEngine\DependencyInjection;
 use Doctrine\Instantiator\Instantiator;
 use Doctrine\Instantiator\InstantiatorInterface;
 use Exception;
-use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryFactory;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryFactoryInterface;
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Configuration\CacheableActionConfigurationRepositoryFactory;
-use Jmf\CrudEngine\Controller\CreateAction;
-use Jmf\CrudEngine\Controller\DeleteAction;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
-use Jmf\CrudEngine\Controller\IndexAction;
-use Jmf\CrudEngine\Controller\ReadAction;
-use Jmf\CrudEngine\Controller\UpdateAction;
 use Jmf\CrudEngine\Routing\RouteLoader;
 use Override;
 use Symfony\Component\Config\FileLocator;
@@ -53,7 +48,7 @@ class JmfCrudEngineExtension extends Extension
             ->addTag('routing.route_loader')
         ;
 
-        $container->autowire(ActionConfigurationRepository::class)
+        $container->autowire(ActionConfigurationRepositoryInterface::class)
             ->setFactory(
                 [
                     new Reference(ActionConfigurationRepositoryFactoryInterface::class),

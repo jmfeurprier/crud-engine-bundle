@@ -4,7 +4,7 @@ namespace Jmf\CrudEngine\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Jmf\CrudEngine\Configuration\ActionConfiguration;
-use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperInterface;
 use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
@@ -55,7 +55,7 @@ class ReadAction
         Environment $twigEnvironment,
         ReadActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
-        private readonly ActionConfigurationRepository $actionConfigurationRepository,
+        private readonly ActionConfigurationRepositoryInterface $actionConfigurationRepository,
     ) {
         $this->managerRegistry      = $managerRegistry;
         $this->twigEnvironment      = $twigEnvironment;

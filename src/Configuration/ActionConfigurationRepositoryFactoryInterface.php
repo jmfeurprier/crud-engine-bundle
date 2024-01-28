@@ -9,5 +9,5 @@ interface ActionConfigurationRepositoryFactoryInterface
     /**
      * @throws CrudEngineMissingConfigurationException
      */
-    public function make(): ActionConfigurationRepository;
+    public function make(): ActionConfigurationRepositoryInterface;
 }
