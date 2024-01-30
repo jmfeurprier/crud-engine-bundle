@@ -58,7 +58,7 @@ class RouteConfigurationLoader
             return KeyStringCollection::createEmpty();
         }
 
-        Assert::isMap($this->routeConfig['parameters']);
+        Assert::isArray($this->routeConfig['parameters']);
 
         return new KeyStringCollection(
             $this->routeConfig['parameters'],

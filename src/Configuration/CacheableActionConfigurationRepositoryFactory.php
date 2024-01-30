@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
+use Override;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -17,6 +18,7 @@ readonly class CacheableActionConfigurationRepositoryFactory implements ActionCo
     /**
      * @throws InvalidArgumentException
      */
+    #[Override]
     public function make(): ActionConfigurationRepositoryInterface
     {
         return $this->cache->get(

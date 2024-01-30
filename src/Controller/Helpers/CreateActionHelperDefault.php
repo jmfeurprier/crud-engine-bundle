@@ -5,6 +5,7 @@ namespace Jmf\CrudEngine\Controller\Helpers;
 use Doctrine\Instantiator\Exception\ExceptionInterface;
 use Doctrine\Instantiator\InstantiatorInterface;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
+use Override;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -18,6 +19,7 @@ readonly class CreateActionHelperDefault implements CreateActionHelperInterface
     ) {
     }
 
+    #[Override]
     public function createEntity(
         Request $request,
         string $entityClass,
@@ -29,6 +31,7 @@ readonly class CreateActionHelperDefault implements CreateActionHelperInterface
         }
     }
 
+    #[Override]
     public function hookAfterPersist(
         Request $request,
         object $entity,

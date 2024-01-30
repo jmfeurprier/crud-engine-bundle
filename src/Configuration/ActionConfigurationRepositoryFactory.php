@@ -3,6 +3,7 @@
 namespace Jmf\CrudEngine\Configuration;
 
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Override;
 
 readonly class ActionConfigurationRepositoryFactory implements ActionConfigurationRepositoryFactoryInterface
 {
@@ -15,6 +16,7 @@ readonly class ActionConfigurationRepositoryFactory implements ActionConfigurati
     ) {
     }
 
+    #[Override]
     public function make(): ActionConfigurationRepositoryInterface
     {
         return new ActionConfigurationRepository(

@@ -3,6 +3,8 @@
 namespace Jmf\CrudEngine\Configuration;
 
 use DomainException;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Override;
 use Webmozart\Assert\Assert;
 
 class ActionConfigurationRepository implements ActionConfigurationRepositoryInterface
@@ -30,19 +32,26 @@ class ActionConfigurationRepository implements ActionConfigurationRepositoryInte
         $this->indexedConfigurations[$configuration->getEntityClass()][$configuration->getAction()] = $configuration;
     }
 
-    /**
-     * @param class-string $entityClass
-     */
+    #[Override]
     public function get(
         string $entityClass,
         string $action,
     ): ActionConfiguration {
-        return $this->indexedConfigurations[$entityClass][$action] ?? throw new DomainException(); // @todo Message.
+        return $this->tryGet($entityClass, $action) ?? throw new CrudEngineMissingConfigurationException();
+    }
+
+    #[Override]
+    public function tryGet(
+        string $entityClass,
+        string $action,
+    ): ?ActionConfiguration {
+        return $this->indexedConfigurations[$entityClass][$action] ?? null;
     }
 
     /**
      * @return ActionConfiguration[]
      */
+    #[Override]
     public function all(): iterable
     {
         return $this->configurations;

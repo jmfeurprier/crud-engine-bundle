@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
+use Override;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -10,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 readonly class UpdateActionHelperDefault implements UpdateActionHelperInterface
 {
+    #[Override]
     public function hookAfterPersist(
         Request $request,
         object $entity,

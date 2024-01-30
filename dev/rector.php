@@ -17,6 +17,9 @@ return static function (
 ): void {
     $rootPath = realpath(__DIR__ . '/..') . '/';
 
+    $rectorConfig->cacheDirectory($rootPath . 'var/cache/rector');
+    $rectorConfig->containerCacheDirectory($rootPath . 'var/cache');
+
     $rectorConfig->paths(
         [
             $rootPath . 'src',
