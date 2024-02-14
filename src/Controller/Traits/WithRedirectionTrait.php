@@ -26,12 +26,18 @@ trait WithRedirectionTrait
         ActionConfiguration $actionConfiguration,
         object $entity,
     ): Response {
-        return new RedirectResponse(
-            $this->urlGenerator->generate(
-                $this->getRedirectRoute($actionConfiguration),
-                $this->getRedirectRouteParameters($actionConfiguration, $entity)
-            )
+        $url = $this->urlGenerator->generate(
+            $this->getRedirectRoute($actionConfiguration),
+            $this->getRedirectRouteParameters($actionConfiguration, $entity)
         );
+
+        $fragment = $this->getRedirectFragment($actionConfiguration);
+
+        if (null !== $fragment) {
+            $url .= "#{$fragment}";
+        }
+
+        return new RedirectResponse($url);
     }
 
     /**
@@ -67,5 +73,10 @@ trait WithRedirectionTrait
         }
 
         return $parameters;
+    }
+
+    private function getRedirectFragment(ActionConfiguration $actionConfiguration): ?string
+    {
+        return $actionConfiguration->getRedirectionConfiguration()->getFragment();
     }
 }

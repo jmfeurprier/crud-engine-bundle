@@ -42,6 +42,13 @@ class CreateAction
     use WithRedirectionTrait;
     use WithViewTrait;
 
+    private Request $request;
+
+    /**
+     * @var CreateActionHelperInterface<E>
+     */
+    private CreateActionHelperInterface $actionHelper;
+
     /**
      * @psalm-param CreateActionHelperInterface<E> $defaultActionHelper
      */
@@ -78,12 +85,13 @@ class CreateAction
         string $entityClass,
     ): Response {
         $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'create');
-        $actionHelper        = $this->getActionHelper(
+        $this->request       = $request;
+        $this->actionHelper  = $this->getActionHelper(
             CreateActionHelperInterface::class,
             $actionConfiguration,
         );
 
-        $entity = $actionHelper->createEntity($request, $entityClass);
+        $entity = $this->actionHelper->createEntity($request, $entityClass);
         $form   = $this->getForm($actionConfiguration, $entity);
 
         $form->handleRequest($request);
@@ -93,7 +101,7 @@ class CreateAction
             $entityManager->persist($entity);
             $entityManager->flush();
 
-            $actionHelper->hookAfterPersist($request, $entity);
+            $this->actionHelper->hookAfterPersist($request, $entity);
 
             return $this->redirectOnSuccess($actionConfiguration, $entity);
         }
@@ -119,9 +127,12 @@ class CreateAction
         ActionConfiguration $actionConfiguration,
         array $defaults,
     ): array {
-        return $this->mapViewVariables(
-            $actionConfiguration,
-            $defaults,
+        return array_merge(
+            $this->actionHelper->getViewVariables($this->request, $this->entity),
+            $this->mapViewVariables(
+                $actionConfiguration,
+                $defaults,
+            )
         );
     }
 }

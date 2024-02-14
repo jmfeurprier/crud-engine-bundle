@@ -7,6 +7,7 @@ readonly class RedirectionConfiguration
     public function __construct(
         private string $route,
         private KeyStringCollection $parameters,
+        private ?string $fragment = null,
     ) {
     }
 
@@ -18,5 +19,10 @@ readonly class RedirectionConfiguration
     public function getParameters(): KeyStringCollection
     {
         return $this->parameters;
+    }
+
+    public function getFragment(): ?string
+    {
+        return $this->fragment;
     }
 }

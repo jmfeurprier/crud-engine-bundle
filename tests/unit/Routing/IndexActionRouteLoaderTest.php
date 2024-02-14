@@ -57,9 +57,10 @@ class IndexActionRouteLoaderTest extends TestCase
         );
 
         $routeConfiguration = new RouteConfiguration(
-            name:       $routeName,
-            path:       $routePath,
-            parameters: new KeyStringCollection([]),
+            name:         $routeName,
+            path:         $routePath,
+            parameters:   new KeyStringCollection([]),
+            requirements: new KeyStringCollection([]),
         );
 
         $viewConfiguration = new ViewConfiguration(

@@ -37,4 +37,12 @@ readonly class CreateActionHelperDefault implements CreateActionHelperInterface
         object $entity,
     ): void {
     }
+
+    #[Override]
+    public function getViewVariables(
+        Request $request,
+        object $entity,
+    ): array {
+        return [];
+    }
 }

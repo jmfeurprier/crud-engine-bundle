@@ -27,12 +27,13 @@ abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterface
         $routePath = $this->getRoutePath($actionConfiguration);
 
         $route = new Route(
-            path:     $routePath,
-            defaults: [
-                          '_controller' => $this->getActionClass(),
-                          'entityClass' => $actionConfiguration->getEntityClass(),
-                      ],
-            methods:  (array) $this->getMethods(),
+            path:         $routePath,
+            defaults:     [
+                              '_controller' => $this->getActionClass(),
+                              'entityClass' => $actionConfiguration->getEntityClass(),
+                          ],
+            requirements: $this->getRequirements($actionConfiguration),
+            methods:      (array) $this->getMethods(),
         );
 
         $routeCollection->add(
@@ -73,5 +74,13 @@ abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterface
     private function getRoutePath(ActionConfiguration $actionConfiguration): string
     {
         return $actionConfiguration->getRouteConfiguration()->getPath();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getRequirements(ActionConfiguration $actionConfiguration): array
+    {
+        return $actionConfiguration->getRouteConfiguration()->getRequirements()->all();
     }
 }

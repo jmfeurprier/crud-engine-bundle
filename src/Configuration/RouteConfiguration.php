@@ -8,6 +8,7 @@ readonly class RouteConfiguration
         private ?string $name,
         private string $path,
         private KeyStringCollection $parameters,
+        private KeyStringCollection $requirements,
     ) {
     }
 
@@ -24,5 +25,10 @@ readonly class RouteConfiguration
     public function getParameters(): KeyStringCollection
     {
         return $this->parameters;
+    }
+
+    public function getRequirements(): KeyStringCollection
+    {
+        return $this->requirements;
     }
 }

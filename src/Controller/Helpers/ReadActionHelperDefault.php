@@ -14,7 +14,7 @@ class ReadActionHelperDefault implements ReadActionHelperInterface
     #[Override]
     public function getViewVariables(
         Request $request,
-        object $entity
+        object $entity,
     ): array {
         return [];
     }

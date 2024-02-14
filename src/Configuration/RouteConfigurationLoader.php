@@ -27,6 +27,7 @@ class RouteConfigurationLoader
             $this->getName(),
             $this->getPath(),
             $this->getParameters(),
+            $this->getRequirements(),
         );
     }
 
@@ -62,6 +63,19 @@ class RouteConfigurationLoader
 
         return new KeyStringCollection(
             $this->routeConfig['parameters'],
+        );
+    }
+
+    private function getRequirements(): KeyStringCollection
+    {
+        if (!array_key_exists('requirements', $this->routeConfig)) {
+            return KeyStringCollection::createEmpty();
+        }
+
+        Assert::isArray($this->routeConfig['requirements']);
+
+        return new KeyStringCollection(
+            $this->routeConfig['requirements'],
         );
     }
 }

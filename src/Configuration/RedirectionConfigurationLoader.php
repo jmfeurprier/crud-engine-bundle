@@ -30,6 +30,7 @@ class RedirectionConfigurationLoader
         return new RedirectionConfiguration(
             $this->getRoute(),
             $this->getParameters(),
+            $this->getFragment(),
         );
     }
 
@@ -58,5 +59,16 @@ class RedirectionConfigurationLoader
         return new KeyStringCollection(
             $this->redirectionConfig['parameters'],
         );
+    }
+
+    private function getFragment(): ?string
+    {
+        if (!array_key_exists('fragment', $this->redirectionConfig)) {
+            return null;
+        }
+
+        Assert::string($this->redirectionConfig['fragment']);
+
+        return $this->redirectionConfig['fragment'];
     }
 }

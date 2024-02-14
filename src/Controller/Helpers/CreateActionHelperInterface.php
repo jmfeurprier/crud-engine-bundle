@@ -29,4 +29,14 @@ interface CreateActionHelperInterface extends ActionHelperInterface
         Request $request,
         object $entity,
     ): void;
+
+    /**
+     * @param E $entity
+     *
+     * @return array<string, mixed>
+     */
+    public function getViewVariables(
+        Request $request,
+        object $entity
+    ): array;
 }
