@@ -50,6 +50,11 @@ class CreateAction
     private CreateActionHelperInterface $actionHelper;
 
     /**
+     * @var E
+     */
+    private object $entity;
+
+    /**
      * @psalm-param CreateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
@@ -90,26 +95,26 @@ class CreateAction
             CreateActionHelperInterface::class,
             $actionConfiguration,
         );
+        $this->entity        = $this->actionHelper->createEntity($request, $entityClass);
 
-        $entity = $this->actionHelper->createEntity($request, $entityClass);
-        $form   = $this->getForm($actionConfiguration, $entity);
+        $form = $this->getForm($actionConfiguration, $this->entity);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getEntityManager($entityClass);
-            $entityManager->persist($entity);
+            $entityManager->persist($this->entity);
             $entityManager->flush();
 
-            $this->actionHelper->hookAfterPersist($request, $entity);
+            $this->actionHelper->hookAfterPersist($request, $this->entity);
 
-            return $this->redirectOnSuccess($actionConfiguration, $entity);
+            return $this->redirectOnSuccess($actionConfiguration, $this->entity);
         }
 
         return $this->render(
             $actionConfiguration,
             [
-                'entity' => $entity,
+                'entity' => $this->entity,
                 'form'   => $form->createView(),
             ],
         );
