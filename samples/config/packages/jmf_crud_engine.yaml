@@ -22,7 +22,7 @@ jmf_crud_engine:
                     route:
                         path: '/articles/{id}'
                         requirements:
-                            'id': !php/const:Symfony\Component\Routing\Requirement\Requirement::UUID
+                            'id': !php/const Symfony\Component\Routing\Requirement\Requirement::UUID
                         parameters:
                             'id': '{{ _entity.id }}'
                 index:
@@ -39,7 +39,7 @@ jmf_crud_engine:
                         parameters:
                             'id': '{{ _entity.id }}'
                         requirements:
-                            'id': !php/const:Symfony\Component\Routing\Requirement\Requirement::UUID
+                            'id': !php/const Symfony\Component\Routing\Requirement\Requirement::UUID
                     view:
                         path: 'article/read.html.twig'
                         variables:
@@ -56,7 +56,7 @@ jmf_crud_engine:
                         parameters:
                             'id': '{{ _entity.id }}'
                         requirements:
-                            'id': !php/const:Symfony\Component\Routing\Requirement\Requirement::UUID
+                            'id': !php/const Symfony\Component\Routing\Requirement\Requirement::UUID
                     view:
                         path: 'article/update.html.twig'
                         variables:
