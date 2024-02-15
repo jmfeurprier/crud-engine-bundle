@@ -34,6 +34,7 @@ class Configuration implements ConfigurationInterface
                                         ->scalarNode('helper')->end()
                                         ->arrayNode('redirection')
                                             ->children()
+                                                ->scalarNode('fragment')->end()
                                                 ->scalarNode('route')
                                                     ->isRequired()
                                                 ->end()
