@@ -57,14 +57,11 @@ class DeleteAction
             $actionConfiguration,
         );
 
-        $entity = $this->getEntity($entityClass, $id);
+        $entity        = $this->getEntity($entityClass, $id);
+        $entityManager = $this->getEntityManager($entityClass);
 
         $actionHelper->hookBeforeRemove($entity);
-
-        $entityManager = $this->getEntityManager($entityClass);
-        $entityManager->remove($entity);
-        $entityManager->flush();
-
+        $actionHelper->remove($entityManager, $entity);
         $actionHelper->hookAfterRemove($entity);
 
         return new JsonResponse();

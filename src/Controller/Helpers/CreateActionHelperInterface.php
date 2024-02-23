@@ -13,7 +13,7 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     /**
      * @param class-string<E> $entityClass
      *
-     * @return E
+     * @return object<E>
      *
      * @throws CrudEngineInstantiationFailureException
      */
@@ -23,7 +23,7 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): object;
 
     /**
-     * @param E $entity
+     * @param object<E> $entity
      */
     public function hookAfterPersist(
         Request $request,
@@ -31,7 +31,7 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @param E $entity
+     * @param object<E> $entity
      *
      * @return array<string, mixed>
      */

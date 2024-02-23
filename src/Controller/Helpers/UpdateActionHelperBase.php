@@ -2,19 +2,19 @@
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
-use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
+use Override;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @template E of object
+ * @implements UpdateActionHelperInterface<E>
  */
-interface UpdateActionHelperInterface extends ActionHelperInterface
+abstract class UpdateActionHelperBase implements UpdateActionHelperInterface
 {
-    /**
-     * @param object<E> $entity
-     */
+    #[Override]
     public function hookAfterPersist(
         Request $request,
         object $entity,
-    ): void;
+    ): void {
+    }
 }

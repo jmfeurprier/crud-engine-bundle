@@ -2,20 +2,10 @@
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
-use Override;
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * @template E of object
- * @implements ReadActionHelperInterface<E>
+ * @extends ReadActionHelperBase<E>
  */
-class ReadActionHelperDefault implements ReadActionHelperInterface
+class ReadActionHelperDefault extends ReadActionHelperBase
 {
-    #[Override]
-    public function getViewVariables(
-        Request $request,
-        object $entity,
-    ): array {
-        return [];
-    }
 }

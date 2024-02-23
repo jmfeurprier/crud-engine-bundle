@@ -129,7 +129,7 @@ class IndexAction
             $this->mapViewVariables(
                 $actionConfiguration,
                 $defaults,
-            )
+            ),
         );
     }
 }

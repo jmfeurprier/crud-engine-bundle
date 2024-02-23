@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface ReadActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @param E $entity
+     * @param object<E> $entity
      *
      * @return array<string, mixed>
      */

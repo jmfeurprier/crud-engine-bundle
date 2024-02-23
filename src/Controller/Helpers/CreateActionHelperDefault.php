@@ -10,12 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @template E of object
- * @implements CreateActionHelperInterface<E>
+ * @extends  CreateActionHelperBase<E>
  */
-readonly class CreateActionHelperDefault implements CreateActionHelperInterface
+final class CreateActionHelperDefault extends CreateActionHelperBase
 {
     public function __construct(
-        private InstantiatorInterface $instantiator,
+        private readonly InstantiatorInterface $instantiator,
     ) {
     }
 
@@ -29,20 +29,5 @@ readonly class CreateActionHelperDefault implements CreateActionHelperInterface
         } catch (ExceptionInterface $e) {
             throw new CrudEngineInstantiationFailureException($entityClass, $e);
         }
-    }
-
-    #[Override]
-    public function hookAfterPersist(
-        Request $request,
-        object $entity,
-    ): void {
-    }
-
-    #[Override]
-    public function getViewVariables(
-        Request $request,
-        object $entity,
-    ): array {
-        return [];
     }
 }
