@@ -2,7 +2,7 @@
     "name": "jmf/crud-engine-bundle",
     "description" : "CRUD engine bundle for Symfony",
     "license": "mit",
-    "type": "library",
+    "type": "symfony-bundle",
     "require": {
         "php": ">=8.3",
         "doctrine/instantiator": "^2.0",
