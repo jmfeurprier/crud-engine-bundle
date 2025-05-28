@@ -12,6 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class UpdateActionHelperBase implements UpdateActionHelperInterface
 {
     #[Override]
+    public function hookBeforePersist(
+        Request $request,
+        object $entity,
+    ): void {
+    }
+
+    #[Override]
     public function hookAfterPersist(
         Request $request,
         object $entity,

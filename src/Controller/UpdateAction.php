@@ -89,6 +89,8 @@ class UpdateAction
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $actionHelper->hookBeforePersist($request, $entity);
+
             $this->getEntityManager($entityClass)->flush();
 
             $actionHelper->hookAfterPersist($request, $entity);
