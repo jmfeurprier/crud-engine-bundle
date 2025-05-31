@@ -12,6 +12,7 @@ use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\TemplateRendering\Exception\TemplateRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @template E of object
  */
 #[AsController]
-class ReadAction
+readonly class ReadAction
 {
     /**
      * @use WithActionHelperTrait<ReadActionHelperInterface<E>>
@@ -53,7 +54,7 @@ class ReadAction
      *
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
-     * @throws TemplateRenderingException
+     * @throws CrudEngineViewRenderingException
      */
     public function __invoke(
         Request $request,

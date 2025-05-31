@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormInterface;
 
 trait WithFormTrait
 {
-    private FormFactoryInterface $formFactory;
+    private readonly FormFactoryInterface $formFactory;
 
     /**
      * @throws CrudEngineMissingConfigurationException

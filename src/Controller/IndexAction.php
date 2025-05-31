@@ -12,9 +12,8 @@ use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\TemplateRendering\Exception\TemplateRenderingException;
+use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
-use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -60,7 +59,7 @@ class IndexAction
      *
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
-     * @throws TemplateRenderingException
+     * @throws CrudEngineViewRenderingException
      */
     public function __invoke(
         Request $request,

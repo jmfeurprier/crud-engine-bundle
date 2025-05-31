@@ -9,7 +9,7 @@ use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 
 trait WithEntityManagerTrait
 {
-    private ManagerRegistry $managerRegistry;
+    private readonly ManagerRegistry $managerRegistry;
 
     /**
      * @param class-string $entityClass

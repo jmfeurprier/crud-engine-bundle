@@ -15,7 +15,8 @@ use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\TemplateRendering\Exception\TemplateRenderingException;
+use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
+use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +50,7 @@ readonly class UpdateAction
         ManagerRegistry $managerRegistry,
         UpdateActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
-        private readonly ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
     ) {
         $this->formFactory          = $formFactory;
         $this->urlGenerator         = $urlGenerator;
@@ -65,7 +66,8 @@ readonly class UpdateAction
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
-     * @throws TemplateRenderingException
+     * @throws CrudEngineRedirectionParameterRenderingException
+     * @throws CrudEngineViewRenderingException
      */
     public function __invoke(
         Request $request,

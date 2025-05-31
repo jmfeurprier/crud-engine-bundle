@@ -4,8 +4,7 @@ namespace Jmf\CrudEngine\Controller\Traits;
 
 use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\CrudEngine\Exception\CrudEngineRenderingException;
-use Jmf\TemplateRendering\Exception\TemplateRenderingException;
+use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -17,8 +16,7 @@ trait WithViewTrait
     /**
      * @param array<string, mixed> $context
      *
-     * @throws CrudEngineMissingConfigurationException
-     * @throws TemplateRenderingException
+     * @throws CrudEngineViewRenderingException
      */
     private function render(
         ActionConfiguration $actionConfiguration,
@@ -32,9 +30,9 @@ trait WithViewTrait
                 ),
             );
         } catch (Throwable $e) {
-            throw new CrudEngineRenderingException(
-
-                previousException: $e,
+            throw new CrudEngineViewRenderingException(
+                actionConfiguration: $actionConfiguration,
+                previousException:   $e,
             );
         }
     }

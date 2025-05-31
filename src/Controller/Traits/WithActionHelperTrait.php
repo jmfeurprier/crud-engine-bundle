@@ -12,12 +12,12 @@ use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
  */
 trait WithActionHelperTrait
 {
-    private ActionHelperResolver $actionHelperResolver;
+    private readonly ActionHelperResolver $actionHelperResolver;
 
     /**
      * @psalm-var T
      */
-    private ActionHelperInterface $defaultActionHelper;
+    private readonly ActionHelperInterface $defaultActionHelper;
 
     /**
      * @param class-string<T> $class
