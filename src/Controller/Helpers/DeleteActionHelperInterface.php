@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * @template E of object
@@ -10,20 +10,20 @@ use Doctrine\ORM\EntityManagerInterface;
 interface DeleteActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      */
     public function hookBeforeRemove(object $entity): void;
 
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      */
     public function remove(
-        EntityManagerInterface $entityManager,
+        ObjectManager $objectManager,
         object $entity,
     ): void;
 
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      */
     public function hookAfterRemove(object $entity): void;
 }

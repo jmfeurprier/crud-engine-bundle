@@ -7,6 +7,7 @@ use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Jmf\CrudEngine\Configuration\RedirectionConfiguration;
 use Jmf\CrudEngine\Configuration\RouteConfiguration;
 use Jmf\CrudEngine\Configuration\ViewConfiguration;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
 use Override;
 use PHPUnit\Framework\TestCase;
@@ -26,6 +27,9 @@ class IndexActionRouteLoaderTest extends TestCase
         $this->routeCollection = new RouteCollection();
     }
 
+    /**
+     * @throws CrudEngineMissingConfigurationException
+     */
     public function testLoad(): void
     {
         $actionConfiguration = $this->givenActionConfiguration(

@@ -8,7 +8,7 @@ use Override;
 readonly class ActionConfigurationRepositoryFactory implements ActionConfigurationRepositoryFactoryInterface
 {
     /**
-     * @param array<string, mixed> $config
+     * @param array<class-string, array<string, mixed>> $config
      */
     public function __construct(
         private ActionConfigurationsLoader $actionConfigurationsLoader,

@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface ReadActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      *
      * @return array<string, mixed>
      */

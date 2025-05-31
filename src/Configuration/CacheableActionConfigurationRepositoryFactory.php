@@ -6,6 +6,7 @@ use Override;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Webmozart\Assert\Assert;
 
 readonly class CacheableActionConfigurationRepositoryFactory implements ActionConfigurationRepositoryFactoryInterface
 {
@@ -21,10 +22,14 @@ readonly class CacheableActionConfigurationRepositoryFactory implements ActionCo
     #[Override]
     public function make(): ActionConfigurationRepositoryInterface
     {
-        return $this->cache->get(
+        $repository = $this->cache->get(
             $this->getCacheKey(),
             $this->getCallback(),
         );
+
+        Assert::isInstanceOf($repository, ActionConfigurationRepositoryInterface::class);
+
+        return $repository;
     }
 
     private function getCacheKey(): string
@@ -33,8 +38,8 @@ readonly class CacheableActionConfigurationRepositoryFactory implements ActionCo
             serialize(
                 [
                     self::class,
-                ]
-            )
+                ],
+            ),
         );
     }
 

@@ -13,7 +13,6 @@ use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
-use Jmf\TemplateRendering\Exception\TemplateRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -105,8 +104,9 @@ readonly class ReadAction
     }
 
     /**
-     * @param E                    $entity
-     * @param array<string, mixed> $defaults
+     * @param ReadActionHelperInterface<E> $actionHelper
+     * @param E                            $entity
+     * @param array<string, mixed>         $defaults
      *
      * @return array<string, mixed>
      *

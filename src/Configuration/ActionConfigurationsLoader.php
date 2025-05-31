@@ -13,7 +13,7 @@ readonly class ActionConfigurationsLoader
     }
 
     /**
-     * @param array<string, mixed> $config
+     * @param array<class-string, array<string, mixed>> $config
      *
      * @return ActionConfiguration[]
      *
@@ -27,12 +27,15 @@ readonly class ActionConfigurationsLoader
 
         foreach ($config as $entityClass => $entityConfig) {
             Assert::classExists($entityClass);
-            Assert::isArray($entityConfig);
+            Assert::isMap($entityConfig);
             Assert::keyExists($entityConfig, 'actions');
-            Assert::isMap($entityConfig['actions']);
 
-            foreach ($entityConfig['actions'] as $action => $actionConfig) {
-                Assert::isArray($actionConfig);
+            $actionsConfig = $entityConfig['actions'];
+
+            Assert::isMap($actionsConfig);
+
+            foreach ($actionsConfig as $action => $actionConfig) {
+                Assert::isMap($actionConfig);
 
                 $actionConfigurations[] = $this->actionConfigurationLoader->load(
                     $entityClass,

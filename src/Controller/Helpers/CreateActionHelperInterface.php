@@ -14,7 +14,7 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     /**
      * @param class-string<E> $entityClass
      *
-     * @return object<E>
+     * @psalm-return E
      *
      * @throws CrudEngineInstantiationFailureException
      */
@@ -24,7 +24,7 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): object;
 
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      */
     public function hookBeforePersist(
         Request $request,
@@ -32,7 +32,7 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      */
     public function persist(
         Request $request,
@@ -41,7 +41,7 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      */
     public function hookAfterPersist(
         Request $request,
@@ -49,7 +49,7 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      *
      * @return array<string, mixed>
      */

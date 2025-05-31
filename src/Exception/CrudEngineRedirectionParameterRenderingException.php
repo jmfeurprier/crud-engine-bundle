@@ -16,7 +16,7 @@ class CrudEngineRedirectionParameterRenderingException extends CrudEngineExcepti
         parent::__construct(
             message:  vsprintf(
                           'Failed rendering CRUD redirection parameter "%s" (definition: "%s") "
-                          . "for class %s and action %s.',
+                          . "for entity class %s and action "%s".',
                           [
                               $this->key,
                               $this->definition,

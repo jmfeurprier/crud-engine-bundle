@@ -126,6 +126,8 @@ readonly class CreateAction
      * @param CreateActionHelperInterface<E> $actionHelper
      * @param array<string, mixed>           $defaults
      *
+     * @psalm-param E                        $entity
+     *
      * @return array<string, mixed>
      *
      * @throws CrudEngineMissingConfigurationException

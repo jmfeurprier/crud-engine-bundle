@@ -3,6 +3,7 @@
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use Override;
 
 /**
@@ -18,11 +19,11 @@ abstract class DeleteActionHelperBase implements DeleteActionHelperInterface
 
     #[Override]
     public function remove(
-        EntityManagerInterface $entityManager,
+        ObjectManager $objectManager,
         object $entity,
     ): void {
-        $entityManager->remove($entity);
-        $entityManager->flush();
+        $objectManager->remove($entity);
+        $objectManager->flush();
     }
 
     #[Override]

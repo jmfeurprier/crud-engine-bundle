@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface UpdateActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      */
     public function hookBeforePersist(
         Request $request,
@@ -20,7 +20,7 @@ interface UpdateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      */
     public function persist(
         Request $request,
@@ -30,7 +30,7 @@ interface UpdateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @param object<E> $entity
+     * @psalm-param E $entity
      */
     public function hookAfterPersist(
         Request $request,

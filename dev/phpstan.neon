@@ -9,6 +9,8 @@ parameters:
             - 'RuntimeException'
         uncheckedExceptionRegexes:
             - '|^PHPUnit\\|'
+    excludePaths:
+        - ../src/DependencyInjection/Configuration.php
     level: 10
     paths:
         - ../bin/

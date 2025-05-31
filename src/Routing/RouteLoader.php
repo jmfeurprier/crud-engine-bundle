@@ -4,8 +4,8 @@ namespace Jmf\CrudEngine\Routing;
 
 use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
-use Jmf\CrudEngine\Exception\CrudEngineException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Webmozart\Assert\Assert;
@@ -35,6 +35,10 @@ readonly class RouteLoader implements RouteLoaderInterface
         $this->loaderByAction = $indexed;
     }
 
+    /**
+     * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineUnsupportedActionException
+     */
     public function __invoke(): RouteCollection
     {
         $routeCollection = new RouteCollection();
@@ -48,6 +52,7 @@ readonly class RouteLoader implements RouteLoaderInterface
 
     /**
      * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineUnsupportedActionException
      */
     private function loadAction(
         RouteCollection $routeCollection,
@@ -58,6 +63,9 @@ readonly class RouteLoader implements RouteLoaderInterface
         $loader->load($routeCollection, $actionConfiguration);
     }
 
+    /**
+     * @throws CrudEngineUnsupportedActionException
+     */
     private function getLoader(
         ActionConfiguration $actionConfiguration,
     ): ActionRouteLoaderInterface {
@@ -65,7 +73,6 @@ readonly class RouteLoader implements RouteLoaderInterface
 
         return $this->loaderByAction[$action]
             ??
-            // @todo Create dedicated exception class.
-            throw new CrudEngineException('Unsupported CRUD action.');
+            throw new CrudEngineUnsupportedActionException($actionConfiguration);
     }
 }

@@ -29,7 +29,7 @@ class CrudEngineMissingConfigurationException extends CrudEngineException
     /**
      * @return string[]
      */
-    private function getVars(): iterable
+    private function getVars(): array
     {
         if (null === $this->configurationKey) {
             return [
