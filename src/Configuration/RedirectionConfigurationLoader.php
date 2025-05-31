@@ -67,11 +67,12 @@ readonly class RedirectionConfigurationLoader
             return KeyStringCollection::createEmpty();
         }
 
-        Assert::isArray($redirectionConfig['parameters']);
+        $parametersConfig = $redirectionConfig['parameters'];
 
-        return new KeyStringCollection(
-            $redirectionConfig['parameters'],
-        );
+        Assert::isMap($parametersConfig);
+        Assert::allString($parametersConfig);
+
+        return new KeyStringCollection($parametersConfig);
     }
 
     /**

@@ -87,11 +87,12 @@ readonly class RouteConfigurationLoader
             return KeyStringCollection::createEmpty();
         }
 
-        Assert::isArray($routeConfig['parameters']);
+        $parametersConfig = $routeConfig['parameters'];
 
-        return new KeyStringCollection(
-            $routeConfig['parameters'],
-        );
+        Assert::isMap($parametersConfig);
+        Assert::allString($parametersConfig);
+
+        return new KeyStringCollection($parametersConfig);
     }
 
     /**
@@ -103,10 +104,11 @@ readonly class RouteConfigurationLoader
             return KeyStringCollection::createEmpty();
         }
 
-        Assert::isArray($routeConfig['requirements']);
+        $requirementsConfig = $routeConfig['requirements'];
 
-        return new KeyStringCollection(
-            $routeConfig['requirements'],
-        );
+        Assert::isMap($requirementsConfig);
+        Assert::allString($requirementsConfig);
+
+        return new KeyStringCollection($requirementsConfig);
     }
 }
