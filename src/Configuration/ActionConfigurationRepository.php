@@ -2,34 +2,32 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
-use DomainException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Override;
 use Webmozart\Assert\Assert;
 
-class ActionConfigurationRepository implements ActionConfigurationRepositoryInterface
+readonly class ActionConfigurationRepository implements ActionConfigurationRepositoryInterface
 {
     /**
      * @var array<class-string, array<string, ActionConfiguration>>
      */
-    private array $indexedConfigurations = [];
+    private array $indexedConfigurations;
 
     /**
      * @param ActionConfiguration[] $configurations
      */
     public function __construct(
-        private readonly iterable $configurations,
+        private iterable $configurations,
     ) {
         Assert::allIsInstanceOf($configurations, ActionConfiguration::class);
 
-        foreach ($configurations as $configuration) {
-            $this->addConfiguration($configuration);
-        }
-    }
+        $indexed = [];
 
-    private function addConfiguration(ActionConfiguration $configuration): void
-    {
-        $this->indexedConfigurations[$configuration->getEntityClass()][$configuration->getAction()] = $configuration;
+        foreach ($configurations as $configuration) {
+            $indexed[$configuration->getEntityClass()][$configuration->getAction()] = $configuration;
+        }
+
+        $this->indexedConfigurations = $indexed;
     }
 
     #[Override]
@@ -37,7 +35,12 @@ class ActionConfigurationRepository implements ActionConfigurationRepositoryInte
         string $entityClass,
         string $action,
     ): ActionConfiguration {
-        return $this->tryGet($entityClass, $action) ?? throw new CrudEngineMissingConfigurationException();
+        return $this->tryGet($entityClass, $action)
+            ??
+            throw new CrudEngineMissingConfigurationException(
+                $entityClass,
+                $action,
+            );
     }
 
     #[Override]

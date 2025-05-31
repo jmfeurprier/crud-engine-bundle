@@ -86,8 +86,9 @@ readonly class ActionConfiguration
     private function onMissingConfiguration(string $configurationKey): never
     {
         throw new CrudEngineMissingConfigurationException(
-            "Missing '{$configurationKey}' entity action configuration " .
-            "for entity {$this->entityClass} and action '{$this->action}'."
+            $this->entityClass,
+            $this->action,
+            $configurationKey,
         );
     }
 }

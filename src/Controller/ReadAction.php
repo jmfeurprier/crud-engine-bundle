@@ -14,7 +14,6 @@ use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\TemplateRendering\Exception\TemplateRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
-use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -32,18 +31,6 @@ class ReadAction
     use WithActionHelperTrait;
     use WithEntityManagerTrait;
     use WithViewTrait;
-
-    private Request $request;
-
-    /**
-     * @var ReadActionHelperInterface<E>
-     */
-    private ReadActionHelperInterface $actionHelper;
-
-    /**
-     * @var E
-     */
-    private object $entity;
 
     /**
      * @param ReadActionHelperInterface<E> $defaultActionHelper
@@ -74,18 +61,25 @@ class ReadAction
         string $entityClass,
     ): Response {
         $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'read');
-        $this->request       = $request;
-        $this->actionHelper  = $this->getActionHelper(
+
+        $actionHelper = $this->getActionHelper(
             ReadActionHelperInterface::class,
             $actionConfiguration,
         );
-        $this->entity        = $this->getEntity($entityClass, $id);
+
+        $entity = $this->getEntity($entityClass, $id);
 
         return $this->render(
             $actionConfiguration,
-            [
-                'entity' => $this->entity,
-            ],
+            $this->getViewContext(
+                $request,
+                $actionConfiguration,
+                $actionHelper,
+                $entity,
+                [
+                    'entity' => $entity,
+                ],
+            ),
         );
     }
 
@@ -110,19 +104,22 @@ class ReadAction
     }
 
     /**
+     * @param E                    $entity
      * @param array<string, mixed> $defaults
      *
      * @return array<string, mixed>
      *
      * @throws CrudEngineMissingConfigurationException
      */
-    #[Override]
-    protected function getViewContext(
+    private function getViewContext(
+        Request $request,
         ActionConfiguration $actionConfiguration,
+        ReadActionHelperInterface $actionHelper,
+        object $entity,
         array $defaults,
     ): array {
         return array_merge(
-            $this->actionHelper->getViewVariables($this->request, $this->entity),
+            $actionHelper->getViewVariables($request, $entity),
             $this->mapViewVariables(
                 $actionConfiguration,
                 $defaults,

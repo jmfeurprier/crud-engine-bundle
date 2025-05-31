@@ -17,7 +17,6 @@ use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\TemplateRendering\Exception\TemplateRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
-use Override;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @template E of object
  */
 #[AsController]
-class UpdateAction
+readonly class UpdateAction
 {
     /**
      * @use WithActionHelperTrait<UpdateActionHelperInterface<E>>
@@ -107,10 +106,13 @@ class UpdateAction
 
         return $this->render(
             $actionConfiguration,
-            [
-                'entity' => $entity,
-                'form'   => $form->createView(),
-            ],
+            $this->getViewContext(
+                $actionConfiguration,
+                [
+                    'entity' => $entity,
+                    'form'   => $form->createView(),
+                ],
+            ),
         );
     }
 
@@ -141,8 +143,7 @@ class UpdateAction
      *
      * @throws CrudEngineMissingConfigurationException
      */
-    #[Override]
-    protected function getViewContext(
+    private function getViewContext(
         ActionConfiguration $actionConfiguration,
         array $defaults,
     ): array {

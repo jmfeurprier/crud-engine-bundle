@@ -2,80 +2,111 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
-use RuntimeException;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
-class RouteConfigurationLoader
+readonly class RouteConfigurationLoader
 {
     /**
-     * @var array<string, mixed>
-     */
-    private array $routeConfig;
-
-    /**
+     * @param class-string         $entityClass
      * @param array<string, mixed> $actionConfig
+     *
+     * @throws CrudEngineMissingConfigurationException
      */
-    public function load(array $actionConfig): RouteConfiguration
-    {
-        Assert::keyExists($actionConfig, 'route');
+    public function load(
+        string $entityClass,
+        string $action,
+        array $actionConfig,
+    ): RouteConfiguration {
+        if (!array_key_exists('route', $actionConfig)) {
+            throw new CrudEngineMissingConfigurationException(
+                $entityClass,
+                $action,
+                'route',
+            );
+        }
 
         Assert::isMap($actionConfig['route']);
 
-        $this->routeConfig = $actionConfig['route'];
+        $routeConfig = $actionConfig['route'];
 
         return new RouteConfiguration(
-            $this->getName(),
-            $this->getPath(),
-            $this->getParameters(),
-            $this->getRequirements(),
+            $this->getName($routeConfig),
+            $this->getPath($entityClass, $action, $routeConfig),
+            $this->getParameters($routeConfig),
+            $this->getRequirements($routeConfig),
         );
     }
 
-    private function getName(): ?string
+    /**
+     * @param array<string, mixed> $routeConfig
+     *
+     * @return null|non-empty-string
+     */
+    private function getName(array $routeConfig): ?string
     {
-        if (!array_key_exists('name', $this->routeConfig)) {
+        if (!array_key_exists('name', $routeConfig)) {
             return null;
         }
 
-        Assert::string($this->routeConfig['name']);
+        Assert::stringNotEmpty($routeConfig['name']);
 
-        return $this->routeConfig['name'];
+        return $routeConfig['name'];
     }
 
-    private function getPath(): string
-    {
-        if (!array_key_exists('path', $this->routeConfig)) {
-            throw new RuntimeException();
+    /**
+     * @param class-string         $entityClass
+     * @param array<string, mixed> $routeConfig
+     *
+     * @throws CrudEngineMissingConfigurationException
+     */
+    private function getPath(
+        string $entityClass,
+        string $action,
+        array $routeConfig,
+    ): string {
+        if (!array_key_exists('path', $routeConfig)) {
+            throw new CrudEngineMissingConfigurationException(
+                $entityClass,
+                $action,
+                'route.path',
+            );
         }
 
-        Assert::string($this->routeConfig['path']);
+        Assert::stringNotEmpty($routeConfig['path']);
 
-        return $this->routeConfig['path'];
+        return $routeConfig['path'];
     }
 
-    private function getParameters(): KeyStringCollection
+    /**
+     * @param array<string, mixed> $routeConfig
+     */
+    private function getParameters(array $routeConfig): KeyStringCollection
     {
-        if (!array_key_exists('parameters', $this->routeConfig)) {
+        if (!array_key_exists('parameters', $routeConfig)) {
             return KeyStringCollection::createEmpty();
         }
 
-        Assert::isArray($this->routeConfig['parameters']);
+        Assert::isArray($routeConfig['parameters']);
 
         return new KeyStringCollection(
-            $this->routeConfig['parameters'],
+            $routeConfig['parameters'],
         );
     }
 
-    private function getRequirements(): KeyStringCollection
+    /**
+     * @param array<string, mixed> $routeConfig
+     */
+    private function getRequirements(array $routeConfig): KeyStringCollection
     {
-        if (!array_key_exists('requirements', $this->routeConfig)) {
+        if (!array_key_exists('requirements', $routeConfig)) {
             return KeyStringCollection::createEmpty();
         }
 
-        Assert::isArray($this->routeConfig['requirements']);
+        Assert::isArray($routeConfig['requirements']);
 
         return new KeyStringCollection(
-            $this->routeConfig['requirements'],
+            $routeConfig['requirements'],
         );
     }
 }

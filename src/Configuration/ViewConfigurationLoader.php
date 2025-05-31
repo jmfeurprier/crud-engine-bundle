@@ -2,58 +2,74 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
-use RuntimeException;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
-class ViewConfigurationLoader
+readonly class ViewConfigurationLoader
 {
     /**
-     * @var array<string, mixed>
-     */
-    private array $viewConfig;
-
-    /**
+     * @param class-string         $entityClass
      * @param array<string, mixed> $actionConfig
+     *
+     * @throws CrudEngineMissingConfigurationException
      */
-    public function load(array $actionConfig): ?ViewConfiguration
-    {
+    public function load(
+        string $entityClass,
+        string $action,
+        array $actionConfig,
+    ): ?ViewConfiguration {
         if (!array_key_exists('view', $actionConfig)) {
             return null;
         }
 
         Assert::isMap($actionConfig['view']);
 
-        $this->viewConfig = $actionConfig['view'];
+        $viewConfig = $actionConfig['view'];
 
         return new ViewConfiguration(
-            $this->getPath(),
-            $this->getVariables(),
+            $this->getPath($entityClass, $action, $viewConfig),
+            $this->getVariables($viewConfig),
         );
     }
 
-    private function getPath(): string
-    {
-        if (!array_key_exists('path', $this->viewConfig)) {
-            throw new RuntimeException();
+    /**
+     * @param class-string         $entityClass
+     * @param array<string, mixed> $viewConfig
+     *
+     * @throws CrudEngineMissingConfigurationException
+     */
+    private function getPath(
+        string $entityClass,
+        string $action,
+        array $viewConfig,
+    ): string {
+        if (!array_key_exists('path', $viewConfig)) {
+            throw new CrudEngineMissingConfigurationException(
+                $entityClass,
+                $action,
+                'view.path',
+            );
         }
 
-        Assert::string($this->viewConfig['path']);
+        Assert::string($viewConfig['path']);
 
-        return $this->viewConfig['path'];
+        return $viewConfig['path'];
     }
 
-
-    private function getVariables(): KeyStringCollection
+    /**
+     * @param array<string, mixed> $viewConfig
+     */
+    private function getVariables(array $viewConfig): KeyStringCollection
     {
-        if (!array_key_exists('variables', $this->viewConfig)) {
+        if (!array_key_exists('variables', $viewConfig)) {
             return KeyStringCollection::createEmpty();
         }
 
-        Assert::isMap($this->viewConfig['variables']);
-        Assert::allString($this->viewConfig['variables']);
+        Assert::isMap($viewConfig['variables']);
+        Assert::allString($viewConfig['variables']);
 
         return new KeyStringCollection(
-            $this->viewConfig['variables'],
+            $viewConfig['variables'],
         );
     }
 }

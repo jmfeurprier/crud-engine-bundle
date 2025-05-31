@@ -5,70 +5,86 @@ namespace Jmf\CrudEngine\Configuration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
-class RedirectionConfigurationLoader
+readonly class RedirectionConfigurationLoader
 {
     /**
-     * @var array<string, mixed>
-     */
-    private array $redirectionConfig;
-
-    /**
+     * @param class-string         $entityClass
      * @param array<string, mixed> $actionConfig
      *
      * @throws CrudEngineMissingConfigurationException
      */
-    public function load(array $actionConfig): ?RedirectionConfiguration
-    {
+    public function load(
+        string $entityClass,
+        string $action,
+        array $actionConfig,
+    ): ?RedirectionConfiguration {
         if (!array_key_exists('redirection', $actionConfig)) {
             return null;
         }
 
         Assert::isMap($actionConfig['redirection']);
 
-        $this->redirectionConfig = $actionConfig['redirection'];
+        $redirectionConfig = $actionConfig['redirection'];
 
         return new RedirectionConfiguration(
-            $this->getRoute(),
-            $this->getParameters(),
-            $this->getFragment(),
+            $this->getRoute($entityClass, $action, $redirectionConfig),
+            $this->getParameters($redirectionConfig),
+            $this->getFragment($redirectionConfig),
         );
     }
 
     /**
+     * @param class-string         $entityClass
+     * @param array<string, mixed> $redirectionConfig
+     *
      * @throws CrudEngineMissingConfigurationException
      */
-    private function getRoute(): string
-    {
-        if (!array_key_exists('route', $this->redirectionConfig)) {
-            throw new CrudEngineMissingConfigurationException("Missing required 'route' configuration.");
+    private function getRoute(
+        string $entityClass,
+        string $action,
+        array $redirectionConfig,
+    ): string {
+        if (!array_key_exists('route', $redirectionConfig)) {
+            throw new CrudEngineMissingConfigurationException(
+                $entityClass,
+                $action,
+                'redirection.route',
+            );
         }
 
-        Assert::string($this->redirectionConfig['route']);
+        Assert::string($redirectionConfig['route']);
 
-        return $this->redirectionConfig['route'];
+        return $redirectionConfig['route'];
     }
 
-    private function getParameters(): KeyStringCollection
-    {
-        if (!array_key_exists('parameters', $this->redirectionConfig)) {
+    /**
+     * @param array<string, mixed> $redirectionConfig
+     */
+    private function getParameters(
+        array $redirectionConfig,
+    ): KeyStringCollection {
+        if (!array_key_exists('parameters', $redirectionConfig)) {
             return KeyStringCollection::createEmpty();
         }
 
-        Assert::isArray($this->redirectionConfig['parameters']);
+        Assert::isArray($redirectionConfig['parameters']);
 
         return new KeyStringCollection(
-            $this->redirectionConfig['parameters'],
+            $redirectionConfig['parameters'],
         );
     }
 
-    private function getFragment(): ?string
+    /**
+     * @param array<string, mixed> $redirectionConfig
+     */
+    private function getFragment(array $redirectionConfig): ?string
     {
-        if (!array_key_exists('fragment', $this->redirectionConfig)) {
+        if (!array_key_exists('fragment', $redirectionConfig)) {
             return null;
         }
 
-        Assert::string($this->redirectionConfig['fragment']);
+        Assert::string($redirectionConfig['fragment']);
 
-        return $this->redirectionConfig['fragment'];
+        return $redirectionConfig['fragment'];
     }
 }

@@ -4,30 +4,39 @@ namespace Jmf\CrudEngine\Controller\Traits;
 
 use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineRenderingException;
 use Jmf\TemplateRendering\Exception\TemplateRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 trait WithViewTrait
 {
     private TemplateRendererInterface $templateRenderer;
 
     /**
-     * @param array<string, mixed> $defaults
+     * @param array<string, mixed> $context
      *
      * @throws CrudEngineMissingConfigurationException
      * @throws TemplateRenderingException
      */
     private function render(
         ActionConfiguration $actionConfiguration,
-        array $defaults,
+        array $context,
     ): Response {
-        return new Response(
-            $this->templateRenderer->renderFromFile(
-                $this->getViewPath($actionConfiguration),
-                $this->getViewContext($actionConfiguration, $defaults),
-            ),
-        );
+        try {
+            return new Response(
+                $this->templateRenderer->renderFromFile(
+                    $this->getViewPath($actionConfiguration),
+                    $context,
+                ),
+            );
+        } catch (Throwable $e) {
+            throw new CrudEngineRenderingException(
+
+                previousException: $e,
+            );
+        }
     }
 
     /**
@@ -37,16 +46,6 @@ trait WithViewTrait
     {
         return $actionConfiguration->getViewConfiguration()->getPath();
     }
-
-    /**
-     * @param array<string, mixed> $defaults
-     *
-     * @return array<string, mixed>
-     */
-    abstract protected function getViewContext(
-        ActionConfiguration $actionConfiguration,
-        array $defaults,
-    ): array;
 
     /**
      * @param array<string, mixed> $defaults

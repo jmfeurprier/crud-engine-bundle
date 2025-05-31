@@ -119,10 +119,13 @@ class CreateAction
 
         return $this->render(
             $actionConfiguration,
-            [
-                'entity' => $this->entity,
-                'form'   => $form->createView(),
-            ],
+            $this->getViewContext(
+                $actionConfiguration,
+                [
+                    'entity' => $this->entity,
+                    'form'   => $form->createView(),
+                ],
+            ),
         );
     }
 
@@ -133,8 +136,7 @@ class CreateAction
      *
      * @throws CrudEngineMissingConfigurationException
      */
-    #[Override]
-    protected function getViewContext(
+    private function getViewContext(
         ActionConfiguration $actionConfiguration,
         array $defaults,
     ): array {

@@ -77,9 +77,12 @@ class IndexAction
 
         return $this->render(
             $actionConfiguration,
-            [
-                'entities' => $this->getEntities($this->actionHelper, $entityClass),
-            ],
+            $this->getViewContext(
+                $actionConfiguration,
+                [
+                    'entities' => $this->getEntities($this->actionHelper, $entityClass),
+                ],
+            ),
         );
     }
 
@@ -115,8 +118,7 @@ class IndexAction
      *
      * @throws CrudEngineMissingConfigurationException
      */
-    #[Override]
-    protected function getViewContext(
+    private function getViewContext(
         ActionConfiguration $actionConfiguration,
         array $defaults,
     ): array {

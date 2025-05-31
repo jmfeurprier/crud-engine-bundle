@@ -5,22 +5,12 @@ namespace Jmf\CrudEngine\Configuration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
-class ActionConfigurationLoader
+readonly class ActionConfigurationLoader
 {
-    /**
-     * @var array<string, mixed>
-     */
-    private array $entityConfig;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private array $actionConfig;
-
     public function __construct(
-        private readonly RedirectionConfigurationLoader $redirectionConfigurationLoader,
-        private readonly RouteConfigurationLoader $routeConfigurationLoader,
-        private readonly ViewConfigurationLoader $viewConfigurationLoader,
+        private RedirectionConfigurationLoader $redirectionConfigurationLoader,
+        private RouteConfigurationLoader $routeConfigurationLoader,
+        private ViewConfigurationLoader $viewConfigurationLoader,
     ) {
     }
 
@@ -37,79 +27,120 @@ class ActionConfigurationLoader
         array $entityConfig,
         array $actionConfig,
     ): ActionConfiguration {
-        $this->entityConfig = $entityConfig;
-        $this->actionConfig = $actionConfig;
-
         return new ActionConfiguration(
             $entityClass,
             $action,
-            $this->getEntityName(),
-            $this->getFormTypeClass(),
-            $this->getHelperClass(),
-            $this->getRedirectionConfiguration(),
-            $this->getRouteConfiguration(),
-            $this->getViewConfiguration(),
+            $this->getEntityName($entityConfig),
+            $this->getFormTypeClass($actionConfig),
+            $this->getHelperClass($actionConfig),
+            $this->getRedirectionConfiguration($entityClass, $action, $actionConfig),
+            $this->getRouteConfiguration($entityClass, $action, $actionConfig),
+            $this->getViewConfiguration($entityClass, $action, $actionConfig),
         );
     }
 
-    private function getEntityName(): ?string
+    /**
+     * @param array<string, mixed> $entityConfig
+     */
+    private function getEntityName(array $entityConfig): ?string
     {
-        if (!array_key_exists('name', $this->entityConfig)) {
+        if (!array_key_exists('name', $entityConfig)) {
             return null;
         }
 
-        $entityName = $this->entityConfig['name'];
+        $entityName = $entityConfig['name'];
 
         Assert::stringNotEmpty($entityName);
 
         return $entityName;
     }
 
+
     /**
+     * @param array<string, mixed> $actionConfig
+     *
      * @return null|class-string
      */
-    private function getFormTypeClass(): ?string
+    private function getFormTypeClass(array $actionConfig): ?string
     {
-        if (!array_key_exists('formType', $this->actionConfig)) {
+        if (!array_key_exists('formType', $actionConfig)) {
             return null;
         }
 
-        Assert::string($this->actionConfig['formType']);
-        Assert::classExists($this->actionConfig['formType']);
+        Assert::string($actionConfig['formType']);
+        Assert::classExists($actionConfig['formType']);
 
-        return $this->actionConfig['formType'];
+        return $actionConfig['formType'];
     }
 
     /**
+     * @param array<string, mixed> $actionConfig
+     *
      * @return null|class-string
      */
-    private function getHelperClass(): ?string
+    private function getHelperClass(array $actionConfig): ?string
     {
-        if (!array_key_exists('helper', $this->actionConfig)) {
+        if (!array_key_exists('helper', $actionConfig)) {
             return null;
         }
 
-        Assert::string($this->actionConfig['helper']);
-        Assert::classExists($this->actionConfig['helper']);
+        Assert::string($actionConfig['helper']);
+        Assert::classExists($actionConfig['helper']);
 
-        return $this->actionConfig['helper'];
+        return $actionConfig['helper'];
     }
 
     /**
+     * @param class-string         $entityClass
+     * @param array<string, mixed> $actionConfig
+     *
      * @throws CrudEngineMissingConfigurationException
      */
-    private function getRedirectionConfiguration(): ?RedirectionConfiguration
-    {
-        return $this->redirectionConfigurationLoader->load($this->actionConfig);
+    private function getRedirectionConfiguration(
+        string $entityClass,
+        string $action,
+        array $actionConfig,
+    ): ?RedirectionConfiguration {
+        return $this->redirectionConfigurationLoader->load(
+            $entityClass,
+            $action,
+            $actionConfig,
+        );
     }
 
-    private function getRouteConfiguration(): RouteConfiguration
-    {
-        return $this->routeConfigurationLoader->load($this->actionConfig);
+    /**
+     * @param class-string         $entityClass
+     * @param array<string, mixed> $actionConfig
+     *
+     * @throws CrudEngineMissingConfigurationException
+     */
+    private function getRouteConfiguration(
+        string $entityClass,
+        string $action,
+        array $actionConfig,
+    ): RouteConfiguration {
+        return $this->routeConfigurationLoader->load(
+            $entityClass,
+            $action,
+            $actionConfig,
+        );
     }
 
-    private function getViewConfiguration(): ?ViewConfiguration
-    {
-        return $this->viewConfigurationLoader->load($this->actionConfig);
+    /**
+     * @param class-string         $entityClass
+     * @param array<string, mixed> $actionConfig
+     *
+     * @throws CrudEngineMissingConfigurationException
+     */
+    private function getViewConfiguration(
+        string $entityClass,
+        string $action,
+        array $actionConfig,
+    ): ?ViewConfiguration {
+        return $this->viewConfigurationLoader->load(
+            $entityClass,
+            $action,
+            $actionConfig,
+        );
     }
 }

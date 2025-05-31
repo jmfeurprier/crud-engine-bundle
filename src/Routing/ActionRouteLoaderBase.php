@@ -54,20 +54,20 @@ abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterface
      */
     private function getRouteName(ActionConfiguration $actionConfiguration): string
     {
-        $actionName = $this->getActionName();
-
         if (null !== $actionConfiguration->getRouteConfiguration()->getName()) {
             return $actionConfiguration->getRouteConfiguration()->getName();
         }
 
         if (null !== $actionConfiguration->getEntityName()) {
-            return "{$actionConfiguration->getEntityName()}.{$actionName}";
+            return "{$actionConfiguration->getEntityName()}.{$this->getActionName()}";
         }
 
         $entityClass = $actionConfiguration->getEntityClass();
 
+        // @todo Refine message.
         throw new CrudEngineMissingConfigurationException(
-            "No CRUD entity routing name property defined for class {$entityClass} and action '{$actionName}'."
+            $entityClass,
+            $this->getActionName(),
         );
     }
 
