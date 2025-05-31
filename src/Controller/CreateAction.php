@@ -16,16 +16,14 @@ use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\TemplateRendering\Exception\TemplateRenderingException;
+use Jmf\TemplateRendering\TemplateRendererInterface;
 use Override;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * @template E of object
@@ -60,7 +58,7 @@ class CreateAction
     public function __construct(
         FormFactoryInterface $formFactory,
         UrlGeneratorInterface $urlGenerator,
-        Environment $twigEnvironment,
+        TemplateRendererInterface $templateRenderer,
         ManagerRegistry $managerRegistry,
         CreateActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
@@ -68,7 +66,7 @@ class CreateAction
     ) {
         $this->formFactory          = $formFactory;
         $this->urlGenerator         = $urlGenerator;
-        $this->twigEnvironment      = $twigEnvironment;
+        $this->templateRenderer     = $templateRenderer;
         $this->managerRegistry      = $managerRegistry;
         $this->defaultActionHelper  = $defaultActionHelper;
         $this->actionHelperResolver = $actionHelperResolver;
@@ -81,9 +79,7 @@ class CreateAction
      * @throws CrudEngineInstantiationFailureException
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @throws TemplateRenderingException
      */
     public function __invoke(
         Request $request,
@@ -102,11 +98,21 @@ class CreateAction
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getEntityManager($entityClass);
-            $entityManager->persist($this->entity);
-            $entityManager->flush();
+            $this->actionHelper->hookBeforePersist(
+                $request,
+                $this->entity,
+            );
 
-            $this->actionHelper->hookAfterPersist($request, $this->entity);
+            $this->actionHelper->persist(
+                $request,
+                $this->entity,
+                $this->getEntityManager($entityClass),
+            );
+
+            $this->actionHelper->hookAfterPersist(
+                $request,
+                $this->entity,
+            );
 
             return $this->redirectOnSuccess($actionConfiguration, $this->entity);
         }
@@ -137,7 +143,7 @@ class CreateAction
             $this->mapViewVariables(
                 $actionConfiguration,
                 $defaults,
-            )
+            ),
         );
     }
 }

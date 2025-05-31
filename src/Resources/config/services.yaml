@@ -35,3 +35,6 @@ services:
                 - '@Jmf\CrudEngine\Routing\IndexActionRouteLoader'
                 - '@Jmf\CrudEngine\Routing\ReadActionRouteLoader'
                 - '@Jmf\CrudEngine\Routing\UpdateActionRouteLoader'
+
+    Jmf\TemplateRendering\TemplateRendererInterface:
+        class: Jmf\TemplateRendering\TemplateRenderer

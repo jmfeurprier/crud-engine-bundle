@@ -4,33 +4,29 @@ namespace Jmf\CrudEngine\Controller\Traits;
 
 use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\TemplateRendering\Exception\TemplateRenderingException;
+use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Twig\Environment as TwigEnvironment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 trait WithViewTrait
 {
-    private TwigEnvironment $twigEnvironment;
+    private TemplateRendererInterface $templateRenderer;
 
     /**
      * @param array<string, mixed> $defaults
      *
      * @throws CrudEngineMissingConfigurationException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @throws TemplateRenderingException
      */
     private function render(
         ActionConfiguration $actionConfiguration,
         array $defaults,
     ): Response {
         return new Response(
-            $this->twigEnvironment->render(
+            $this->templateRenderer->renderFromFile(
                 $this->getViewPath($actionConfiguration),
-                $this->getViewContext($actionConfiguration, $defaults)
-            )
+                $this->getViewContext($actionConfiguration, $defaults),
+            ),
         );
     }
 
@@ -47,7 +43,7 @@ trait WithViewTrait
      *
      * @return array<string, mixed>
      */
-    abstract private function getViewContext(
+    abstract protected function getViewContext(
         ActionConfiguration $actionConfiguration,
         array $defaults,
     ): array;

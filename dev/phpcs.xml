@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="../vendor/squizlabs/php_codesniffer/phpcs.xsd">
+<ruleset
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../vendor/squizlabs/php_codesniffer/phpcs.xsd"
+>
 
-    <arg name="extensions" value="php"/>
+	<arg name="basepath" value="."/>
+        <arg value="p"/>
+	<arg name="cache" value="../var/cache/.phpcs-cache"/>
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
 
-    <rule ref="PSR12"/>
+	<rule ref="PSR12"/>
 
-    <file>../src/</file>
-    <file>../tests/</file>
+	<file>../bin/</file>
+	<file>../src/</file>
+	<file>../tests/</file>
 
 </ruleset>

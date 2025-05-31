@@ -4,23 +4,21 @@ namespace Jmf\CrudEngine\Controller\Traits;
 
 use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\TemplateRendering\Exception\TemplateRenderingException;
+use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\SyntaxError;
 
 trait WithRedirectionTrait
 {
     private UrlGeneratorInterface $urlGenerator;
 
-    private Environment $twigEnvironment;
+    private TemplateRendererInterface $templateRenderer;
 
     /**
      * @throws CrudEngineMissingConfigurationException
-     * @throws LoaderError
-     * @throws SyntaxError
+     * @throws TemplateRenderingException
      */
     private function redirectOnSuccess(
         ActionConfiguration $actionConfiguration,
@@ -28,7 +26,7 @@ trait WithRedirectionTrait
     ): Response {
         $url = $this->urlGenerator->generate(
             $this->getRedirectRoute($actionConfiguration),
-            $this->getRedirectRouteParameters($actionConfiguration, $entity)
+            $this->getRedirectRouteParameters($actionConfiguration, $entity),
         );
 
         $fragment = $this->getRedirectFragment($actionConfiguration);
@@ -52,8 +50,7 @@ trait WithRedirectionTrait
      * @return array<string, string>
      *
      * @throws CrudEngineMissingConfigurationException
-     * @throws LoaderError
-     * @throws SyntaxError
+     * @throws TemplateRenderingException
      */
     private function getRedirectRouteParameters(
         ActionConfiguration $actionConfiguration,
@@ -63,12 +60,11 @@ trait WithRedirectionTrait
         $parameters  = [];
 
         foreach ($definitions as $key => $definition) {
-            $template = $this->twigEnvironment->createTemplate($definition);
-
-            $parameters[$key] = $template->render(
+            $parameters[$key] = $this->templateRenderer->renderFromString(
+                $definition,
                 [
                     '_entity' => $entity,
-                ]
+                ],
             );
         }
 

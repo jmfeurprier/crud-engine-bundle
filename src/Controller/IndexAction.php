@@ -12,14 +12,12 @@ use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\TemplateRendering\Exception\TemplateRenderingException;
+use Jmf\TemplateRendering\TemplateRendererInterface;
 use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * @template E of object
@@ -45,13 +43,13 @@ class IndexAction
      * @psalm-param IndexActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        Environment $twigEnvironment,
+        TemplateRendererInterface $templateRenderer,
         ManagerRegistry $managerRegistry,
         IndexActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
         private readonly ActionConfigurationRepositoryInterface $actionConfigurationRepository,
     ) {
-        $this->twigEnvironment      = $twigEnvironment;
+        $this->templateRenderer     = $templateRenderer;
         $this->managerRegistry      = $managerRegistry;
         $this->defaultActionHelper  = $defaultActionHelper;
         $this->actionHelperResolver = $actionHelperResolver;
@@ -62,9 +60,7 @@ class IndexAction
      *
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @throws TemplateRenderingException
      */
     public function __invoke(
         Request $request,
@@ -83,7 +79,7 @@ class IndexAction
             $actionConfiguration,
             [
                 'entities' => $this->getEntities($this->actionHelper, $entityClass),
-            ]
+            ],
         );
     }
 
@@ -108,7 +104,7 @@ class IndexAction
         string $entityClass,
     ): iterable {
         return $actionHelper->getEntities(
-            $this->getRepository($entityClass)
+            $this->getRepository($entityClass),
         );
     }
 

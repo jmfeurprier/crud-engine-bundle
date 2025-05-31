@@ -12,15 +12,13 @@ use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\TemplateRendering\Exception\TemplateRenderingException;
+use Jmf\TemplateRendering\TemplateRendererInterface;
 use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * @template E of object
@@ -52,13 +50,13 @@ class ReadAction
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
-        Environment $twigEnvironment,
+        TemplateRendererInterface $templateRenderer,
         ReadActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
         private readonly ActionConfigurationRepositoryInterface $actionConfigurationRepository,
     ) {
         $this->managerRegistry      = $managerRegistry;
-        $this->twigEnvironment      = $twigEnvironment;
+        $this->templateRenderer     = $templateRenderer;
         $this->defaultActionHelper  = $defaultActionHelper;
         $this->actionHelperResolver = $actionHelperResolver;
     }
@@ -68,9 +66,7 @@ class ReadAction
      *
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @throws TemplateRenderingException
      */
     public function __invoke(
         Request $request,
@@ -89,7 +85,7 @@ class ReadAction
             $actionConfiguration,
             [
                 'entity' => $this->entity,
-            ]
+            ],
         );
     }
 
@@ -130,7 +126,7 @@ class ReadAction
             $this->mapViewVariables(
                 $actionConfiguration,
                 $defaults,
-            )
+            ),
         );
     }
 }

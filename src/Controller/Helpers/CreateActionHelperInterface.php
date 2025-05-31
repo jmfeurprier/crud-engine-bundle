@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
+use Doctrine\Persistence\ObjectManager;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,6 +26,23 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     /**
      * @param object<E> $entity
      */
+    public function hookBeforePersist(
+        Request $request,
+        object $entity,
+    ): void;
+
+    /**
+     * @param object<E> $entity
+     */
+    public function persist(
+        Request $request,
+        object $entity,
+        ObjectManager $entityManager,
+    ): void;
+
+    /**
+     * @param object<E> $entity
+     */
     public function hookAfterPersist(
         Request $request,
         object $entity,
@@ -37,6 +55,6 @@ interface CreateActionHelperInterface extends ActionHelperInterface
      */
     public function getViewVariables(
         Request $request,
-        object $entity
+        object $entity,
     ): array;
 }

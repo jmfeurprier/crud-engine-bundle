@@ -15,6 +15,8 @@ use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\TemplateRendering\Exception\TemplateRenderingException;
+use Jmf\TemplateRendering\TemplateRendererInterface;
 use Override;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,10 +24,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * @template E of object
@@ -48,7 +46,7 @@ class UpdateAction
     public function __construct(
         FormFactoryInterface $formFactory,
         UrlGeneratorInterface $urlGenerator,
-        Environment $twigEnvironment,
+        TemplateRendererInterface $templateRenderer,
         ManagerRegistry $managerRegistry,
         UpdateActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
@@ -56,7 +54,7 @@ class UpdateAction
     ) {
         $this->formFactory          = $formFactory;
         $this->urlGenerator         = $urlGenerator;
-        $this->twigEnvironment      = $twigEnvironment;
+        $this->templateRenderer     = $templateRenderer;
         $this->managerRegistry      = $managerRegistry;
         $this->defaultActionHelper  = $defaultActionHelper;
         $this->actionHelperResolver = $actionHelperResolver;
@@ -68,9 +66,7 @@ class UpdateAction
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @throws TemplateRenderingException
      */
     public function __invoke(
         Request $request,
@@ -89,11 +85,22 @@ class UpdateAction
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $actionHelper->hookBeforePersist($request, $entity);
+            $actionHelper->hookBeforePersist(
+                $request,
+                $entity,
+            );
 
-            $this->getEntityManager($entityClass)->flush();
+            $actionHelper->persist(
+                $request,
+                $entity,
+                $form,
+                $this->getEntityManager($entityClass),
+            );
 
-            $actionHelper->hookAfterPersist($request, $entity);
+            $actionHelper->hookAfterPersist(
+                $request,
+                $entity,
+            );
 
             return $this->redirectOnSuccess($actionConfiguration, $entity);
         }

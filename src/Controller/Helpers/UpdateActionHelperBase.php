@@ -2,7 +2,9 @@
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
+use Doctrine\Persistence\ObjectManager;
 use Override;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -16,6 +18,16 @@ abstract class UpdateActionHelperBase implements UpdateActionHelperInterface
         Request $request,
         object $entity,
     ): void {
+    }
+
+    #[Override]
+    public function persist(
+        Request $request,
+        object $entity,
+        FormInterface $form,
+        ObjectManager $objectManager,
+    ): void {
+        $objectManager->flush();
     }
 
     #[Override]

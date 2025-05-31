@@ -7,19 +7,18 @@
         "php": ">=8.3",
         "doctrine/instantiator": "^2.0",
         "doctrine/orm": "^3.1",
+        "jmf/template-rendering": "^1.0",
         "symfony/form": "^7.0",
         "symfony/framework-bundle": "^7.0",
         "symfony/http-foundation": "^7.0",
         "symfony/routing": "^7.0",
-        "twig/twig": "^3.0",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
-        "phing/phing": "^2.17",
         "phpmd/phpmd": "^2.13",
-        "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^11.1",
-        "rector/rector": "^1.0",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^12.1",
+        "rector/rector": "^2.0",
         "squizlabs/php_codesniffer": "^3.8"
     },
     "config": {
