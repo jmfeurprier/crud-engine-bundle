@@ -6,20 +6,20 @@
     "require": {
         "php": ">=8.3",
         "doctrine/instantiator": "^2.0",
-        "doctrine/orm": "^3.1",
+        "doctrine/orm": "^3.0",
         "jmf/template-rendering": "^1.0",
         "symfony/form": "^7.0",
         "symfony/framework-bundle": "^7.0",
         "symfony/http-foundation": "^7.0",
         "symfony/routing": "^7.0",
-        "webmozart/assert": "^1.11"
+        "webmozart/assert": "^1.0"
     },
     "require-dev": {
-        "phpmd/phpmd": "^2.13",
-        "phpstan/phpstan": "^2.1",
-        "phpunit/phpunit": "^12.1",
-        "rector/rector": "^2.0",
-        "squizlabs/php_codesniffer": "^3.8"
+        "phpmd/phpmd": "^2.15.0",
+        "phpstan/phpstan": "^2.1.17",
+        "phpunit/phpunit": "^12.1.6",
+        "rector/rector": "^2.0.17",
+        "squizlabs/php_codesniffer": "^3.13.0"
     },
     "config": {
         "optimize-autoloader": true,
