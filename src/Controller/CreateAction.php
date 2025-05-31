@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @template E of object
  */
 #[AsController]
-class CreateAction
+readonly class CreateAction
 {
     /**
      * @use WithActionHelperTrait<CreateActionHelperInterface<E>>
@@ -39,18 +39,6 @@ class CreateAction
     use WithFormTrait;
     use WithRedirectionTrait;
     use WithViewTrait;
-
-    private Request $request;
-
-    /**
-     * @var CreateActionHelperInterface<E>
-     */
-    private CreateActionHelperInterface $actionHelper;
-
-    /**
-     * @var E
-     */
-    private object $entity;
 
     /**
      * @psalm-param CreateActionHelperInterface<E> $defaultActionHelper
@@ -62,7 +50,7 @@ class CreateAction
         ManagerRegistry $managerRegistry,
         CreateActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
-        private readonly ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
     ) {
         $this->formFactory          = $formFactory;
         $this->urlGenerator         = $urlGenerator;
@@ -87,43 +75,47 @@ class CreateAction
         string $entityClass,
     ): Response {
         $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'create');
-        $this->request       = $request;
-        $this->actionHelper  = $this->getActionHelper(
+
+        $actionHelper = $this->getActionHelper(
             CreateActionHelperInterface::class,
             $actionConfiguration,
         );
-        $this->entity        = $this->actionHelper->createEntity($request, $entityClass);
 
-        $form = $this->getForm($actionConfiguration, $this->entity);
+        $entity = $actionHelper->createEntity($request, $entityClass);
+
+        $form = $this->getForm($actionConfiguration, $entity);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->actionHelper->hookBeforePersist(
+            $actionHelper->hookBeforePersist(
                 $request,
-                $this->entity,
+                $entity,
             );
 
-            $this->actionHelper->persist(
+            $actionHelper->persist(
                 $request,
-                $this->entity,
+                $entity,
                 $this->getEntityManager($entityClass),
             );
 
-            $this->actionHelper->hookAfterPersist(
+            $actionHelper->hookAfterPersist(
                 $request,
-                $this->entity,
+                $entity,
             );
 
-            return $this->redirectOnSuccess($actionConfiguration, $this->entity);
+            return $this->redirectOnSuccess($actionConfiguration, $entity);
         }
 
         return $this->render(
             $actionConfiguration,
             $this->getViewContext(
+                $request,
                 $actionConfiguration,
+                $actionHelper,
+                $entity,
                 [
-                    'entity' => $this->entity,
+                    'entity' => $entity,
                     'form'   => $form->createView(),
                 ],
             ),
@@ -131,18 +123,22 @@ class CreateAction
     }
 
     /**
-     * @param array<string, mixed> $defaults
+     * @param CreateActionHelperInterface<E> $actionHelper
+     * @param array<string, mixed>           $defaults
      *
      * @return array<string, mixed>
      *
      * @throws CrudEngineMissingConfigurationException
      */
     private function getViewContext(
+        Request $request,
         ActionConfiguration $actionConfiguration,
+        CreateActionHelperInterface $actionHelper,
+        object $entity,
         array $defaults,
     ): array {
         return array_merge(
-            $this->actionHelper->getViewVariables($this->request, $this->entity),
+            $actionHelper->getViewVariables($request, $entity),
             $this->mapViewVariables(
                 $actionConfiguration,
                 $defaults,

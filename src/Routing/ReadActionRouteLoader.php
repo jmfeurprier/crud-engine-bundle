@@ -5,7 +5,7 @@ namespace Jmf\CrudEngine\Routing;
 use Jmf\CrudEngine\Controller\ReadAction;
 use Override;
 
-class ReadActionRouteLoader extends ActionRouteLoaderBase
+readonly class ReadActionRouteLoader extends ActionRouteLoaderBase
 {
     #[Override]
     public function getActionName(): string

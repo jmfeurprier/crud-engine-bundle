@@ -18,8 +18,10 @@ abstract class IndexActionHelperBase implements IndexActionHelperInterface
     }
 
     #[Override]
-    public function getEntities(ObjectRepository $entityRepository): iterable
-    {
+    public function getEntities(
+        Request $request,
+        ObjectRepository $entityRepository,
+    ): iterable {
         return $entityRepository->findAll();
     }
 

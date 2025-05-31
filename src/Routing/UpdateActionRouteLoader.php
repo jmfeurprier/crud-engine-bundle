@@ -5,7 +5,7 @@ namespace Jmf\CrudEngine\Routing;
 use Jmf\CrudEngine\Controller\UpdateAction;
 use Override;
 
-class UpdateActionRouteLoader extends ActionRouteLoaderBase
+readonly class UpdateActionRouteLoader extends ActionRouteLoaderBase
 {
     #[Override]
     public function getActionName(): string

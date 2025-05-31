@@ -4,30 +4,35 @@ namespace Jmf\CrudEngine\Routing;
 
 use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
-use RuntimeException;
+use Jmf\CrudEngine\Exception\CrudEngineException;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Webmozart\Assert\Assert;
 
-class RouteLoader implements RouteLoaderInterface
+readonly class RouteLoader implements RouteLoaderInterface
 {
     /**
      * @var array<string, ActionRouteLoaderInterface>
      */
-    private array $loaderByAction = [];
+    private array $loaderByAction;
 
     /**
      * @param ActionRouteLoaderInterface[] $loaders
      */
     public function __construct(
-        private readonly ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
         iterable $loaders,
     ) {
         Assert::allIsInstanceOf($loaders, ActionRouteLoaderInterface::class);
 
+        $indexed = [];
+
         foreach ($loaders as $loader) {
-            $this->loaderByAction[$loader->getActionName()] = $loader;
+            $indexed[$loader->getActionName()] = $loader;
         }
+
+        $this->loaderByAction = $indexed;
     }
 
     public function __invoke(): RouteCollection
@@ -41,6 +46,9 @@ class RouteLoader implements RouteLoaderInterface
         return $routeCollection;
     }
 
+    /**
+     * @throws CrudEngineMissingConfigurationException
+     */
     private function loadAction(
         RouteCollection $routeCollection,
         ActionConfiguration $actionConfiguration,
@@ -55,6 +63,9 @@ class RouteLoader implements RouteLoaderInterface
     ): ActionRouteLoaderInterface {
         $action = $actionConfiguration->getAction();
 
-        return $this->loaderByAction[$action] ?? throw new RuntimeException('Unsupported action.');
+        return $this->loaderByAction[$action]
+            ??
+            // @todo Create dedicated exception class.
+            throw new CrudEngineException('Unsupported CRUD action.');
     }
 }

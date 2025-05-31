@@ -5,7 +5,7 @@ namespace Jmf\CrudEngine\Routing;
 use Jmf\CrudEngine\Controller\IndexAction;
 use Override;
 
-class IndexActionRouteLoader extends ActionRouteLoaderBase
+readonly class IndexActionRouteLoader extends ActionRouteLoaderBase
 {
     #[Override]
     public function getActionName(): string

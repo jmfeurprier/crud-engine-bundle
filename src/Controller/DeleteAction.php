@@ -10,6 +10,7 @@ use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -19,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @template E of object
  */
 #[AsController]
-class DeleteAction
+readonly class DeleteAction
 {
     /**
      * @use WithActionHelperTrait<DeleteActionHelperInterface<E>>
@@ -34,7 +35,7 @@ class DeleteAction
         ManagerRegistry $managerRegistry,
         DeleteActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
-        private readonly ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
     ) {
         $this->managerRegistry      = $managerRegistry;
         $this->defaultActionHelper  = $defaultActionHelper;
@@ -46,6 +47,7 @@ class DeleteAction
      *
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
+     * @throws CrudEngineMissingConfigurationException
      */
     public function __invoke(
         string $entityClass,

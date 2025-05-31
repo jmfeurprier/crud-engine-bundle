@@ -5,7 +5,7 @@ namespace Jmf\CrudEngine\Routing;
 use Jmf\CrudEngine\Controller\DeleteAction;
 use Override;
 
-class DeleteActionRouteLoader extends ActionRouteLoaderBase
+readonly class DeleteActionRouteLoader extends ActionRouteLoaderBase
 {
     #[Override]
     public function getActionName(): string

@@ -17,7 +17,10 @@ interface IndexActionHelperInterface extends ActionHelperInterface
      *
      * @return E[]
      */
-    public function getEntities(ObjectRepository $entityRepository): iterable;
+    public function getEntities(
+        Request $request,
+        ObjectRepository $entityRepository,
+    ): iterable;
 
     /**
      * @return array<string, mixed>

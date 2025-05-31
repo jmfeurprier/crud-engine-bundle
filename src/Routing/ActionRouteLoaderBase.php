@@ -9,11 +9,8 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Webmozart\Assert\Assert;
 
-abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterface
+readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterface
 {
-    /**
-     * @throws CrudEngineMissingConfigurationException
-     */
     #[Override]
     public function load(
         RouteCollection $routeCollection,

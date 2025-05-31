@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
  * @template E of object
  */
 #[AsController]
-class IndexAction
+readonly class IndexAction
 {
     /**
      * @use WithActionHelperTrait<IndexActionHelperInterface<E>>
@@ -30,13 +30,6 @@ class IndexAction
     use WithActionHelperTrait;
     use WithEntityManagerTrait;
     use WithViewTrait;
-
-    private Request $request;
-
-    /**
-     * @var IndexActionHelperInterface<E>
-     */
-    private IndexActionHelperInterface $actionHelper;
 
     /**
      * @psalm-param IndexActionHelperInterface<E> $defaultActionHelper
@@ -66,33 +59,25 @@ class IndexAction
         string $entityClass,
     ): Response {
         $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'index');
-        $this->request       = $request;
-        $this->actionHelper  = $this->getActionHelper(
+
+        $actionHelper = $this->getActionHelper(
             IndexActionHelperInterface::class,
             $actionConfiguration,
         );
 
-        $this->hookBeforeRender($this->actionHelper, $request);
+        $actionHelper->hookBeforeRender($request);
 
         return $this->render(
             $actionConfiguration,
             $this->getViewContext(
+                $request,
                 $actionConfiguration,
+                $actionHelper,
                 [
-                    'entities' => $this->getEntities($this->actionHelper, $entityClass),
+                    'entities' => $this->getEntities($request, $entityClass, $actionHelper),
                 ],
             ),
         );
-    }
-
-    /**
-     * @param IndexActionHelperInterface<E> $actionHelper
-     */
-    private function hookBeforeRender(
-        IndexActionHelperInterface $actionHelper,
-        Request $request,
-    ): void {
-        $actionHelper->hookBeforeRender($request);
     }
 
     /**
@@ -102,27 +87,32 @@ class IndexAction
      * @return E[]
      */
     private function getEntities(
-        IndexActionHelperInterface $actionHelper,
+        Request $request,
         string $entityClass,
+        IndexActionHelperInterface $actionHelper,
     ): iterable {
         return $actionHelper->getEntities(
+            $request,
             $this->getRepository($entityClass),
         );
     }
 
     /**
-     * @param array<string, mixed> $defaults
+     * @param IndexActionHelperInterface<E> $actionHelper
+     * @param array<string, mixed>          $defaults
      *
      * @return array<string, mixed>
      *
      * @throws CrudEngineMissingConfigurationException
      */
     private function getViewContext(
+        Request $request,
         ActionConfiguration $actionConfiguration,
+        IndexActionHelperInterface $actionHelper,
         array $defaults,
     ): array {
         return array_merge(
-            $this->actionHelper->getViewVariables($this->request),
+            $actionHelper->getViewVariables($request),
             $this->mapViewVariables(
                 $actionConfiguration,
                 $defaults,
