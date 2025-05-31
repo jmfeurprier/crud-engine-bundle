@@ -17,6 +17,7 @@ interface UpdateActionHelperInterface extends ActionHelperInterface
     public function hookBeforePersist(
         Request $request,
         object $entity,
+        FormInterface $form,
     ): void;
 
     /**
@@ -35,5 +36,6 @@ interface UpdateActionHelperInterface extends ActionHelperInterface
     public function hookAfterPersist(
         Request $request,
         object $entity,
+        FormInterface $form,
     ): void;
 }

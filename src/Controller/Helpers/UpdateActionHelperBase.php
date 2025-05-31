@@ -17,6 +17,7 @@ abstract class UpdateActionHelperBase implements UpdateActionHelperInterface
     public function hookBeforePersist(
         Request $request,
         object $entity,
+        FormInterface $form,
     ): void {
     }
 
@@ -34,6 +35,7 @@ abstract class UpdateActionHelperBase implements UpdateActionHelperInterface
     public function hookAfterPersist(
         Request $request,
         object $entity,
+        FormInterface $form,
     ): void {
     }
 }

@@ -91,17 +91,20 @@ readonly class CreateAction
             $actionHelper->hookBeforePersist(
                 $request,
                 $entity,
+                $form,
             );
 
             $actionHelper->persist(
                 $request,
                 $entity,
+                $form,
                 $this->getEntityManager($entityClass),
             );
 
             $actionHelper->hookAfterPersist(
                 $request,
                 $entity,
+                $form,
             );
 
             return $this->redirectOnSuccess($actionConfiguration, $entity);

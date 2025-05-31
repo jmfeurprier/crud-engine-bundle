@@ -4,6 +4,7 @@ namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
 use Override;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -24,6 +25,7 @@ abstract class CreateActionHelperBase implements CreateActionHelperInterface
     public function hookBeforePersist(
         Request $request,
         object $entity,
+        FormInterface $form,
     ): void {
     }
 
@@ -31,6 +33,7 @@ abstract class CreateActionHelperBase implements CreateActionHelperInterface
     public function persist(
         Request $request,
         object $entity,
+        FormInterface $form,
         ObjectManager $entityManager,
     ): void {
         $entityManager->persist($entity);
@@ -41,6 +44,7 @@ abstract class CreateActionHelperBase implements CreateActionHelperInterface
     public function hookAfterPersist(
         Request $request,
         object $entity,
+        FormInterface $form,
     ): void {
     }
 

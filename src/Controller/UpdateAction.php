@@ -89,6 +89,7 @@ readonly class UpdateAction
             $actionHelper->hookBeforePersist(
                 $request,
                 $entity,
+                $form,
             );
 
             $actionHelper->persist(
@@ -101,6 +102,7 @@ readonly class UpdateAction
             $actionHelper->hookAfterPersist(
                 $request,
                 $entity,
+                $form,
             );
 
             return $this->redirectOnSuccess($actionConfiguration, $entity);
