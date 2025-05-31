@@ -11,7 +11,7 @@ use Throwable;
 
 trait WithViewTrait
 {
-    private TemplateRendererInterface $templateRenderer;
+    private readonly TemplateRendererInterface $templateRenderer;
 
     /**
      * @param array<string, mixed> $context
