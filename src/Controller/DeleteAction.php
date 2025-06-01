@@ -11,10 +11,10 @@ use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 /**
  * @template E of object
@@ -48,6 +48,7 @@ readonly class DeleteAction
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
+     * @throws Throwable
      */
     public function __invoke(
         string $entityClass,
@@ -62,11 +63,15 @@ readonly class DeleteAction
         $entity        = $this->getEntity($entityClass, $id);
         $entityManager = $this->getEntityManager($entityClass);
 
-        $actionHelper->hookBeforeRemove($entity);
-        $actionHelper->remove($entityManager, $entity);
-        $actionHelper->hookAfterRemove($entity);
+        try {
+            $actionHelper->hookBeforeRemove($entity);
+            $actionHelper->remove($entityManager, $entity);
+            $actionHelper->hookAfterRemove($entity);
+        } catch (Throwable $e) {
+            return $actionHelper->onFailure($entity, $e);
+        }
 
-        return new JsonResponse();
+        return $actionHelper->onSuccess($entity);
     }
 
     /**

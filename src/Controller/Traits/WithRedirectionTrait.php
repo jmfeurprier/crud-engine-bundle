@@ -7,7 +7,6 @@ use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Throwable;
 
@@ -24,7 +23,7 @@ trait WithRedirectionTrait
     private function redirectOnSuccess(
         ActionConfiguration $actionConfiguration,
         object $entity,
-    ): Response {
+    ): RedirectResponse {
         $url = $this->urlGenerator->generate(
             $this->getRedirectRoute($actionConfiguration),
             $this->getRedirectRouteParameters($actionConfiguration, $entity),
