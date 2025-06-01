@@ -39,9 +39,9 @@ class CrudEngineMissingConfigurationException extends CrudEngineException
         }
 
         return [
+            $this->configurationKey,
             $this->entityClass,
             $this->action,
-            $this->configurationKey,
         ];
     }
 
