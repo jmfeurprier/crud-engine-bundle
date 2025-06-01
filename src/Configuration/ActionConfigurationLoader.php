@@ -55,7 +55,6 @@ readonly class ActionConfigurationLoader
         return $entityName;
     }
 
-
     /**
      * @param array<string, mixed> $actionConfig
      *

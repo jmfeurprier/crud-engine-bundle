@@ -35,7 +35,7 @@ class JmfCrudEngineExtension extends Extension
 
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(__DIR__ . '/../Resources/config')
+            new FileLocator(__DIR__ . '/../Resources/config'),
         );
 
         $loader->load('services.yaml');
@@ -53,7 +53,7 @@ class JmfCrudEngineExtension extends Extension
                 [
                     new Reference(ActionConfigurationRepositoryFactoryInterface::class),
                     'make',
-                ]
+                ],
             )
         ;
 

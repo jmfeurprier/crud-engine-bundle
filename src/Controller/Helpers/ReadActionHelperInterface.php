@@ -16,6 +16,6 @@ interface ReadActionHelperInterface extends ActionHelperInterface
      */
     public function getViewVariables(
         Request $request,
-        object $entity
+        object $entity,
     ): array;
 }

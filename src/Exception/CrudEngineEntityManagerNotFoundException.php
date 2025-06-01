@@ -11,7 +11,7 @@ class CrudEngineEntityManagerNotFoundException extends CrudEngineException
      */
     public function __construct(
         private readonly string $entityClass,
-        ?Throwable $previousException = null
+        ?Throwable $previousException = null,
     ) {
         parent::__construct(
             "Entity manager not found for class {$entityClass}",

@@ -2,7 +2,6 @@
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Override;
 
