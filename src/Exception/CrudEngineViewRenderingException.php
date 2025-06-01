@@ -13,7 +13,7 @@ class CrudEngineViewRenderingException extends CrudEngineException
     ) {
         parent::__construct(
             message:  vsprintf(
-                          "Failed rendering CRUD view for class %s and action %s.",
+                          'Failed rendering CRUD view for class %s and action "%s".',
                           [
                               $this->actionConfiguration->getEntityClass(),
                               $this->actionConfiguration->getAction(),
