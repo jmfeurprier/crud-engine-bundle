@@ -22,7 +22,7 @@ trait WithActionHelperTrait
     /**
      * @param class-string<T> $class
      *
-     * @return T
+     * @psalm-return T
      *
      * @throws CrudEngineInvalidActionHelperException
      */
