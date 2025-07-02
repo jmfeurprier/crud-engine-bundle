@@ -12,20 +12,18 @@ trait WithFormTrait
     private readonly FormFactoryInterface $formFactory;
 
     /**
+     * @template TE of object
+     *
+     * @psalm-param TE $entity
+     *
+     * @return FormInterface<TE>
+     *
      * @throws CrudEngineMissingConfigurationException
      */
     private function getForm(
         ActionConfiguration $actionConfiguration,
         object $entity,
     ): FormInterface {
-        return $this->formFactory->create($this->getFormTypeClass($actionConfiguration), $entity);
-    }
-
-    /**
-     * @throws CrudEngineMissingConfigurationException
-     */
-    private function getFormTypeClass(ActionConfiguration $actionConfiguration): string
-    {
-        return $actionConfiguration->getFormTypeClass();
+        return $this->formFactory->create($actionConfiguration->getFormTypeClass(), $entity);
     }
 }

@@ -35,6 +35,7 @@ readonly class ActionConfigurationsLoader
             Assert::isMap($actionsConfig);
 
             foreach ($actionsConfig as $action => $actionConfig) {
+                Assert::stringNotEmpty($action);
                 Assert::isMap($actionConfig);
 
                 $actionConfigurations[] = $this->actionConfigurationLoader->load(

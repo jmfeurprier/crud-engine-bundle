@@ -12,7 +12,8 @@ readonly class ActionConfigurationFallbacksResolver
     }
 
     /**
-     * @param class-string $class
+     * @param class-string     $class
+     * @param non-empty-string $action
      *
      * @return null|class-string
      */
@@ -38,7 +39,8 @@ readonly class ActionConfigurationFallbacksResolver
     }
 
     /**
-     * @param class-string $class
+     * @param class-string     $class
+     * @param non-empty-string $action
      *
      * @return null|class-string
      */
@@ -66,7 +68,7 @@ readonly class ActionConfigurationFallbacksResolver
     /**
      * @param class-string $class
      *
-     * @return non-empty-string
+     * @return string
      */
     private function getClassShortName(string $class): string
     {
@@ -76,7 +78,7 @@ readonly class ActionConfigurationFallbacksResolver
     /**
      * @param non-empty-string $action
      *
-     * @return non-empty-string
+     * @return string
      */
     private function getActionCamelName(string $action): string
     {

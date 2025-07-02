@@ -11,12 +11,13 @@ readonly class ActionConfigurationLoader
         private RedirectionConfigurationLoader $redirectionConfigurationLoader,
         private RouteConfigurationLoader $routeConfigurationLoader,
         private ViewConfigurationLoader $viewConfigurationLoader,
-        private ActionConfigurationFallbacksResolver $entityClassNamesResolver,
+        private ActionConfigurationFallbacksResolver $fallbacksResolver,
     ) {
     }
 
     /**
      * @param class-string         $entityClass
+     * @param non-empty-string     $action
      * @param array<string, mixed> $entityConfig
      * @param array<string, mixed> $actionConfig
      *
@@ -31,9 +32,9 @@ readonly class ActionConfigurationLoader
         return new ActionConfiguration(
             $entityClass,
             $action,
-            $this->getEntityName($entityConfig),
-            $this->getFormTypeClass($actionConfig),
-            $this->getHelperClass($actionConfig),
+            $this->getEntityName($entityClass, $entityConfig),
+            $this->getFormTypeClass($entityClass, $action, $actionConfig),
+            $this->getHelperClass($entityClass, $action, $actionConfig),
             $this->getRedirectionConfiguration($entityClass, $action, $actionConfig),
             $this->getRouteConfiguration($entityClass, $action, $actionConfig),
             $this->getViewConfiguration($entityClass, $action, $actionConfig),
@@ -41,10 +42,13 @@ readonly class ActionConfigurationLoader
     }
 
     /**
+     * @param class-string         $entityClass
      * @param array<string, mixed> $entityConfig
      */
-    private function getEntityName(array $entityConfig): ?string
-    {
+    private function getEntityName(
+        string $entityClass,
+        array $entityConfig,
+    ): ?string {
         if (!array_key_exists('name', $entityConfig)) {
             // @todo Generate name from entity class.
 
@@ -59,15 +63,22 @@ readonly class ActionConfigurationLoader
     }
 
     /**
+     * @param class-string         $entityClass
+     * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      *
      * @return null|class-string
      */
-    private function getFormTypeClass(array $actionConfig): ?string
-    {
+    private function getFormTypeClass(
+        string $entityClass,
+        string $action,
+        array $actionConfig,
+    ): ?string {
         if (!array_key_exists('formType', $actionConfig)) {
-            // @todo Generate from entity class.
+            return $this->fallbacksResolver->tryResolveFormTypeClass($entityClass, $action);
+        }
 
+        if (null === $actionConfig['formType']) {
             return null;
         }
 
@@ -78,15 +89,22 @@ readonly class ActionConfigurationLoader
     }
 
     /**
+     * @param class-string         $entityClass
+     * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      *
      * @return null|class-string
      */
-    private function getHelperClass(array $actionConfig): ?string
-    {
+    private function getHelperClass(
+        string $entityClass,
+        string $action,
+        array $actionConfig,
+    ): ?string {
         if (!array_key_exists('helper', $actionConfig)) {
-            // @todo Generate from entity class.
+            return $this->fallbacksResolver->tryResolveHelperClass($entityClass, $action);
+        }
 
+        if (null === $actionConfig['helper']) {
             return null;
         }
 
