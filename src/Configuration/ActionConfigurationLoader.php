@@ -32,7 +32,7 @@ readonly class ActionConfigurationLoader
         return new ActionConfiguration(
             $entityClass,
             $action,
-            $this->getEntityName($entityClass, $entityConfig),
+            $this->getEntityName($entityConfig),
             $this->getFormTypeClass($entityClass, $action, $actionConfig),
             $this->getHelperClass($entityClass, $action, $actionConfig),
             $this->getRedirectionConfiguration($entityClass, $action, $actionConfig),
@@ -42,11 +42,9 @@ readonly class ActionConfigurationLoader
     }
 
     /**
-     * @param class-string         $entityClass
      * @param array<string, mixed> $entityConfig
      */
     private function getEntityName(
-        string $entityClass,
         array $entityConfig,
     ): ?string {
         if (!array_key_exists('name', $entityConfig)) {
