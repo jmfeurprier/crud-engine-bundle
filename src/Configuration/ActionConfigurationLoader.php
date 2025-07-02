@@ -11,6 +11,7 @@ readonly class ActionConfigurationLoader
         private RedirectionConfigurationLoader $redirectionConfigurationLoader,
         private RouteConfigurationLoader $routeConfigurationLoader,
         private ViewConfigurationLoader $viewConfigurationLoader,
+        private ActionConfigurationFallbacksResolver $entityClassNamesResolver,
     ) {
     }
 
@@ -45,6 +46,8 @@ readonly class ActionConfigurationLoader
     private function getEntityName(array $entityConfig): ?string
     {
         if (!array_key_exists('name', $entityConfig)) {
+            // @todo Generate name from entity class.
+
             return null;
         }
 
@@ -63,6 +66,8 @@ readonly class ActionConfigurationLoader
     private function getFormTypeClass(array $actionConfig): ?string
     {
         if (!array_key_exists('formType', $actionConfig)) {
+            // @todo Generate from entity class.
+
             return null;
         }
 
@@ -80,6 +85,8 @@ readonly class ActionConfigurationLoader
     private function getHelperClass(array $actionConfig): ?string
     {
         if (!array_key_exists('helper', $actionConfig)) {
+            // @todo Generate from entity class.
+
             return null;
         }
 

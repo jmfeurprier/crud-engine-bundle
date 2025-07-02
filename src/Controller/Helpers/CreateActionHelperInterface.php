@@ -25,7 +25,8 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): object;
 
     /**
-     * @psalm-param E $entity
+     * @psalm-param E                $entity
+     * @psalm-param FormInterface<E> $form
      */
     public function hookBeforePersist(
         Request $request,
@@ -34,7 +35,8 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @psalm-param E $entity
+     * @psalm-param E                $entity
+     * @psalm-param FormInterface<E> $form
      */
     public function persist(
         Request $request,
@@ -44,7 +46,8 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @psalm-param E $entity
+     * @psalm-param E                $entity
+     * @psalm-param FormInterface<E> $form
      */
     public function hookAfterPersist(
         Request $request,

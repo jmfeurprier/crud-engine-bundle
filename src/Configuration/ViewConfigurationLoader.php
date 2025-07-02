@@ -19,6 +19,8 @@ readonly class ViewConfigurationLoader
         array $actionConfig,
     ): ?ViewConfiguration {
         if (!array_key_exists('view', $actionConfig)) {
+            // @todo Generate from entity class.
+
             return null;
         }
 

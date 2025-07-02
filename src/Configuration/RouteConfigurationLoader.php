@@ -46,6 +46,8 @@ readonly class RouteConfigurationLoader
     private function getName(array $routeConfig): ?string
     {
         if (!array_key_exists('name', $routeConfig)) {
+            // @todo Generate from entity class.
+
             return null;
         }
 
