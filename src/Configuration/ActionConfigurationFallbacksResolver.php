@@ -67,8 +67,6 @@ readonly class ActionConfigurationFallbacksResolver
 
     /**
      * @param class-string $class
-     *
-     * @return string
      */
     private function getClassShortName(string $class): string
     {
@@ -77,8 +75,6 @@ readonly class ActionConfigurationFallbacksResolver
 
     /**
      * @param non-empty-string $action
-     *
-     * @return string
      */
     private function getActionCamelName(string $action): string
     {

@@ -47,6 +47,6 @@ readonly class CacheableActionConfigurationRepositoryFactory implements ActionCo
     {
         return fn(
             ItemInterface $item,
-        ) => $this->actionConfigurationRepositoryFactory->make();
+        ): ActionConfigurationRepositoryInterface => $this->actionConfigurationRepositoryFactory->make();
     }
 }

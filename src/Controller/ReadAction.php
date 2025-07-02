@@ -96,17 +96,13 @@ readonly class ReadAction
     ): object {
         $entity = $this->getRepository($entityClass)->find($id);
 
-        if ($entity) {
-            return $entity;
-        }
-
-        throw new NotFoundHttpException();
+        return $entity ?? throw new NotFoundHttpException();
     }
 
     /**
-     * @param ReadActionHelperInterface<E> $actionHelper
-     * @param E                            $entity
-     * @param array<string, mixed>         $defaults
+     * @psalm-param ReadActionHelperInterface<E> $actionHelper
+     * @psalm-param E                            $entity
+     * @psalm-param array<string, mixed>         $defaults
      *
      * @return array<string, mixed>
      *

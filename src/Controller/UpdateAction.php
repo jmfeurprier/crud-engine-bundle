@@ -133,11 +133,7 @@ readonly class UpdateAction
     ): object {
         $entity = $this->getRepository($entityClass)->find($id);
 
-        if ($entity) {
-            return $entity;
-        }
-
-        throw new NotFoundHttpException();
+        return $entity ?? throw new NotFoundHttpException();
     }
 
     /**
