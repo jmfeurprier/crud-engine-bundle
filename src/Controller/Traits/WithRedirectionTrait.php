@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Controller\Traits;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;

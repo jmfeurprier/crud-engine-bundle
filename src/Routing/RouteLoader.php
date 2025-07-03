@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Routing;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;

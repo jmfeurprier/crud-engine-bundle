@@ -2,11 +2,11 @@
 
 namespace Jmf\CrudEngine\Tests\Routing;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Action\Redirection\RedirectionConfiguration;
+use Jmf\CrudEngine\Configuration\Action\Route\RouteConfiguration;
+use Jmf\CrudEngine\Configuration\Action\View\ViewConfiguration;
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
-use Jmf\CrudEngine\Configuration\RedirectionConfiguration;
-use Jmf\CrudEngine\Configuration\RouteConfiguration;
-use Jmf\CrudEngine\Configuration\ViewConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
 use Override;

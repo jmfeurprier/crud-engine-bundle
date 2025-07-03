@@ -2,21 +2,21 @@
 
 namespace Jmf\CrudEngine\Tests\Configuration;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationFallbacksResolver;
+use Jmf\CrudEngine\Configuration\EntityConfigurationFallbacksResolver;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormInterface;
 
-class ActionConfigurationFallbacksResolverTest extends TestCase
+class EntityConfigurationFallbacksResolverTest extends TestCase
 {
-    private ActionConfigurationFallbacksResolver $actionConfigurationFallbacksResolver;
+    private EntityConfigurationFallbacksResolver $entityConfigurationFallbacksResolver;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->actionConfigurationFallbacksResolver = new ActionConfigurationFallbacksResolver();
+        $this->entityConfigurationFallbacksResolver = new EntityConfigurationFallbacksResolver();
     }
 
     /**
@@ -49,14 +49,14 @@ class ActionConfigurationFallbacksResolverTest extends TestCase
         string $action,
         string $helperClass,
     ): void {
-        $result = $this->actionConfigurationFallbacksResolver->tryResolveHelperClass($class, $action);
+        $result = $this->entityConfigurationFallbacksResolver->tryResolveHelperClass($class, $action);
 
         self::assertNull($result);
 
         $newClass = $this->createMock(ActionHelperInterface::class);
         class_alias($newClass::class, $helperClass);
 
-        $result = $this->actionConfigurationFallbacksResolver->tryResolveHelperClass($class, $action);
+        $result = $this->entityConfigurationFallbacksResolver->tryResolveHelperClass($class, $action);
 
         self::assertSame($helperClass, $result);
     }
@@ -91,14 +91,14 @@ class ActionConfigurationFallbacksResolverTest extends TestCase
         string $action,
         string $formTypeClass,
     ): void {
-        $result = $this->actionConfigurationFallbacksResolver->tryResolveFormTypeClass($class, $action);
+        $result = $this->entityConfigurationFallbacksResolver->tryResolveFormTypeClass($class, $action);
 
         self::assertNull($result);
 
         $newClass = $this->createMock(FormInterface::class);
         class_alias($newClass::class, $formTypeClass);
 
-        $result = $this->actionConfigurationFallbacksResolver->tryResolveFormTypeClass($class, $action);
+        $result = $this->entityConfigurationFallbacksResolver->tryResolveFormTypeClass($class, $action);
 
         self::assertSame($formTypeClass, $result);
     }

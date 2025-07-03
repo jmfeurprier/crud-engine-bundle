@@ -2,6 +2,8 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
+use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Action\ActionConfigurationLoader;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 

@@ -1,7 +1,10 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration;
+namespace Jmf\CrudEngine\Configuration\Action;
 
+use Jmf\CrudEngine\Configuration\Action\Redirection\RedirectionConfiguration;
+use Jmf\CrudEngine\Configuration\Action\Route\RouteConfiguration;
+use Jmf\CrudEngine\Configuration\Action\View\ViewConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 
 readonly class ActionConfiguration

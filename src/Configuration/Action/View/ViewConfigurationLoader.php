@@ -1,32 +1,35 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration;
+namespace Jmf\CrudEngine\Configuration\Action\View;
 
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Configuration\EntityConfigurationFallbacksResolver;
+use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Webmozart\Assert\Assert;
 
 readonly class ViewConfigurationLoader
 {
+    public function __construct(
+        private EntityConfigurationFallbacksResolver $fallbacksResolver,
+    ) {
+    }
+
     /**
      * @param class-string         $entityClass
+     * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
-     *
-     * @throws CrudEngineMissingConfigurationException
      */
     public function load(
         string $entityClass,
         string $action,
         array $actionConfig,
     ): ?ViewConfiguration {
-        if (!array_key_exists('view', $actionConfig)) {
-            // @todo Generate from entity class.
+        $viewConfig = [];
 
-            return null;
+        if (array_key_exists('view', $actionConfig)) {
+            Assert::isMap($actionConfig['view']);
+
+            $viewConfig = $actionConfig['view'];
         }
-
-        Assert::isMap($actionConfig['view']);
-
-        $viewConfig = $actionConfig['view'];
 
         return new ViewConfiguration(
             $this->getPath($entityClass, $action, $viewConfig),
@@ -36,9 +39,8 @@ readonly class ViewConfigurationLoader
 
     /**
      * @param class-string         $entityClass
+     * @param non-empty-string     $action
      * @param array<string, mixed> $viewConfig
-     *
-     * @throws CrudEngineMissingConfigurationException
      */
     private function getPath(
         string $entityClass,
@@ -46,11 +48,7 @@ readonly class ViewConfigurationLoader
         array $viewConfig,
     ): string {
         if (!array_key_exists('path', $viewConfig)) {
-            throw new CrudEngineMissingConfigurationException(
-                $entityClass,
-                $action,
-                'view.path',
-            );
+            return $this->fallbacksResolver->resolveViewPath($entityClass, $action);
         }
 
         Assert::string($viewConfig['path']);

@@ -4,11 +4,20 @@ namespace Jmf\CrudEngine\Configuration;
 
 use function Symfony\Component\String\u;
 
-readonly class ActionConfigurationFallbacksResolver
+readonly class EntityConfigurationFallbacksResolver
 {
     public function __construct(
         private string $baseNamespace = 'App',
     ) {
+    }
+
+    /**
+     * @param class-string $class
+     */
+    public function resolveEntityName(
+        string $class,
+    ): string {
+        return u($class)->afterLast('\\')->snake()->toString();
     }
 
     /**
@@ -63,6 +72,17 @@ readonly class ActionConfigurationFallbacksResolver
         }
 
         return null;
+    }
+
+    /**
+     * @param class-string     $class
+     * @param non-empty-string $action
+     */
+    public function resolveViewPath(
+        string $class,
+        string $action,
+    ): string {
+        return u($class)->afterLast('\\')->snake()->append("/{$action}.html.twig")->toString();
     }
 
     /**

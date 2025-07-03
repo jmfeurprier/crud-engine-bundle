@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Exception;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Throwable;
 
 class CrudEngineViewRenderingException extends CrudEngineException

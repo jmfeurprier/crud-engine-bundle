@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Controller\Traits;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;

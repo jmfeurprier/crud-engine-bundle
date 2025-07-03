@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
+use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 
 interface ActionConfigurationRepositoryInterface

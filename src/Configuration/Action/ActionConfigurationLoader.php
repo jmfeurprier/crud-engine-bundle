@@ -1,7 +1,16 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration;
+namespace Jmf\CrudEngine\Configuration\Action;
 
+use Jmf\CrudEngine\Configuration\Action\FormType\FormTypeClassConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Action\Helper\HelperClassConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Action\Redirection\RedirectionConfiguration;
+use Jmf\CrudEngine\Configuration\Action\Redirection\RedirectionConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Action\Route\RouteConfiguration;
+use Jmf\CrudEngine\Configuration\Action\Route\RouteConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Action\View\ViewConfiguration;
+use Jmf\CrudEngine\Configuration\Action\View\ViewConfigurationLoader;
+use Jmf\CrudEngine\Configuration\EntityConfigurationFallbacksResolver;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
@@ -11,7 +20,9 @@ readonly class ActionConfigurationLoader
         private RedirectionConfigurationLoader $redirectionConfigurationLoader,
         private RouteConfigurationLoader $routeConfigurationLoader,
         private ViewConfigurationLoader $viewConfigurationLoader,
-        private ActionConfigurationFallbacksResolver $fallbacksResolver,
+        private EntityConfigurationFallbacksResolver $fallbacksResolver,
+        private FormTypeClassConfigurationLoader $formTypeClassConfigurationLoader,
+        private HelperClassConfigurationLoader $helperClassConfigurationLoader,
     ) {
     }
 
@@ -32,7 +43,7 @@ readonly class ActionConfigurationLoader
         return new ActionConfiguration(
             $entityClass,
             $action,
-            $this->getEntityName($entityConfig),
+            $this->getEntityName($entityClass, $entityConfig),
             $this->getFormTypeClass($entityClass, $action, $actionConfig),
             $this->getHelperClass($entityClass, $action, $actionConfig),
             $this->getRedirectionConfiguration($entityClass, $action, $actionConfig),
@@ -42,15 +53,15 @@ readonly class ActionConfigurationLoader
     }
 
     /**
+     * @param class-string         $entityClass
      * @param array<string, mixed> $entityConfig
      */
     private function getEntityName(
+        string $entityClass,
         array $entityConfig,
-    ): ?string {
+    ): string {
         if (!array_key_exists('name', $entityConfig)) {
-            // @todo Generate name from entity class.
-
-            return null;
+            return $this->fallbacksResolver->resolveEntityName($entityClass);
         }
 
         $entityName = $entityConfig['name'];
@@ -72,18 +83,11 @@ readonly class ActionConfigurationLoader
         string $action,
         array $actionConfig,
     ): ?string {
-        if (!array_key_exists('formType', $actionConfig)) {
-            return $this->fallbacksResolver->tryResolveFormTypeClass($entityClass, $action);
-        }
-
-        if (null === $actionConfig['formType']) {
-            return null;
-        }
-
-        Assert::string($actionConfig['formType']);
-        Assert::classExists($actionConfig['formType']);
-
-        return $actionConfig['formType'];
+        return $this->formTypeClassConfigurationLoader->load(
+            $entityClass,
+            $action,
+            $actionConfig,
+        );
     }
 
     /**
@@ -98,18 +102,11 @@ readonly class ActionConfigurationLoader
         string $action,
         array $actionConfig,
     ): ?string {
-        if (!array_key_exists('helper', $actionConfig)) {
-            return $this->fallbacksResolver->tryResolveHelperClass($entityClass, $action);
-        }
-
-        if (null === $actionConfig['helper']) {
-            return null;
-        }
-
-        Assert::string($actionConfig['helper']);
-        Assert::classExists($actionConfig['helper']);
-
-        return $actionConfig['helper'];
+        return $this->helperClassConfigurationLoader->load(
+            $entityClass,
+            $action,
+            $actionConfig,
+        );
     }
 
     /**
@@ -150,6 +147,7 @@ readonly class ActionConfigurationLoader
 
     /**
      * @param class-string         $entityClass
+     * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      *
      * @throws CrudEngineMissingConfigurationException

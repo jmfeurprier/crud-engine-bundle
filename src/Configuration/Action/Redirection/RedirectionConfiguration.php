@@ -1,6 +1,8 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration;
+namespace Jmf\CrudEngine\Configuration\Action\Redirection;
+
+use Jmf\CrudEngine\Configuration\KeyStringCollection;
 
 readonly class RedirectionConfiguration
 {
