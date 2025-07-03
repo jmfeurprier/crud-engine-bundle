@@ -16,35 +16,13 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
         RouteCollection $routeCollection,
         ActionConfiguration $actionConfiguration,
     ): void {
-        $actionName = $this->getActionName();
-
-        Assert::same($actionName, $actionConfiguration->getAction());
-
-        $routeName = $this->getRouteName($actionConfiguration);
-        $routePath = $this->getRoutePath($actionConfiguration);
-
-        $route = new Route(
-            path:         $routePath,
-            defaults:     [
-                              '_controller' => $this->getActionClass(),
-                              'entityClass' => $actionConfiguration->getEntityClass(),
-                          ],
-            requirements: $this->getRequirements($actionConfiguration),
-            methods:      (array) $this->getMethods(),
-        );
+        Assert::same($this->getActionName(), $actionConfiguration->getAction());
 
         $routeCollection->add(
-            $routeName,
-            $route,
+            $this->getRouteName($actionConfiguration),
+            $this->getRoute($actionConfiguration),
         );
     }
-
-    /**
-     * @return string[]
-     */
-    abstract protected function getMethods(): iterable;
-
-    abstract protected function getActionClass(): string;
 
     /**
      * @throws CrudEngineMissingConfigurationException
@@ -59,14 +37,32 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
             return "{$actionConfiguration->getEntityName()}.{$this->getActionName()}";
         }
 
-        $entityClass = $actionConfiguration->getEntityClass();
-
         // @todo Refine message.
         throw new CrudEngineMissingConfigurationException(
-            $entityClass,
+            $actionConfiguration->getEntityClass(),
             $this->getActionName(),
         );
     }
+
+    private function getRoute(ActionConfiguration $actionConfiguration): Route
+    {
+        return new Route(
+            path:         $this->getRoutePath($actionConfiguration),
+            defaults:     [
+                              '_controller' => $this->getActionClass(),
+                              'entityClass' => $actionConfiguration->getEntityClass(),
+                          ],
+            requirements: $this->getRequirements($actionConfiguration),
+            methods:      (array) $this->getMethods(),
+        );
+    }
+
+    /**
+     * @return string[]
+     */
+    abstract protected function getMethods(): iterable;
+
+    abstract protected function getActionClass(): string;
 
     private function getRoutePath(ActionConfiguration $actionConfiguration): string
     {

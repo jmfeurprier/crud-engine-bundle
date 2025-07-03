@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Configuration\Action\View\ViewConfigurationLoader;
 use Jmf\CrudEngine\Configuration\EntityConfigurationFallbacksResolver;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
+use function Symfony\Component\String\u;
 
 readonly class ActionConfigurationLoader
 {
@@ -20,7 +21,6 @@ readonly class ActionConfigurationLoader
         private RedirectionConfigurationLoader $redirectionConfigurationLoader,
         private RouteConfigurationLoader $routeConfigurationLoader,
         private ViewConfigurationLoader $viewConfigurationLoader,
-        private EntityConfigurationFallbacksResolver $fallbacksResolver,
         private FormTypeClassConfigurationLoader $formTypeClassConfigurationLoader,
         private HelperClassConfigurationLoader $helperClassConfigurationLoader,
     ) {
@@ -61,7 +61,7 @@ readonly class ActionConfigurationLoader
         array $entityConfig,
     ): string {
         if (!array_key_exists('name', $entityConfig)) {
-            return $this->fallbacksResolver->resolveEntityName($entityClass);
+            return u($entityClass)->afterLast('\\')->snake()->toString();
         }
 
         $entityName = $entityConfig['name'];

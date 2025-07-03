@@ -2,16 +2,11 @@
 
 namespace Jmf\CrudEngine\Configuration\Action\FormType;
 
-use Jmf\CrudEngine\Configuration\EntityConfigurationFallbacksResolver;
 use Webmozart\Assert\Assert;
+use function Symfony\Component\String\u;
 
 readonly class FormTypeClassConfigurationLoader
 {
-    public function __construct(
-        private EntityConfigurationFallbacksResolver $fallbacksResolver,
-    ) {
-    }
-
     /**
      * @param class-string         $entityClass
      * @param non-empty-string     $action
@@ -24,17 +19,46 @@ readonly class FormTypeClassConfigurationLoader
         string $action,
         array $actionConfig,
     ): ?string {
-        if (!array_key_exists('formType', $actionConfig)) {
-            return $this->fallbacksResolver->tryResolveFormTypeClass($entityClass, $action);
+        if (array_key_exists('formType', $actionConfig)) {
+            $formTypeClass = $actionConfig['formType'];
+        } else {
+            $formTypeClass = $this->tryGetFallBackFormTypeClass($entityClass, $action);
         }
 
-        if (null === $actionConfig['formType']) {
+        if (null === $formTypeClass) {
             return null;
         }
 
-        Assert::string($actionConfig['formType']);
-        Assert::classExists($actionConfig['formType']);
+        Assert::string($formTypeClass);
+        Assert::classExists($formTypeClass);
 
-        return $actionConfig['formType'];
+        return $formTypeClass;
+    }
+
+    /**
+     * @param class-string     $class
+     * @param non-empty-string $action
+     *
+     * @return null|class-string
+     */
+    private function tryGetFallBackFormTypeClass(
+        string $class,
+        string $action,
+    ): ?string {
+        $classShortName  = u($class)->afterLast('\\')->toString();
+        $actionCamelName = u($action)->camel()->title()->toString();
+
+        $candidates = [
+            "App\\Form\\{$classShortName}\\{$actionCamelName}Type",
+            "App\\Form\\{$classShortName}{$actionCamelName}Type",
+        ];
+
+        foreach ($candidates as $candidate) {
+            if (class_exists($candidate)) {
+                return $candidate;
+            }
+        }
+
+        return null;
     }
 }

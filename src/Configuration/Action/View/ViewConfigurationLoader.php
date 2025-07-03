@@ -2,17 +2,12 @@
 
 namespace Jmf\CrudEngine\Configuration\Action\View;
 
-use Jmf\CrudEngine\Configuration\EntityConfigurationFallbacksResolver;
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Webmozart\Assert\Assert;
+use function Symfony\Component\String\u;
 
 readonly class ViewConfigurationLoader
 {
-    public function __construct(
-        private EntityConfigurationFallbacksResolver $fallbacksResolver,
-    ) {
-    }
-
     /**
      * @param class-string         $entityClass
      * @param non-empty-string     $action
@@ -48,12 +43,24 @@ readonly class ViewConfigurationLoader
         array $viewConfig,
     ): string {
         if (!array_key_exists('path', $viewConfig)) {
-            return $this->fallbacksResolver->resolveViewPath($entityClass, $action);
+            return $this->getFallbackPath($entityClass, $action);
         }
 
         Assert::string($viewConfig['path']);
 
         return $viewConfig['path'];
+    }
+
+
+    /**
+     * @param class-string     $entityClass
+     * @param non-empty-string $action
+     */
+    private function getFallbackPath(
+        string $entityClass,
+        string $action,
+    ): string {
+        return u($entityClass)->afterLast('\\')->snake()->append("/{$action}.html.twig")->toString();
     }
 
     /**

@@ -2,16 +2,11 @@
 
 namespace Jmf\CrudEngine\Configuration\Action\Helper;
 
-use Jmf\CrudEngine\Configuration\EntityConfigurationFallbacksResolver;
 use Webmozart\Assert\Assert;
+use function Symfony\Component\String\u;
 
 readonly class HelperClassConfigurationLoader
 {
-    public function __construct(
-        private EntityConfigurationFallbacksResolver $fallbacksResolver,
-    ) {
-    }
-
     /**
      * @param class-string         $entityClass
      * @param non-empty-string     $action
@@ -25,16 +20,45 @@ readonly class HelperClassConfigurationLoader
         array $actionConfig,
     ): ?string {
         if (!array_key_exists('helper', $actionConfig)) {
-            return $this->fallbacksResolver->tryResolveHelperClass($entityClass, $action);
+            return $this->tryGetFallBackHelperClass($entityClass, $action);
         }
 
-        if (null === $actionConfig['helper']) {
+        $helperClass = $actionConfig['helper'];
+
+        if (null === $helperClass) {
             return null;
         }
 
-        Assert::string($actionConfig['helper']);
-        Assert::classExists($actionConfig['helper']);
+        Assert::string($helperClass);
+        Assert::classExists($helperClass);
 
-        return $actionConfig['helper'];
+        return $helperClass;
+    }
+
+    /**
+     * @param class-string     $class
+     * @param non-empty-string $action
+     *
+     * @return null|class-string
+     */
+    private function tryGetFallBackHelperClass(
+        string $class,
+        string $action,
+    ): ?string {
+        $classShortName  = u($class)->afterLast('\\')->toString();
+        $actionCamelName = u($action)->camel()->title()->toString();
+
+        $candidates = [
+            "App\\Controller\\{$classShortName}\\{$actionCamelName}ActionHelper",
+            "App\\Controller\\{$classShortName}{$actionCamelName}ActionHelper",
+        ];
+
+        foreach ($candidates as $candidate) {
+            if (class_exists($candidate)) {
+                return $candidate;
+            }
+        }
+
+        return null;
     }
 }

@@ -43,7 +43,7 @@ class Configuration implements ConfigurationInterface
                                             ->end()
                                         ->end()
                                         ->arrayNode('route')
-                                            ->isRequired()
+                                            //->isRequired()
                                             ->children()
                                                 ->scalarNode('path')
                                                     //->isRequired()
