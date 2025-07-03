@@ -3,11 +3,13 @@
 namespace Jmf\CrudEngine\Configuration;
 
 use Symfony\Component\String\Inflector\EnglishInflector;
+use Symfony\Component\String\Inflector\InflectorInterface;
 use function Symfony\Component\String\u;
 
 readonly class EntityConfigurationFallbacksResolver
 {
     public function __construct(
+        private InflectorInterface $inflector,
         private string $baseNamespace = 'App',
     ) {
     }
@@ -94,10 +96,8 @@ readonly class EntityConfigurationFallbacksResolver
         string $class,
         string $action,
     ): ?string {
-        $inflector = new EnglishInflector();
-
         $token  = u($class)->afterLast('\\');
-        $tokens = $inflector->pluralize($token);
+        $tokens = $this->inflector->pluralize($token);
 
         if (1 !== count($tokens)) {
             return null;

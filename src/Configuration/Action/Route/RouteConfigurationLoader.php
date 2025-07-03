@@ -16,7 +16,10 @@ readonly class RouteConfigurationLoader
 
     /**
      * @param class-string         $entityClass
+     * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
+     *
+     * @throws CrudEngineMissingConfigurationException
      */
     public function load(
         string $entityClass,
@@ -63,6 +66,7 @@ readonly class RouteConfigurationLoader
 
     /**
      * @param class-string         $entityClass
+     * @param non-empty-string     $action
      * @param array<string, mixed> $routeConfig
      *
      * @throws CrudEngineMissingConfigurationException
@@ -93,8 +97,7 @@ readonly class RouteConfigurationLoader
     /**
      * @param array<string, mixed> $routeConfig
      */
-    private
-    function getParameters(
+    private function getParameters(
         array $routeConfig,
     ): KeyStringCollection {
         if (!array_key_exists('parameters', $routeConfig)) {

@@ -129,6 +129,7 @@ readonly class ActionConfigurationLoader
 
     /**
      * @param class-string         $entityClass
+     * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      *
      * @throws CrudEngineMissingConfigurationException
@@ -149,8 +150,6 @@ readonly class ActionConfigurationLoader
      * @param class-string         $entityClass
      * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
-     *
-     * @throws CrudEngineMissingConfigurationException
      */
     private function getViewConfiguration(
         string $entityClass,

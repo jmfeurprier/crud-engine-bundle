@@ -8,6 +8,7 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\String\Inflector\EnglishInflector;
 
 class EntityConfigurationFallbacksResolverTest extends TestCase
 {
@@ -16,7 +17,9 @@ class EntityConfigurationFallbacksResolverTest extends TestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->entityConfigurationFallbacksResolver = new EntityConfigurationFallbacksResolver();
+        $this->entityConfigurationFallbacksResolver = new EntityConfigurationFallbacksResolver(
+            new EnglishInflector(),
+        );
     }
 
     /**
@@ -101,5 +104,75 @@ class EntityConfigurationFallbacksResolverTest extends TestCase
         $result = $this->entityConfigurationFallbacksResolver->tryResolveFormTypeClass($class, $action);
 
         self::assertSame($formTypeClass, $result);
+    }
+
+    /**
+     * @return array{0: non-empty-string, 1: non-empty-string, 2: non-empty-string}[]
+     */
+    public static function dataProviderClassActionAndViewPath(): iterable
+    {
+        return [
+            [
+                'App\\Entity\\Article',
+                'create',
+                'article/create.html.twig',
+            ],
+        ];
+    }
+
+    /**
+     * @param class-string     $class
+     * @param non-empty-string $action
+     * @param class-string     $viewPath
+     */
+    #[DataProvider('dataProviderClassActionAndViewPath')]
+    public function testResolveViewPath(
+        string $class,
+        string $action,
+        string $viewPath,
+    ): void {
+        $result = $this->entityConfigurationFallbacksResolver->resolveViewPath($class, $action);
+
+        self::assertSame($viewPath, $result);
+    }
+
+    /**
+     * @return array{0: non-empty-string, 1: non-empty-string, 2: non-empty-string}[]
+     */
+    public static function dataProviderClassActionAndRoutePath(): iterable
+    {
+        return [
+            [
+                'App\\Entity\\Article',
+                'create',
+                'articles/create',
+            ],
+            [
+                'App\\Entity\\Article',
+                'read',
+                'articles/{id}',
+            ],
+            [
+                'App\\Entity\\Article',
+                'index',
+                'articles',
+            ],
+        ];
+    }
+
+    /**
+     * @param class-string     $class
+     * @param non-empty-string $action
+     * @param class-string     $routePath
+     */
+    #[DataProvider('dataProviderClassActionAndRoutePath')]
+    public function testTryResolveRoutePath(
+        string $class,
+        string $action,
+        string $routePath,
+    ): void {
+        $result = $this->entityConfigurationFallbacksResolver->tryResolveRoutePath($class, $action);
+
+        self::assertSame($routePath, $result);
     }
 }
