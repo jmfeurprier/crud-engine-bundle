@@ -46,7 +46,7 @@ class Configuration implements ConfigurationInterface
                                             ->isRequired()
                                             ->children()
                                                 ->scalarNode('path')
-                                                    ->isRequired()
+                                                    //->isRequired()
                                                 ->end()
                                                 ->arrayNode('parameters')
                                                     ->variablePrototype()->end()

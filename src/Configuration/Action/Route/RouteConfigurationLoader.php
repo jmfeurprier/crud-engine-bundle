@@ -2,17 +2,21 @@
 
 namespace Jmf\CrudEngine\Configuration\Action\Route;
 
+use Jmf\CrudEngine\Configuration\EntityConfigurationFallbacksResolver;
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
 readonly class RouteConfigurationLoader
 {
+    public function __construct(
+        private EntityConfigurationFallbacksResolver $fallbacksResolver,
+    ) {
+    }
+
     /**
      * @param class-string         $entityClass
      * @param array<string, mixed> $actionConfig
-     *
-     * @throws CrudEngineMissingConfigurationException
      */
     public function load(
         string $entityClass,
@@ -69,11 +73,16 @@ readonly class RouteConfigurationLoader
         array $routeConfig,
     ): string {
         if (!array_key_exists('path', $routeConfig)) {
-            throw new CrudEngineMissingConfigurationException(
+            return $this->fallbacksResolver->tryResolveRoutePath(
                 $entityClass,
                 $action,
-                'route.path',
-            );
+            )
+                ??
+                throw new CrudEngineMissingConfigurationException(
+                    $entityClass,
+                    $action,
+                    'route.path',
+                );
         }
 
         Assert::stringNotEmpty($routeConfig['path']);
@@ -84,8 +93,10 @@ readonly class RouteConfigurationLoader
     /**
      * @param array<string, mixed> $routeConfig
      */
-    private function getParameters(array $routeConfig): KeyStringCollection
-    {
+    private
+    function getParameters(
+        array $routeConfig,
+    ): KeyStringCollection {
         if (!array_key_exists('parameters', $routeConfig)) {
             return KeyStringCollection::createEmpty();
         }
@@ -101,8 +112,9 @@ readonly class RouteConfigurationLoader
     /**
      * @param array<string, mixed> $routeConfig
      */
-    private function getRequirements(array $routeConfig): KeyStringCollection
-    {
+    private function getRequirements(
+        array $routeConfig,
+    ): KeyStringCollection {
         if (!array_key_exists('requirements', $routeConfig)) {
             return KeyStringCollection::createEmpty();
         }

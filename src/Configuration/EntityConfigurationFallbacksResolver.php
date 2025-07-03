@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
+use Symfony\Component\String\Inflector\EnglishInflector;
 use function Symfony\Component\String\u;
 
 readonly class EntityConfigurationFallbacksResolver
@@ -83,6 +84,36 @@ readonly class EntityConfigurationFallbacksResolver
         string $action,
     ): string {
         return u($class)->afterLast('\\')->snake()->append("/{$action}.html.twig")->toString();
+    }
+
+    /**
+     * @param class-string     $class
+     * @param non-empty-string $action
+     */
+    public function tryResolveRoutePath(
+        string $class,
+        string $action,
+    ): ?string {
+        $inflector = new EnglishInflector();
+
+        $token  = u($class)->afterLast('\\');
+        $tokens = $inflector->pluralize($token);
+
+        if (1 !== count($tokens)) {
+            return null;
+        }
+
+        $token = $tokens[0];
+        $token = u($token)->kebab()->toString();
+
+        return match ($action) {
+            'create' => "{$token}/create",
+            'delete' => "{$token}/{id}/delete",
+            'index' => "{$token}",
+            'read' => "{$token}/{id}",
+            'update' => "{$token}/{id}/update",
+            default => null,
+        };
     }
 
     /**
