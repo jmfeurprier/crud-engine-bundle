@@ -33,12 +33,11 @@ readonly class DeleteAction
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
-        DeleteActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private DeleteActionHelperInterface $defaultActionHelper,
     ) {
         $this->managerRegistry      = $managerRegistry;
-        $this->defaultActionHelper  = $defaultActionHelper;
         $this->actionHelperResolver = $actionHelperResolver;
     }
 
@@ -58,6 +57,7 @@ readonly class DeleteAction
         $actionHelper        = $this->getActionHelper(
             DeleteActionHelperInterface::class,
             $actionConfiguration,
+            $this->defaultActionHelper,
         );
 
         $entity        = $this->getEntity($entityClass, $id);

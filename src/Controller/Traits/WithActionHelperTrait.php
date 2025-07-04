@@ -15,11 +15,6 @@ trait WithActionHelperTrait
     private readonly ActionHelperResolver $actionHelperResolver;
 
     /**
-     * @psalm-var T
-     */
-    private readonly ActionHelperInterface $defaultActionHelper;
-
-    /**
      * @param class-string<T> $class
      *
      * @psalm-return T
@@ -29,11 +24,12 @@ trait WithActionHelperTrait
     private function getActionHelper(
         string $class,
         ActionConfiguration $actionConfiguration,
+        ActionHelperInterface $defaultActionHelper,
     ): ActionHelperInterface {
         return $this->actionHelperResolver->resolve(
             $class,
             $actionConfiguration,
-            $this->defaultActionHelper,
+            $defaultActionHelper,
         );
     }
 }

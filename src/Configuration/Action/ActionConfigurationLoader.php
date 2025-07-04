@@ -12,6 +12,7 @@ use Jmf\CrudEngine\Configuration\Action\View\ViewConfiguration;
 use Jmf\CrudEngine\Configuration\Action\View\ViewConfigurationLoader;
 use Jmf\CrudEngine\Configuration\EntityConfigurationFallbacksResolver;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Symfony\Component\Form\FormInterface;
 use Webmozart\Assert\Assert;
 use function Symfony\Component\String\u;
 
@@ -76,7 +77,7 @@ readonly class ActionConfigurationLoader
      * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      *
-     * @return null|class-string
+     * @return null|class-string<FormInterface>
      */
     private function getFormTypeClass(
         string $entityClass,

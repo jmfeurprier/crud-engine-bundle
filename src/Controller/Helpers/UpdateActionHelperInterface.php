@@ -41,4 +41,14 @@ interface UpdateActionHelperInterface extends ActionHelperInterface
         object $entity,
         FormInterface $form,
     ): void;
+
+    /**
+     * @psalm-param E $entity
+     *
+     * @return array<string, mixed>
+     */
+    public function getViewVariables(
+        Request $request,
+        object $entity,
+    ): array;
 }

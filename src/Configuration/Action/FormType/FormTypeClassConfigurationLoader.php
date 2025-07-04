@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration\Action\FormType;
 
+use Symfony\Component\Form\FormInterface;
 use Webmozart\Assert\Assert;
 use function Symfony\Component\String\u;
 
@@ -12,7 +13,7 @@ readonly class FormTypeClassConfigurationLoader
      * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      *
-     * @return null|class-string
+     * @return null|class-string<FormInterface>
      */
     public function load(
         string $entityClass,
@@ -31,6 +32,7 @@ readonly class FormTypeClassConfigurationLoader
 
         Assert::string($formTypeClass);
         Assert::classExists($formTypeClass);
+        Assert::subclassOf($formTypeClass, FormInterface::class);
 
         return $formTypeClass;
     }
@@ -39,7 +41,7 @@ readonly class FormTypeClassConfigurationLoader
      * @param class-string     $class
      * @param non-empty-string $action
      *
-     * @return null|class-string
+     * @return null|class-string<FormInterface>
      */
     private function tryGetFallBackFormTypeClass(
         string $class,
@@ -55,6 +57,8 @@ readonly class FormTypeClassConfigurationLoader
 
         foreach ($candidates as $candidate) {
             if (class_exists($candidate)) {
+                Assert::subclassOf($candidate, FormInterface::class);
+
                 return $candidate;
             }
         }

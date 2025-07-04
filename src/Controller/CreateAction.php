@@ -3,27 +3,23 @@
 namespace Jmf\CrudEngine\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Controller\Dependencies\FormCreator;
+use Jmf\CrudEngine\Controller\Dependencies\Redirector;
+use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperInterface;
 use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
-use Jmf\CrudEngine\Controller\Traits\WithFormTrait;
-use Jmf\CrudEngine\Controller\Traits\WithRedirectionTrait;
-use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
-use Jmf\TemplateRendering\TemplateRendererInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @template E of object
@@ -36,27 +32,20 @@ readonly class CreateAction
      */
     use WithActionHelperTrait;
     use WithEntityManagerTrait;
-    use WithFormTrait;
-    use WithRedirectionTrait;
-    use WithViewTrait;
 
     /**
      * @psalm-param CreateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        FormFactoryInterface $formFactory,
-        UrlGeneratorInterface $urlGenerator,
-        TemplateRendererInterface $templateRenderer,
         ManagerRegistry $managerRegistry,
-        CreateActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private Redirector $redirector,
+        private ViewRenderer $viewRenderer,
+        private FormCreator $formCreator,
+        private CreateActionHelperInterface $defaultActionHelper,
     ) {
-        $this->formFactory          = $formFactory;
-        $this->urlGenerator         = $urlGenerator;
-        $this->templateRenderer     = $templateRenderer;
         $this->managerRegistry      = $managerRegistry;
-        $this->defaultActionHelper  = $defaultActionHelper;
         $this->actionHelperResolver = $actionHelperResolver;
     }
 
@@ -79,11 +68,12 @@ readonly class CreateAction
         $actionHelper = $this->getActionHelper(
             CreateActionHelperInterface::class,
             $actionConfiguration,
+            $this->defaultActionHelper,
         );
 
         $entity = $actionHelper->createEntity($request, $entityClass);
 
-        $form = $this->getForm($actionConfiguration, $entity);
+        $form = $this->formCreator->create($actionConfiguration, $entity);
 
         $form->handleRequest($request);
 
@@ -107,14 +97,13 @@ readonly class CreateAction
                 $form,
             );
 
-            return $this->redirectOnSuccess($actionConfiguration, $entity);
+            return $this->redirector->redirect($actionConfiguration, $entity);
         }
 
-        return $this->render(
+        return $this->viewRenderer->render(
             $actionConfiguration,
             $this->getViewContext(
                 $request,
-                $actionConfiguration,
                 $actionHelper,
                 $entity,
                 [
@@ -132,22 +121,16 @@ readonly class CreateAction
      * @psalm-param E                        $entity
      *
      * @return array<string, mixed>
-     *
-     * @throws CrudEngineMissingConfigurationException
      */
     private function getViewContext(
         Request $request,
-        ActionConfiguration $actionConfiguration,
         CreateActionHelperInterface $actionHelper,
         object $entity,
         array $defaults,
     ): array {
         return array_merge(
             $actionHelper->getViewVariables($request, $entity),
-            $this->mapViewVariables(
-                $actionConfiguration,
-                $defaults,
-            ),
+            $defaults,
         );
     }
 }

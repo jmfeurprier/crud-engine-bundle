@@ -38,4 +38,12 @@ abstract class UpdateActionHelperBase implements UpdateActionHelperInterface
         FormInterface $form,
     ): void {
     }
+
+    #[Override]
+    public function getViewVariables(
+        Request $request,
+        object $entity,
+    ): array {
+        return [];
+    }
 }

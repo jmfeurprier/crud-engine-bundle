@@ -1,26 +1,29 @@
 <?php
 
-namespace Jmf\CrudEngine\Controller\Traits;
+namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
-trait WithFormTrait
+readonly class FormCreator
 {
-    private readonly FormFactoryInterface $formFactory;
+    public function __construct(
+        private FormFactoryInterface $formFactory,
+    ) {
+    }
 
     /**
      * @template TE of object
      *
      * @psalm-param TE $entity
      *
-     * @return FormInterface<TE>
+     * @psalm-return FormInterface<TE>
      *
      * @throws CrudEngineMissingConfigurationException
      */
-    private function getForm(
+    public function create(
         ActionConfiguration $actionConfiguration,
         object $entity,
     ): FormInterface {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmf\CrudEngine\Controller\Traits;
+namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -10,17 +10,19 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Throwable;
 
-trait WithRedirectionTrait
+readonly class Redirector
 {
-    private readonly UrlGeneratorInterface $urlGenerator;
-
-    private readonly TemplateRendererInterface $templateRenderer;
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator,
+        private TemplateRendererInterface $templateRenderer,
+    ) {
+    }
 
     /**
      * @throws CrudEngineMissingConfigurationException
      * @throws CrudEngineRedirectionParameterRenderingException
      */
-    private function redirectOnSuccess(
+    public function redirect(
         ActionConfiguration $actionConfiguration,
         object $entity,
     ): RedirectResponse {

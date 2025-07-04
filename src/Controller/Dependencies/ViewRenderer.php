@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmf\CrudEngine\Controller\Traits;
+namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -9,16 +9,19 @@ use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-trait WithViewTrait
+readonly class ViewRenderer
 {
-    private readonly TemplateRendererInterface $templateRenderer;
+    public function __construct(
+        private TemplateRendererInterface $templateRenderer,
+    ) {
+    }
 
     /**
      * @param array<string, mixed> $context
      *
      * @throws CrudEngineViewRenderingException
      */
-    private function render(
+    public function render(
         ActionConfiguration $actionConfiguration,
         array $context,
     ): Response {
@@ -43,30 +46,5 @@ trait WithViewTrait
     private function getViewPath(ActionConfiguration $actionConfiguration): string
     {
         return $actionConfiguration->getViewConfiguration()->getPath();
-    }
-
-    /**
-     * @param array<string, mixed> $defaults
-     *
-     * @return array<string, mixed>
-     *
-     * @throws CrudEngineMissingConfigurationException
-     */
-    private function mapViewVariables(
-        ActionConfiguration $actionConfiguration,
-        array $defaults,
-    ): array {
-        $variables = [];
-
-        foreach ($defaults as $variable => $value) {
-            $variableName = $actionConfiguration->getViewConfiguration()->getVariables()->tryGet(
-                $variable,
-                $variable,
-            );
-
-            $variables[$variableName] = $value;
-        }
-
-        return $variables;
     }
 }

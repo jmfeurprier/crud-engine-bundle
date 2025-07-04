@@ -3,17 +3,15 @@
 namespace Jmf\CrudEngine\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperInterface;
 use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
-use Jmf\CrudEngine\Controller\Traits\WithViewTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
-use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -30,21 +28,18 @@ readonly class ReadAction
      */
     use WithActionHelperTrait;
     use WithEntityManagerTrait;
-    use WithViewTrait;
 
     /**
-     * @param ReadActionHelperInterface<E> $defaultActionHelper
+     * @psalm-param ReadActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
-        TemplateRendererInterface $templateRenderer,
-        ReadActionHelperInterface $defaultActionHelper,
         ActionHelperResolver $actionHelperResolver,
-        private readonly ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ViewRenderer $viewRenderer,
+        private ReadActionHelperInterface $defaultActionHelper,
     ) {
         $this->managerRegistry      = $managerRegistry;
-        $this->templateRenderer     = $templateRenderer;
-        $this->defaultActionHelper  = $defaultActionHelper;
         $this->actionHelperResolver = $actionHelperResolver;
     }
 
@@ -65,15 +60,15 @@ readonly class ReadAction
         $actionHelper = $this->getActionHelper(
             ReadActionHelperInterface::class,
             $actionConfiguration,
+            $this->defaultActionHelper,
         );
 
         $entity = $this->getEntity($entityClass, $id);
 
-        return $this->render(
+        return $this->viewRenderer->render(
             $actionConfiguration,
             $this->getViewContext(
                 $request,
-                $actionConfiguration,
                 $actionHelper,
                 $entity,
                 [
@@ -105,22 +100,16 @@ readonly class ReadAction
      * @psalm-param array<string, mixed>         $defaults
      *
      * @return array<string, mixed>
-     *
-     * @throws CrudEngineMissingConfigurationException
      */
     private function getViewContext(
         Request $request,
-        ActionConfiguration $actionConfiguration,
         ReadActionHelperInterface $actionHelper,
         object $entity,
         array $defaults,
     ): array {
         return array_merge(
             $actionHelper->getViewVariables($request, $entity),
-            $this->mapViewVariables(
-                $actionConfiguration,
-                $defaults,
-            ),
+            $defaults,
         );
     }
 }
