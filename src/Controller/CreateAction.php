@@ -9,7 +9,6 @@ use Jmf\CrudEngine\Controller\Dependencies\Redirector;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperInterface;
-use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
@@ -27,10 +26,6 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 readonly class CreateAction
 {
-    /**
-     * @use WithActionHelperTrait<CreateActionHelperInterface<E>>
-     */
-    use WithActionHelperTrait;
     use WithEntityManagerTrait;
 
     /**
@@ -38,19 +33,18 @@ readonly class CreateAction
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
-        ActionHelperResolver $actionHelperResolver,
+        private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
         private Redirector $redirector,
         private ViewRenderer $viewRenderer,
         private FormCreator $formCreator,
         private CreateActionHelperInterface $defaultActionHelper,
     ) {
-        $this->managerRegistry      = $managerRegistry;
-        $this->actionHelperResolver = $actionHelperResolver;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
-     * @param class-string<E> $entityClass
+     * @psalm-param class-string<E> $entityClass
      *
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInstantiationFailureException
@@ -64,8 +58,7 @@ readonly class CreateAction
         string $entityClass,
     ): Response {
         $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'create');
-
-        $actionHelper = $this->getActionHelper(
+        $actionHelper        = $this->actionHelperResolver->resolve(
             CreateActionHelperInterface::class,
             $actionConfiguration,
             $this->defaultActionHelper,
@@ -74,7 +67,6 @@ readonly class CreateAction
         $entity = $actionHelper->createEntity($request, $entityClass);
 
         $form = $this->formCreator->create($actionConfiguration, $entity);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -102,35 +94,13 @@ readonly class CreateAction
 
         return $this->viewRenderer->render(
             $actionConfiguration,
-            $this->getViewContext(
-                $request,
-                $actionHelper,
-                $entity,
+            array_merge(
+                $actionHelper->getViewVariables($request, $entity),
                 [
                     'entity' => $entity,
                     'form'   => $form->createView(),
                 ],
             ),
-        );
-    }
-
-    /**
-     * @param CreateActionHelperInterface<E> $actionHelper
-     * @param array<string, mixed>           $defaults
-     *
-     * @psalm-param E                        $entity
-     *
-     * @return array<string, mixed>
-     */
-    private function getViewContext(
-        Request $request,
-        CreateActionHelperInterface $actionHelper,
-        object $entity,
-        array $defaults,
-    ): array {
-        return array_merge(
-            $actionHelper->getViewVariables($request, $entity),
-            $defaults,
         );
     }
 }

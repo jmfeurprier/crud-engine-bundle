@@ -7,7 +7,6 @@ use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperInterface;
-use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -23,10 +22,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 #[AsController]
 readonly class ReadAction
 {
-    /**
-     * @use WithActionHelperTrait<ReadActionHelperInterface<E>>
-     */
-    use WithActionHelperTrait;
     use WithEntityManagerTrait;
 
     /**
@@ -34,13 +29,12 @@ readonly class ReadAction
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
-        ActionHelperResolver $actionHelperResolver,
+        private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
         private ViewRenderer $viewRenderer,
         private ReadActionHelperInterface $defaultActionHelper,
     ) {
-        $this->managerRegistry      = $managerRegistry;
-        $this->actionHelperResolver = $actionHelperResolver;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -56,8 +50,7 @@ readonly class ReadAction
         string $entityClass,
     ): Response {
         $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'read');
-
-        $actionHelper = $this->getActionHelper(
+        $actionHelper        = $this->actionHelperResolver->resolve(
             ReadActionHelperInterface::class,
             $actionConfiguration,
             $this->defaultActionHelper,
@@ -67,10 +60,8 @@ readonly class ReadAction
 
         return $this->viewRenderer->render(
             $actionConfiguration,
-            $this->getViewContext(
-                $request,
-                $actionHelper,
-                $entity,
+            array_merge(
+                $actionHelper->getViewVariables($request, $entity),
                 [
                     'entity' => $entity,
                 ],
@@ -92,24 +83,5 @@ readonly class ReadAction
         $entity = $this->getRepository($entityClass)->find($id);
 
         return $entity ?? throw new NotFoundHttpException();
-    }
-
-    /**
-     * @psalm-param ReadActionHelperInterface<E> $actionHelper
-     * @psalm-param E                            $entity
-     * @psalm-param array<string, mixed>         $defaults
-     *
-     * @return array<string, mixed>
-     */
-    private function getViewContext(
-        Request $request,
-        ReadActionHelperInterface $actionHelper,
-        object $entity,
-        array $defaults,
-    ): array {
-        return array_merge(
-            $actionHelper->getViewVariables($request, $entity),
-            $defaults,
-        );
     }
 }

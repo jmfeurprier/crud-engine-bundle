@@ -16,7 +16,7 @@ readonly class ActionHelperResolver
     /**
      * @template T of ActionHelperInterface
      *
-     * @param class-string<T> $class
+     * @psalm-param class-string<T> $class
      *
      * @psalm-return T
      *

@@ -4,6 +4,7 @@ namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
 use Jmf\CrudEngine\Exception\CrudEngineException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -32,8 +33,13 @@ interface DeleteActionHelperInterface extends ActionHelperInterface
 
     /**
      * @psalm-param E $entity
+     *
+     * @return array<string, mixed>
      */
-    public function onSuccess(object $entity): Response;
+    public function getViewVariables(
+        Request $request,
+        object $entity,
+    ): array;
 
     /**
      * @psalm-param E $entity

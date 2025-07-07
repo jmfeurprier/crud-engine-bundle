@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface CreateActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @param class-string<E> $entityClass
+     * @psalm-param class-string<E> $entityClass
      *
      * @psalm-return E
      *
@@ -58,7 +58,7 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     /**
      * @psalm-param E $entity
      *
-     * @return array<string, mixed>
+     * @psalm-return array<string, mixed>
      */
     public function getViewVariables(
         Request $request,

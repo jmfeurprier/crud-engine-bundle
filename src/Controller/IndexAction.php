@@ -7,7 +7,6 @@ use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
-use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -22,10 +21,6 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 readonly class IndexAction
 {
-    /**
-     * @use WithActionHelperTrait<IndexActionHelperInterface<E>>
-     */
-    use WithActionHelperTrait;
     use WithEntityManagerTrait;
 
     /**
@@ -33,13 +28,12 @@ readonly class IndexAction
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
-        ActionHelperResolver $actionHelperResolver,
+        private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
         private ViewRenderer $viewRenderer,
         private IndexActionHelperInterface $defaultActionHelper,
     ) {
-        $this->managerRegistry      = $managerRegistry;
-        $this->actionHelperResolver = $actionHelperResolver;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -54,8 +48,7 @@ readonly class IndexAction
         string $entityClass,
     ): Response {
         $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'index');
-
-        $actionHelper = $this->getActionHelper(
+        $actionHelper        = $this->actionHelperResolver->resolve(
             IndexActionHelperInterface::class,
             $actionConfiguration,
             $this->defaultActionHelper,
@@ -65,9 +58,8 @@ readonly class IndexAction
 
         return $this->viewRenderer->render(
             $actionConfiguration,
-            $this->getViewContext(
-                $request,
-                $actionHelper,
+            array_merge(
+                $actionHelper->getViewVariables($request),
                 [
                     'entities' => $this->getEntities($request, $entityClass, $actionHelper),
                 ],
@@ -89,23 +81,6 @@ readonly class IndexAction
         return $actionHelper->getEntities(
             $request,
             $this->getRepository($entityClass),
-        );
-    }
-
-    /**
-     * @param IndexActionHelperInterface<E> $actionHelper
-     * @param array<string, mixed>          $defaults
-     *
-     * @return array<string, mixed>
-     */
-    private function getViewContext(
-        Request $request,
-        IndexActionHelperInterface $actionHelper,
-        array $defaults,
-    ): array {
-        return array_merge(
-            $actionHelper->getViewVariables($request),
-            $defaults,
         );
     }
 }

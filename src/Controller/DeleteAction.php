@@ -4,13 +4,17 @@ namespace Jmf\CrudEngine\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Controller\Dependencies\Redirector;
+use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
-use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
+use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -22,10 +26,6 @@ use Throwable;
 #[AsController]
 readonly class DeleteAction
 {
-    /**
-     * @use WithActionHelperTrait<DeleteActionHelperInterface<E>>
-     */
-    use WithActionHelperTrait;
     use WithEntityManagerTrait;
 
     /**
@@ -33,12 +33,13 @@ readonly class DeleteAction
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
-        ActionHelperResolver $actionHelperResolver,
+        private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private Redirector $redirector,
+        private ViewRenderer $viewRenderer,
         private DeleteActionHelperInterface $defaultActionHelper,
     ) {
-        $this->managerRegistry      = $managerRegistry;
-        $this->actionHelperResolver = $actionHelperResolver;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -47,31 +48,47 @@ readonly class DeleteAction
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineRedirectionParameterRenderingException
+     * @throws CrudEngineViewRenderingException
      * @throws Throwable
      */
     public function __invoke(
+        Request $request,
         string $entityClass,
         string $id,
     ): Response {
         $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'delete');
-        $actionHelper        = $this->getActionHelper(
+        $actionHelper        = $this->actionHelperResolver->resolve(
             DeleteActionHelperInterface::class,
             $actionConfiguration,
             $this->defaultActionHelper,
         );
 
-        $entity        = $this->getEntity($entityClass, $id);
-        $entityManager = $this->getEntityManager($entityClass);
+        $entity = $this->getEntity($entityClass, $id);
 
-        try {
-            $actionHelper->hookBeforeRemove($entity);
-            $actionHelper->remove($entityManager, $entity);
-            $actionHelper->hookAfterRemove($entity);
-        } catch (Throwable $e) {
-            return $actionHelper->onFailure($entity, $e);
+        if ($request->isMethod('POST')) {
+            $entityManager = $this->getEntityManager($entityClass);
+
+            try {
+                $actionHelper->hookBeforeRemove($entity);
+                $actionHelper->remove($entityManager, $entity);
+                $actionHelper->hookAfterRemove($entity);
+            } catch (Throwable $e) {
+                return $actionHelper->onFailure($entity, $e);
+            }
+
+            return $this->redirector->redirect($actionConfiguration, $entity);
         }
 
-        return $actionHelper->onSuccess($entity);
+        return $this->viewRenderer->render(
+            $actionConfiguration,
+            array_merge(
+                $actionHelper->getViewVariables($request, $entity),
+                [
+                    'entity' => $entity,
+                ],
+            ),
+        );
     }
 
     /**

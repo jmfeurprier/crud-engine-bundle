@@ -6,6 +6,7 @@ use Doctrine\Persistence\ObjectManager;
 use Jmf\CrudEngine\Exception\CrudEngineException;
 use Override;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -35,9 +36,11 @@ abstract class DeleteActionHelperBase implements DeleteActionHelperInterface
     }
 
     #[Override]
-    public function onSuccess(object $entity): JsonResponse
-    {
-        return new JsonResponse();
+    public function getViewVariables(
+        Request $request,
+        object $entity,
+    ): array {
+        return [];
     }
 
     /**

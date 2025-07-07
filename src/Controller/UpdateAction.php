@@ -9,7 +9,6 @@ use Jmf\CrudEngine\Controller\Dependencies\Redirector;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
-use Jmf\CrudEngine\Controller\Traits\WithActionHelperTrait;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
@@ -27,10 +26,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 #[AsController]
 readonly class UpdateAction
 {
-    /**
-     * @use WithActionHelperTrait<UpdateActionHelperInterface<E>>
-     */
-    use WithActionHelperTrait;
     use WithEntityManagerTrait;
 
     /**
@@ -38,15 +33,14 @@ readonly class UpdateAction
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
-        ActionHelperResolver $actionHelperResolver,
+        private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
         private Redirector $redirector,
         private ViewRenderer $viewRenderer,
         private FormCreator $formCreator,
         private UpdateActionHelperInterface $defaultActionHelper,
     ) {
-        $this->managerRegistry      = $managerRegistry;
-        $this->actionHelperResolver = $actionHelperResolver;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -64,7 +58,7 @@ readonly class UpdateAction
         string $id,
     ): Response {
         $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'update');
-        $actionHelper        = $this->getActionHelper(
+        $actionHelper        = $this->actionHelperResolver->resolve(
             UpdateActionHelperInterface::class,
             $actionConfiguration,
             $this->defaultActionHelper,
@@ -100,10 +94,8 @@ readonly class UpdateAction
 
         return $this->viewRenderer->render(
             $actionConfiguration,
-            $this->getViewContext(
-                $request,
-                $actionHelper,
-                $entity,
+            array_merge(
+                $actionHelper->getViewVariables($request, $entity),
                 [
                     'entity' => $entity,
                     'form'   => $form->createView(),
@@ -126,24 +118,5 @@ readonly class UpdateAction
         $entity = $this->getRepository($entityClass)->find($id);
 
         return $entity ?? throw new NotFoundHttpException();
-    }
-
-    /**
-     * @psalm-param UpdateActionHelperInterface<E> $actionHelper
-     * @psalm-param E                              $entity
-     * @psalm-param array<string, mixed>           $defaults
-     *
-     * @return array<string, mixed>
-     */
-    private function getViewContext(
-        Request $request,
-        UpdateActionHelperInterface $actionHelper,
-        object $entity,
-        array $defaults,
-    ): array {
-        return array_merge(
-            $actionHelper->getViewVariables($request, $entity),
-            $defaults,
-        );
     }
 }
