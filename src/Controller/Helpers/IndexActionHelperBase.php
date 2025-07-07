@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
-use Doctrine\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectManager;
 use Override;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -13,16 +13,18 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class IndexActionHelperBase implements IndexActionHelperInterface
 {
     #[Override]
-    public function hookBeforeRender(Request $request): void
-    {
+    public function hookBeforeRender(
+        Request $request,
+    ): void {
     }
 
     #[Override]
     public function getEntities(
         Request $request,
-        ObjectRepository $entityRepository,
+        string $entityClass,
+        ObjectManager $entityManager,
     ): iterable {
-        return $entityRepository->findAll();
+        return $entityManager->getRepository($entityClass)->findAll();
     }
 
     #[Override]

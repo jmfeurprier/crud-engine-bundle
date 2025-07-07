@@ -4,7 +4,6 @@ namespace Jmf\CrudEngine\Controller\Traits;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectRepository;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 
 trait WithEntityManagerTrait
@@ -25,17 +24,5 @@ trait WithEntityManagerTrait
         }
 
         return $entityManager;
-    }
-
-    /**
-     * @template T of object
-     *
-     * @param class-string<T> $entityClass
-     *
-     * @return ObjectRepository<T>
-     */
-    private function getRepository(string $entityClass): ObjectRepository
-    {
-        return $this->managerRegistry->getRepository($entityClass);
     }
 }

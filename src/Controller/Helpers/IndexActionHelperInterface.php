@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
-use Doctrine\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -13,13 +13,14 @@ interface IndexActionHelperInterface extends ActionHelperInterface
     public function hookBeforeRender(Request $request): void;
 
     /**
-     * @param ObjectRepository<E> $entityRepository
+     * @param class-string<E> $entityClass
      *
      * @return E[]
      */
     public function getEntities(
         Request $request,
-        ObjectRepository $entityRepository,
+        string $entityClass,
+        ObjectManager $entityManager,
     ): iterable;
 
     /**

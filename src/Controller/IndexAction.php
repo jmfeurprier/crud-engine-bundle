@@ -8,6 +8,7 @@ use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
+use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
@@ -39,6 +40,7 @@ readonly class IndexAction
     /**
      * @param class-string<E> $entityClass
      *
+     * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
      * @throws CrudEngineViewRenderingException
@@ -72,6 +74,8 @@ readonly class IndexAction
      * @param class-string<E>               $entityClass
      *
      * @return E[]
+     *
+     * @throws CrudEngineEntityManagerNotFoundException
      */
     private function getEntities(
         Request $request,
@@ -80,7 +84,8 @@ readonly class IndexAction
     ): iterable {
         return $actionHelper->getEntities(
             $request,
-            $this->getRepository($entityClass),
+            $entityClass,
+            $this->getEntityManager($entityClass),
         );
     }
 }

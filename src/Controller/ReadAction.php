@@ -8,6 +8,7 @@ use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperInterface;
 use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
+use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
@@ -40,6 +41,7 @@ readonly class ReadAction
     /**
      * @param class-string<E> $entityClass
      *
+     * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingConfigurationException
      * @throws CrudEngineViewRenderingException
@@ -74,13 +76,14 @@ readonly class ReadAction
      *
      * @psalm-return E
      *
+     * @throws CrudEngineEntityManagerNotFoundException
      * @throws NotFoundHttpException
      */
     private function getEntity(
         string $entityClass,
         string $id,
     ): object {
-        $entity = $this->getRepository($entityClass)->find($id);
+        $entity = $this->getEntityManager($entityClass)->find($entityClass, $id);
 
         return $entity ?? throw new NotFoundHttpException();
     }

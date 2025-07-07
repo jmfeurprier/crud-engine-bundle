@@ -109,13 +109,14 @@ readonly class UpdateAction
      *
      * @psalm-return E
      *
+     * @throws CrudEngineEntityManagerNotFoundException
      * @throws NotFoundHttpException
      */
     private function getEntity(
         string $entityClass,
         string $id,
     ): object {
-        $entity = $this->getRepository($entityClass)->find($id);
+        $entity = $this->getEntityManager($entityClass)->find($entityClass, $id);
 
         return $entity ?? throw new NotFoundHttpException();
     }
