@@ -76,11 +76,9 @@ class FormTypeClassConfigurationLoaderTest extends TestCase
         array $actionConfig,
         ?string $formTypeClass,
     ): void {
-        if (null !== $formTypeClass) {
-            if (!class_exists($formTypeClass)) {
-                $newClass = $this->createMock(FormInterface::class);
-                class_alias($newClass::class, $formTypeClass);
-            }
+        if (null !== $formTypeClass && !class_exists($formTypeClass)) {
+            $newClass = $this->createMock(FormInterface::class);
+            class_alias($newClass::class, $formTypeClass);
         }
 
         $result = $this->formTypeClassConfigurationLoader->load($entityClass, $action, $actionConfig);
