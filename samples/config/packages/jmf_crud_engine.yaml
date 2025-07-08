@@ -1,8 +1,17 @@
 jmf_crud_engine:
 
+    view:
+        naming:
+            entities: "{{ entityClass|u.afterLast('\\').camel|plural }}"
+            entity:   "{{ entityClass|u.afterLast('\\').camel }}"
+
     entities:
         App\Entity\Article:
-            name: 'article'
+            view:
+                naming:
+                    entities: 'articles'
+                    entity:   'article'
+                    form:     'form'
             actions:
                 create:
                     formType: 'App\Form\ArticleType'
@@ -14,8 +23,6 @@ jmf_crud_engine:
                         path: '/articles/create'
                     view:
                         path: 'article/create.html.twig'
-                        variables:
-                            entity: 'article'
                 delete:
                     redirection:
                         route: 'article.index'
@@ -23,27 +30,19 @@ jmf_crud_engine:
                         path: '/articles/{id}'
                         requirements:
                             'id': !php/const Symfony\Component\Routing\Requirement\Requirement::UUID
-                        parameters:
-                            'id': '{{ _entity.id }}'
                 index:
                     route:
                         path: '/articles'
                     view:
                         path: 'article/index.html.twig'
-                        variables:
-                            entities: 'articles'
                 read:
                     helper: 'App\Controller\Article\ReadActionHelper'
                     route:
                         path: '/articles/{id}'
-                        parameters:
-                            'id': '{{ _entity.id }}'
                         requirements:
                             'id': !php/const Symfony\Component\Routing\Requirement\Requirement::UUID
                     view:
                         path: 'article/read.html.twig'
-                        variables:
-                            entity: 'article'
                 update:
                     formType: 'App\Form\ArticleType'
                     redirection:
@@ -53,12 +52,8 @@ jmf_crud_engine:
                             id: '{{ _entity.id }}'
                     route:
                         path: '/articles/{id}/update'
-                        parameters:
-                            'id': '{{ _entity.id }}'
                         requirements:
                             'id': !php/const Symfony\Component\Routing\Requirement\Requirement::UUID
                     view:
                         path: 'article/update.html.twig'
-                        variables:
-                            entity: 'article'
 
