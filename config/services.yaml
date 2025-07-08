@@ -5,7 +5,7 @@ services:
         autowire:      true
 
     Jmf\CrudEngine\:
-        resource: '../../'
+        resource: '../src/'
 
     Jmf\CrudEngine\Controller\CreateAction:
         arguments:
