@@ -10,7 +10,7 @@ parameters:
         uncheckedExceptionRegexes:
             - '|^PHPUnit\\|'
     excludePaths:
-        - ../src/DependencyInjection/Configuration.php
+        - ../src/JmfCrudEngineBundle.php
     level: 10
     paths:
         - ../bin/

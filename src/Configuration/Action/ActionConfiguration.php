@@ -6,14 +6,14 @@ use Jmf\CrudEngine\Configuration\Action\Redirection\RedirectionConfiguration;
 use Jmf\CrudEngine\Configuration\Action\Route\RouteConfiguration;
 use Jmf\CrudEngine\Configuration\Action\View\ViewConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
 
 readonly class ActionConfiguration
 {
     /**
-     * @param class-string                     $entityClass
-     * @param null|class-string<FormInterface> $formTypeClass
-     * @param null|class-string                $helperClass
+     * @param class-string                         $entityClass
+     * @param null|class-string<FormTypeInterface> $formTypeClass
+     * @param null|class-string                    $helperClass
      */
     public function __construct(
         private string $entityClass,
@@ -46,7 +46,7 @@ readonly class ActionConfiguration
     }
 
     /**
-     * @return class-string<FormInterface>
+     * @return class-string<FormTypeInterface>
      *
      * @throws CrudEngineMissingConfigurationException
      */
