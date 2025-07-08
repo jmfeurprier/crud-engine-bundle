@@ -53,6 +53,7 @@ readonly class FormTypeClassConfigurationLoader
         $candidates = [
             "App\\Form\\{$classShortName}\\{$actionCamelName}Type",
             "App\\Form\\{$classShortName}{$actionCamelName}Type",
+            "App\\Form\\{$classShortName}Type",
         ];
 
         foreach ($candidates as $candidate) {
