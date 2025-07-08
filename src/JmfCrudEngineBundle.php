@@ -89,16 +89,19 @@ class JmfCrudEngineBundle extends AbstractBundle
     ): void {
         $container->import('../config/services.yaml');
 
-        $container->autowire(ActionHelperResolver::class)
-            ->setArgument('$container', new Reference('service_container'))
+        $container->services()
+            ->set(ActionHelperResolver::class)
+            ->arg('$container', new Reference('service_container'))
         ;
 
-        $container->getDefinition(RouteLoader::class)
-            ->addTag('routing.route_loader')
+        $container->services()
+            ->get(RouteLoader::class)
+            ->tag('routing.route_loader')
         ;
 
-        $container->autowire(ActionConfigurationRepositoryInterface::class)
-            ->setFactory(
+        $container->services()
+            ->set(ActionConfigurationRepositoryInterface::class)
+            ->factory(
                 [
                     new Reference(ActionConfigurationRepositoryFactoryInterface::class),
                     'make',
@@ -107,26 +110,30 @@ class JmfCrudEngineBundle extends AbstractBundle
         ;
 
         if (interface_exists(CacheInterface::class)) {
-            $container->autowire(ActionConfigurationRepositoryFactory::class)
-                ->setArgument('$config', $config['entities'])
+            $container->services()
+                ->get(ActionConfigurationRepositoryFactory::class)
+                ->arg('$config', $config['entities'])
             ;
 
-            $container->autowire(ActionConfigurationRepositoryFactoryInterface::class)
-                ->setClass(CacheableActionConfigurationRepositoryFactory::class)
-                ->setArgument(
+            $container->services()
+                ->get(ActionConfigurationRepositoryFactoryInterface::class)
+                ->class(CacheableActionConfigurationRepositoryFactory::class)
+                ->arg(
                     '$actionConfigurationRepositoryFactory',
                     new Reference(ActionConfigurationRepositoryFactory::class),
                 )
             ;
         } else {
-            $container->autowire(ActionConfigurationRepositoryFactoryInterface::class)
-                ->setClass(ActionConfigurationRepositoryFactory::class)
-                ->setArgument('$config', $config['entities'])
+            $container->services()
+                ->get(ActionConfigurationRepositoryFactoryInterface::class)
+                ->class(ActionConfigurationRepositoryFactory::class)
+                ->arg('$config', $config['entities'])
             ;
         }
 
-        $container->autowire(InstantiatorInterface::class)
-            ->setClass(Instantiator::class)
+        $container->services()
+            ->get(InstantiatorInterface::class)
+            ->class(Instantiator::class)
         ;
     }
 }
