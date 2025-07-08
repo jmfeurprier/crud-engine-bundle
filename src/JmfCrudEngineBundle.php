@@ -90,12 +90,14 @@ class JmfCrudEngineBundle extends AbstractBundle
         $container->import('../config/services.yaml');
 
         $container->services()
-            ->get(ActionHelperResolver::class)
+            ->set(ActionHelperResolver::class)
+            ->autowire()
             ->arg('$container', new Reference('service_container'))
         ;
 
         $container->services()
             ->get(RouteLoader::class)
+            //->autowire()
             ->tag('routing.route_loader')
         ;
 
@@ -111,7 +113,8 @@ class JmfCrudEngineBundle extends AbstractBundle
 
         if (interface_exists(CacheInterface::class)) {
             $container->services()
-                ->get(ActionConfigurationRepositoryFactory::class)
+                ->set(ActionConfigurationRepositoryFactory::class)
+                ->autowire()
                 ->arg('$config', $config['entities'])
             ;
 
@@ -126,8 +129,9 @@ class JmfCrudEngineBundle extends AbstractBundle
             ;
         } else {
             $container->services()
-                ->get(ActionConfigurationRepositoryFactoryInterface::class)
+                ->set(ActionConfigurationRepositoryFactoryInterface::class)
                 ->class(ActionConfigurationRepositoryFactory::class)
+                ->autowire()
                 ->arg('$config', $config['entities'])
             ;
         }

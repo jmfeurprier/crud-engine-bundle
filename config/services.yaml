@@ -39,5 +39,8 @@ services:
     Jmf\TemplateRendering\TemplateRendererInterface:
         class: Jmf\TemplateRendering\TemplateRenderer
 
+    Doctrine\Instantiator\InstantiatorInterface:
+        class: Doctrine\Instantiator\Instantiator
+
     Symfony\Component\String\Inflector\InflectorInterface:
         class: Symfony\Component\String\Inflector\EnglishInflector
