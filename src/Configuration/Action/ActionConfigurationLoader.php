@@ -10,7 +10,6 @@ use Jmf\CrudEngine\Configuration\Action\Route\RouteConfiguration;
 use Jmf\CrudEngine\Configuration\Action\Route\RouteConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Action\View\ViewConfiguration;
 use Jmf\CrudEngine\Configuration\Action\View\ViewConfigurationLoader;
-use Jmf\CrudEngine\Configuration\EntityConfigurationFallbacksResolver;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\Form\FormInterface;
 use Webmozart\Assert\Assert;

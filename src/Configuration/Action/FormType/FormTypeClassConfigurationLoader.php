@@ -3,6 +3,7 @@
 namespace Jmf\CrudEngine\Configuration\Action\FormType;
 
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
 use Webmozart\Assert\Assert;
 use function Symfony\Component\String\u;
 
@@ -32,7 +33,7 @@ readonly class FormTypeClassConfigurationLoader
 
         Assert::string($formTypeClass);
         Assert::classExists($formTypeClass);
-        Assert::subclassOf($formTypeClass, FormInterface::class);
+        Assert::subclassOf($formTypeClass, FormTypeInterface::class);
 
         return $formTypeClass;
     }
