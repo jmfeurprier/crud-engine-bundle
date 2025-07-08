@@ -97,7 +97,6 @@ class JmfCrudEngineBundle extends AbstractBundle
 
         $container->services()
             ->get(RouteLoader::class)
-            //->autowire()
             ->tag('routing.route_loader')
         ;
 
