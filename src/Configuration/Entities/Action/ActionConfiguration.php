@@ -1,10 +1,10 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration\Action;
+namespace Jmf\CrudEngine\Configuration\Entities\Action;
 
-use Jmf\CrudEngine\Configuration\Action\Redirection\RedirectionConfiguration;
-use Jmf\CrudEngine\Configuration\Action\Route\RouteConfiguration;
-use Jmf\CrudEngine\Configuration\Action\View\ViewConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\Form\FormTypeInterface;
 
@@ -18,12 +18,11 @@ readonly class ActionConfiguration
     public function __construct(
         private string $entityClass,
         private string $action,
-        private ?string $entityName,
         private ?string $formTypeClass,
         private ?string $helperClass,
-        private ?RedirectionConfiguration $redirectionConfiguration,
+        private ?ActionRedirectionConfiguration $redirectionConfiguration,
         private RouteConfiguration $routeConfiguration,
-        private ?ViewConfiguration $viewConfiguration,
+        private ?ActionViewConfiguration $viewConfiguration,
     ) {
     }
 
@@ -38,11 +37,6 @@ readonly class ActionConfiguration
     public function getAction(): string
     {
         return $this->action;
-    }
-
-    public function getEntityName(): ?string
-    {
-        return $this->entityName;
     }
 
     /**
@@ -66,7 +60,7 @@ readonly class ActionConfiguration
     /**
      * @throws CrudEngineMissingConfigurationException
      */
-    public function getRedirectionConfiguration(): RedirectionConfiguration
+    public function getRedirectionConfiguration(): ActionRedirectionConfiguration
     {
         return $this->redirectionConfiguration ?? $this->onMissingConfiguration('redirection');
     }
@@ -79,7 +73,7 @@ readonly class ActionConfiguration
     /**
      * @throws CrudEngineMissingConfigurationException
      */
-    public function getViewConfiguration(): ViewConfiguration
+    public function getViewConfiguration(): ActionViewConfiguration
     {
         return $this->viewConfiguration ?? $this->onMissingConfiguration('view');
     }

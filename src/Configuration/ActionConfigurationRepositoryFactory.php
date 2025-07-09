@@ -2,14 +2,14 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Override;
 
 readonly class ActionConfigurationRepositoryFactory implements ActionConfigurationRepositoryFactoryInterface
 {
     /**
-     * @param array<class-string, array<string, mixed>> $config
+     * @param array<string, mixed> $config
      */
     public function __construct(
         private ActionConfigurationsLoader $actionConfigurationsLoader,
@@ -28,7 +28,7 @@ readonly class ActionConfigurationRepositoryFactory implements ActionConfigurati
     /**
      * @return ActionConfiguration[]
      *
-     * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineConfigurationException
      */
     private function getActionConfigurations(): iterable
     {

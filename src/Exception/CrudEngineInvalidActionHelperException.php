@@ -2,6 +2,6 @@
 
 namespace Jmf\CrudEngine\Exception;
 
-class CrudEngineInvalidActionHelperException extends CrudEngineException
+class CrudEngineInvalidActionHelperException extends CrudEngineRuntimeException
 {
 }

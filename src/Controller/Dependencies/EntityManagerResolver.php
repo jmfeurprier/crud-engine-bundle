@@ -1,21 +1,24 @@
 <?php
 
-namespace Jmf\CrudEngine\Controller\Traits;
+namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 
-trait WithEntityManagerTrait
+readonly class EntityManagerResolver
 {
-    private readonly ManagerRegistry $managerRegistry;
+    public function __construct(
+        private ManagerRegistry $managerRegistry,
+    ) {
+    }
 
     /**
      * @param class-string $entityClass
      *
      * @throws CrudEngineEntityManagerNotFoundException
      */
-    private function getEntityManager(string $entityClass): ObjectManager
+    public function resolve(string $entityClass): ObjectManager
     {
         $entityManager = $this->managerRegistry->getManagerForClass($entityClass);
 

@@ -4,7 +4,7 @@ namespace Jmf\CrudEngine\Exception;
 
 use Throwable;
 
-class CrudEngineInstantiationFailureException extends CrudEngineException
+class CrudEngineInstantiationFailureException extends CrudEngineRuntimeException
 {
     /**
      * @param class-string $entityClass

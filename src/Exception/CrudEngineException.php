@@ -4,6 +4,6 @@ namespace Jmf\CrudEngine\Exception;
 
 use Exception;
 
-class CrudEngineException extends Exception
+abstract class CrudEngineException extends Exception
 {
 }

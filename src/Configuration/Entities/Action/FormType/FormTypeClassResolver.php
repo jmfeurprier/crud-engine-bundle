@@ -1,12 +1,13 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration\Action\FormType;
+namespace Jmf\CrudEngine\Configuration\Entities\Action\FormType;
 
+use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Symfony\Component\Form\FormTypeInterface;
 use Webmozart\Assert\Assert;
 use function Symfony\Component\String\u;
 
-readonly class FormTypeClassConfigurationLoader
+readonly class FormTypeClassResolver
 {
     /**
      * @param class-string         $entityClass
@@ -15,7 +16,8 @@ readonly class FormTypeClassConfigurationLoader
      *
      * @return null|class-string<FormTypeInterface>
      */
-    public function load(
+    public function resolve(
+        SchemaConfiguration $schemaConfiguration,
         string $entityClass,
         string $action,
         array $actionConfig,

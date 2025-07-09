@@ -2,14 +2,13 @@
 
 namespace Jmf\CrudEngine\Controller;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
 use Jmf\CrudEngine\Controller\Dependencies\FormCreator;
-use Jmf\CrudEngine\Controller\Dependencies\Redirector;
+use Jmf\CrudEngine\Controller\Dependencies\RedirectionGenerator;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperInterface;
-use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
@@ -26,21 +25,18 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 readonly class CreateAction
 {
-    use WithEntityManagerTrait;
-
     /**
      * @psalm-param CreateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        ManagerRegistry $managerRegistry,
+        private EntityManagerResolver $entityManagerResolver,
         private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
-        private Redirector $redirector,
+        private RedirectionGenerator $redirectionGenerator,
         private ViewRenderer $viewRenderer,
         private FormCreator $formCreator,
         private CreateActionHelperInterface $defaultActionHelper,
     ) {
-        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -80,7 +76,7 @@ readonly class CreateAction
                 $request,
                 $entity,
                 $form,
-                $this->getEntityManager($entityClass),
+                $this->entityManagerResolver->resolve($entityClass),
             );
 
             $actionHelper->hookAfterPersist(
@@ -89,7 +85,7 @@ readonly class CreateAction
                 $form,
             );
 
-            return $this->redirector->redirect($actionConfiguration, $entity);
+            return $this->redirectionGenerator->generate($actionConfiguration, $entity);
         }
 
         return $this->viewRenderer->render(

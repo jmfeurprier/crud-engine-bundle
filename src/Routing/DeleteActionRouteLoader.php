@@ -17,7 +17,8 @@ readonly class DeleteActionRouteLoader extends ActionRouteLoaderBase
     protected function getMethods(): iterable
     {
         return [
-            'DELETE',
+            'GET',
+            'POST',
         ];
     }
 

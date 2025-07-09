@@ -2,10 +2,10 @@
 
 namespace Jmf\CrudEngine\Exception;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Throwable;
 
-class CrudEngineViewRenderingException extends CrudEngineException
+class CrudEngineViewRenderingException extends CrudEngineRuntimeException
 {
     public function __construct(
         private readonly ActionConfiguration $actionConfiguration,

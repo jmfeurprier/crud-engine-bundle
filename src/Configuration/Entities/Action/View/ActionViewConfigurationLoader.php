@@ -1,12 +1,13 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration\Action\View;
+namespace Jmf\CrudEngine\Configuration\Entities\Action\View;
 
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
+use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Webmozart\Assert\Assert;
 use function Symfony\Component\String\u;
 
-readonly class ViewConfigurationLoader
+readonly class ActionViewConfigurationLoader
 {
     /**
      * @param class-string         $entityClass
@@ -14,10 +15,11 @@ readonly class ViewConfigurationLoader
      * @param array<string, mixed> $actionConfig
      */
     public function load(
+        SchemaConfiguration $schemaConfiguration,
         string $entityClass,
         string $action,
         array $actionConfig,
-    ): ?ViewConfiguration {
+    ): ?ActionViewConfiguration {
         $viewConfig = [];
 
         if (array_key_exists('view', $actionConfig)) {
@@ -26,7 +28,7 @@ readonly class ViewConfigurationLoader
             $viewConfig = $actionConfig['view'];
         }
 
-        return new ViewConfiguration(
+        return new ActionViewConfiguration(
             $this->getPath($entityClass, $action, $viewConfig),
             $this->getVariables($viewConfig),
         );

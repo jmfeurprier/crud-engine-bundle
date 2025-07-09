@@ -3,7 +3,6 @@
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
-use Jmf\CrudEngine\Exception\CrudEngineException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -43,6 +42,8 @@ interface DeleteActionHelperInterface extends ActionHelperInterface
 
     /**
      * @psalm-param E $entity
+     *
+     * @throws Throwable
      */
     public function onFailure(
         object $entity,

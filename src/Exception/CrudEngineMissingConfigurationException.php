@@ -2,11 +2,11 @@
 
 namespace Jmf\CrudEngine\Exception;
 
-class CrudEngineMissingConfigurationException extends CrudEngineException
+class CrudEngineMissingConfigurationException extends CrudEngineConfigurationException
 {
     public function __construct(
         private readonly string $entityClass,
-        private readonly string $action,
+        private readonly ?string $action = null,
         private readonly ?string $configurationKey = null,
     ) {
         parent::__construct(
@@ -19,11 +19,21 @@ class CrudEngineMissingConfigurationException extends CrudEngineException
 
     private function getTemplate(): string
     {
-        if (null === $this->configurationKey) {
-            return 'Missing configuration for entity class %s and action "%s".';
+        $tokens = [
+            'Missing configuration',
+        ];
+
+        if (null !== $this->configurationKey) {
+            $tokens[] = '"%s"';
         }
 
-        return 'Missing configuration "%s" for entity class %s and action "%s".';
+        $tokens[] = 'for entity class %s';
+
+        if (null !== $this->action) {
+            $tokens[] = 'and action "%s"';
+        }
+
+        return implode(' ', $tokens) . '.';
     }
 
     /**
@@ -31,18 +41,19 @@ class CrudEngineMissingConfigurationException extends CrudEngineException
      */
     private function getVars(): array
     {
-        if (null === $this->configurationKey) {
-            return [
-                $this->entityClass,
-                $this->action,
-            ];
+        $vars = [];
+
+        if (null !== $this->configurationKey) {
+            $vars[] = $this->configurationKey;
         }
 
-        return [
-            $this->configurationKey,
-            $this->entityClass,
-            $this->action,
-        ];
+        $vars[] = $this->entityClass;
+
+        if (null !== $this->action) {
+            $vars[] = $this->action;
+        }
+
+        return $vars;
     }
 
     public function getEntityClass(): string
@@ -50,7 +61,7 @@ class CrudEngineMissingConfigurationException extends CrudEngineException
         return $this->entityClass;
     }
 
-    public function getAction(): string
+    public function getAction(): ?string
     {
         return $this->action;
     }

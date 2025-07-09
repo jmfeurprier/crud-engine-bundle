@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Controller\Dependencies;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;

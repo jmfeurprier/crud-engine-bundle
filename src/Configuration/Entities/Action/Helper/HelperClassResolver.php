@@ -1,11 +1,12 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration\Action\Helper;
+namespace Jmf\CrudEngine\Configuration\Entities\Action\Helper;
 
+use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Webmozart\Assert\Assert;
 use function Symfony\Component\String\u;
 
-readonly class HelperClassConfigurationLoader
+readonly class HelperClassResolver
 {
     /**
      * @param class-string         $entityClass
@@ -14,7 +15,8 @@ readonly class HelperClassConfigurationLoader
      *
      * @return null|class-string
      */
-    public function load(
+    public function resolve(
+        SchemaConfiguration $schemaConfiguration,
         string $entityClass,
         string $action,
         array $actionConfig,

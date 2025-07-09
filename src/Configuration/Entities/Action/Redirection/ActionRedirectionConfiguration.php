@@ -1,10 +1,10 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration\Action\Redirection;
+namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
 
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 
-readonly class RedirectionConfiguration
+readonly class ActionRedirectionConfiguration
 {
     public function __construct(
         private string $route,

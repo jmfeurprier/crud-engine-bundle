@@ -1,19 +1,19 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration\Action\Route;
+namespace Jmf\CrudEngine\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 
 readonly class RouteConfiguration
 {
     public function __construct(
-        private ?string $name,
+        private string $name,
         private string $path,
         private KeyStringCollection $requirements,
     ) {
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

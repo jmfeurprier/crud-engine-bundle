@@ -1,10 +1,10 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration\Action\View;
+namespace Jmf\CrudEngine\Configuration\Entities\Action\View;
 
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 
-readonly class ViewConfiguration
+readonly class ActionViewConfiguration
 {
     public function __construct(
         private string $path,

@@ -2,19 +2,23 @@
 
 namespace Jmf\CrudEngine\Tests\Configuration\Action\Helper;
 
-use Jmf\CrudEngine\Configuration\Action\Helper\HelperClassConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Entities\Action\Helper\HelperClassResolver;
+use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
-class HelperClassConfigurationLoaderTest extends TestCase
+class HelperClassResolverTest extends TestCase
 {
-    private HelperClassConfigurationLoader $helperClassConfigurationLoader;
+    private HelperClassResolver $helperClassResolver;
 
     protected function setUp(): void
     {
-        $this->helperClassConfigurationLoader = new HelperClassConfigurationLoader();
+        $this->helperClassResolver = new HelperClassResolver();
     }
 
     /**
@@ -58,14 +62,19 @@ class HelperClassConfigurationLoaderTest extends TestCase
         array $actionConfig,
         string $helperClass,
     ): void {
-        $result = $this->helperClassConfigurationLoader->load($class, $action, $actionConfig);
+        $schemaConfiguration = new SchemaConfiguration(
+            new SchemaRouteConfiguration('foo'),
+            new SchemaViewConfiguration('bar', SchemaViewVariablesCollection::createEmpty()),
+        );
+
+        $result = $this->helperClassResolver->resolve($schemaConfiguration, $class, $action, $actionConfig);
 
         self::assertNull($result);
 
         $newClass = $this->createMock(ActionHelperInterface::class);
         class_alias($newClass::class, $helperClass);
 
-        $result = $this->helperClassConfigurationLoader->load($class, $action, $actionConfig);
+        $result = $this->helperClassResolver->resolve($schemaConfiguration, $class, $action, $actionConfig);
 
         self::assertSame($helperClass, $result);
     }

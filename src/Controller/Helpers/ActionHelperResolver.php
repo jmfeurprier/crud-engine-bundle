@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

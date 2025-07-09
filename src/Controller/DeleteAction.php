@@ -2,13 +2,13 @@
 
 namespace Jmf\CrudEngine\Controller;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
-use Jmf\CrudEngine\Controller\Dependencies\Redirector;
+use Jmf\CrudEngine\Controller\Dependencies\EntityFinder;
+use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
+use Jmf\CrudEngine\Controller\Dependencies\RedirectionGenerator;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
-use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -17,7 +17,6 @@ use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 /**
@@ -26,20 +25,18 @@ use Throwable;
 #[AsController]
 readonly class DeleteAction
 {
-    use WithEntityManagerTrait;
-
     /**
      * @param DeleteActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        ManagerRegistry $managerRegistry,
+        private EntityFinder $entityFinder,
+        private EntityManagerResolver $entityManagerResolver,
         private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
-        private Redirector $redirector,
+        private RedirectionGenerator $redirectionGenerator,
         private ViewRenderer $viewRenderer,
         private DeleteActionHelperInterface $defaultActionHelper,
     ) {
-        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -64,20 +61,27 @@ readonly class DeleteAction
             $this->defaultActionHelper,
         );
 
-        $entity = $this->getEntity($entityClass, $id);
+        $entity = $this->entityFinder->find($entityClass, $id);
 
         if ($request->isMethod('POST')) {
-            $entityManager = $this->getEntityManager($entityClass);
-
             try {
-                $actionHelper->hookBeforeRemove($entity);
-                $actionHelper->remove($entityManager, $entity);
-                $actionHelper->hookAfterRemove($entity);
+                $actionHelper->hookBeforeRemove(
+                    $entity,
+                );
+
+                $actionHelper->remove(
+                    $this->entityManagerResolver->resolve($entityClass),
+                    $entity,
+                );
+
+                $actionHelper->hookAfterRemove(
+                    $entity,
+                );
             } catch (Throwable $e) {
                 return $actionHelper->onFailure($entity, $e);
             }
 
-            return $this->redirector->redirect($actionConfiguration, $entity);
+            return $this->redirectionGenerator->generate($actionConfiguration, $entity);
         }
 
         return $this->viewRenderer->render(
@@ -89,22 +93,5 @@ readonly class DeleteAction
                 ],
             ),
         );
-    }
-
-    /**
-     * @param class-string<E> $entityClass
-     *
-     * @psalm-return E
-     *
-     * @throws CrudEngineEntityManagerNotFoundException
-     * @throws NotFoundHttpException
-     */
-    private function getEntity(
-        string $entityClass,
-        string $id,
-    ): object {
-        $entity = $this->getEntityManager($entityClass)->find($entityClass, $id);
-
-        return $entity ?? throw new NotFoundHttpException();
     }
 }

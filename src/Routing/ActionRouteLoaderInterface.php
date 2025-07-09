@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Routing;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\Routing\RouteCollection;
 

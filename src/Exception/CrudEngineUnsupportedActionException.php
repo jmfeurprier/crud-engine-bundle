@@ -2,9 +2,9 @@
 
 namespace Jmf\CrudEngine\Exception;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 
-class CrudEngineUnsupportedActionException extends CrudEngineException
+class CrudEngineUnsupportedActionException extends CrudEngineRuntimeException
 {
     public function __construct(
         private readonly ActionConfiguration $actionConfiguration,

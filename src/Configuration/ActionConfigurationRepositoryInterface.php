@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 
 interface ActionConfigurationRepositoryInterface
@@ -26,7 +26,7 @@ interface ActionConfigurationRepositoryInterface
     ): ?ActionConfiguration;
 
     /**
-     * @return ActionConfiguration[]
+     * @return \Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration[]
      */
     public function all(): iterable;
 }

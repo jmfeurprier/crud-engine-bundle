@@ -1,0 +1,10 @@
+jmf_crud_engine:
+
+    entities:
+        App\Entity\Article:
+            actions:
+                create:
+                delete:
+                index:
+                read:
+                update:

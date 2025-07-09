@@ -1,0 +1,82 @@
+jmf_crud_engine:
+
+    schema:
+        #formType:
+        #    - "App\Form\{{ entityClass|u.afterLast('\\') }}\{{ action|u.title }}Type" # "App\Form\FooBar\UpdateType"
+        #    - "App\Form\{{ entityClass|u.afterLast('\\') }}{{ action|u.title }}Type"  # "App\Form\FooBarUpdateType"
+        #    - "App\Form\{{ entityClass|u.afterLast('\\') }}Type"                      # "App\Form\FooBarType"
+        #helper:
+        #    - "App\Controller\{{ entityClass|u.afterLast('\\') }}\{{ action|u.title }}ActionHelper" # "App\Controller\FooBar\UpdateActionHelper"
+        #    - "App\Controller\{{ entityClass|u.afterLast('\\') }}{{ action|u.title }}ActionHelper"  # "App\Controller\FooBarUpdateActionHelper"
+        #redirections:
+        #    create: '{{ x }}.read'
+        #    delete: '{{ x }}.index'
+        #    update: '{{ x }}.read'
+        route:
+            name: "{{ entityClass|u.afterLast('\\').snake }}.{{ action }}" # "foo_bar"
+        #routes:
+        #    create: "{{ entityClass|u.afterLast('\\').kebab|plural }}/create"      # "foo-bars/create"
+        #    delete: "{{ entityClass|u.afterLast('\\').kebab|plural }}/{id}/delete" # "foo-bars/{id}/delete"
+        #    index:  "{{ entityClass|u.afterLast('\\').kebab|plural }}"             # "foo-bars"
+        #    read:   "{{ entityClass|u.afterLast('\\').kebab|plural }}/{id}"        # "foo-bars/{id}"
+        #    update: "{{ entityClass|u.afterLast('\\').kebab|plural }}/{id}/update" # "foo-bars/{id}/update"
+        view:
+            path: "{{ entityClass|u.afterLast('\\').snake }}/{{ action }}.html.twig" # "foo_bar/update.html.twig"
+            variables:
+                entities:
+                    - 'entities'
+                    - "{{ entityClass|u.afterLast('\\').camel|plural }}" # "fooBars"
+                entity:
+                    - 'entity'
+                    - "{{ entityClass|u.afterLast('\\').camel }}" # "fooBar"
+
+    entities:
+        App\Entity\Article:
+            actions:
+                create:
+                    formType: 'App\Form\ArticleType'
+                    redirection:
+                        route: 'article.read'
+                        parameters:
+                            id: '{{ _entity.id }}'
+                    route:
+                        name: 'article.create'
+                        path: '/articles/create'
+                    view:
+                        path: 'article/create.html.twig'
+                delete:
+                    redirection:
+                        route: 'article.index'
+                    route:
+                        path: '/articles/{id}/delete'
+                        requirements:
+                            'id': !php/const Symfony\Component\Routing\Requirement\Requirement::UUID
+                    view:
+                        path: 'article/delete.html.twig'
+                index:
+                    route:
+                        path: '/articles'
+                    view:
+                        path: 'article/index.html.twig'
+                read:
+                    helper: 'App\Controller\Article\ReadActionHelper'
+                    route:
+                        path: '/articles/{id}'
+                        requirements:
+                            'id': !php/const Symfony\Component\Routing\Requirement\Requirement::UUID
+                    view:
+                        path: 'article/read.html.twig'
+                update:
+                    formType: 'App\Form\ArticleType'
+                    redirection:
+                        fragment: 'content'
+                        route:    'article.read'
+                        parameters:
+                            id: '{{ _entity.id }}'
+                    route:
+                        path: '/articles/{id}/update'
+                        requirements:
+                            'id': !php/const Symfony\Component\Routing\Requirement\Requirement::UUID
+                    view:
+                        path: 'article/update.html.twig'
+

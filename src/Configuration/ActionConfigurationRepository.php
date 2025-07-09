@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Override;
 use Webmozart\Assert\Assert;
@@ -53,7 +53,7 @@ readonly class ActionConfigurationRepository implements ActionConfigurationRepos
     }
 
     /**
-     * @return ActionConfiguration[]
+     * @return \Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration[]
      */
     #[Override]
     public function all(): iterable

@@ -2,6 +2,6 @@
 
 namespace Jmf\CrudEngine\Exception;
 
-class CrudEngineInvalidConfigurationException extends CrudEngineException
+class CrudEngineInvalidConfigurationException extends CrudEngineConfigurationException
 {
 }

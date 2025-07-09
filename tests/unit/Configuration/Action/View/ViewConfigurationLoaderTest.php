@@ -2,17 +2,22 @@
 
 namespace Jmf\CrudEngine\Tests\Configuration\Action\View;
 
-use Jmf\CrudEngine\Configuration\Action\View\ViewConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ViewConfigurationLoaderTest extends TestCase
 {
-    private ViewConfigurationLoader $viewConfigurationLoader;
+    private ActionViewConfigurationLoader $viewConfigurationLoader;
 
     protected function setUp(): void
     {
-        $this->viewConfigurationLoader = new ViewConfigurationLoader();
+        $this->viewConfigurationLoader =
+            new \Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader();
     }
 
     /**
@@ -72,7 +77,12 @@ class ViewConfigurationLoaderTest extends TestCase
         string $viewPath,
         array $viewVariables,
     ): void {
-        $result = $this->viewConfigurationLoader->load($entityClass, $action, $actionConfig);
+        $schemaConfiguration = new SchemaConfiguration(
+            new SchemaRouteConfiguration('foo'),
+            new SchemaViewConfiguration('bar', SchemaViewVariablesCollection::createEmpty()),
+        );
+
+        $result = $this->viewConfigurationLoader->load($schemaConfiguration, $entityClass, $action, $actionConfig);
 
         self::assertNotNull($result);
         self::assertSame($viewPath, $result->getPath());

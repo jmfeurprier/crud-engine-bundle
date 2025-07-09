@@ -2,8 +2,8 @@
 
 namespace Jmf\CrudEngine\Routing;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
@@ -58,9 +58,7 @@ readonly class RouteLoader implements RouteLoaderInterface
         RouteCollection $routeCollection,
         ActionConfiguration $actionConfiguration,
     ): void {
-        $loader = $this->getLoader($actionConfiguration);
-
-        $loader->load($routeCollection, $actionConfiguration);
+        $this->getLoader($actionConfiguration)->load($routeCollection, $actionConfiguration);
     }
 
     /**

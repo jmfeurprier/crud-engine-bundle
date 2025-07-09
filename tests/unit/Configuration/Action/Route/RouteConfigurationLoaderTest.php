@@ -2,12 +2,20 @@
 
 namespace Jmf\CrudEngine\Tests\Configuration\Action\Route;
 
-use Jmf\CrudEngine\Configuration\Action\Route\RouteConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\String\Inflector\EnglishInflector;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 
 class RouteConfigurationLoaderTest extends TestCase
 {
@@ -17,6 +25,11 @@ class RouteConfigurationLoaderTest extends TestCase
     protected function setUp(): void
     {
         $this->routeConfigurationLoader = new RouteConfigurationLoader(
+            new TemplateRenderer(
+                new Environment(
+                    new ArrayLoader(),
+                ),
+            ),
             new EnglishInflector(),
         );
     }
@@ -60,21 +73,32 @@ class RouteConfigurationLoaderTest extends TestCase
     }
 
     /**
-     * @param class-string         $class
+     * @param class-string         $entityClass
      * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      * @param class-string         $routePath
      *
+     * @throws CrudEngineInvalidConfigurationException
      * @throws CrudEngineMissingConfigurationException
      */
     #[DataProvider('dataProviderClassActionAndRoutePath')]
     public function testLoad(
-        string $class,
+        string $entityClass,
         string $action,
         array $actionConfig,
         string $routePath,
     ): void {
-        $result = $this->routeConfigurationLoader->load($class, $action, $actionConfig);
+        $schemaConfiguration = new SchemaConfiguration(
+            new SchemaRouteConfiguration('foo'),
+            new SchemaViewConfiguration('bar', SchemaViewVariablesCollection::createEmpty()),
+        );
+
+        $result = $this->routeConfigurationLoader->load(
+            $schemaConfiguration,
+            $entityClass,
+            $action,
+            $actionConfig,
+        );
 
         self::assertSame($routePath, $result->getPath());
     }

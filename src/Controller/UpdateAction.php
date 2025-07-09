@@ -2,14 +2,14 @@
 
 namespace Jmf\CrudEngine\Controller;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Controller\Dependencies\EntityFinder;
+use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
 use Jmf\CrudEngine\Controller\Dependencies\FormCreator;
-use Jmf\CrudEngine\Controller\Dependencies\Redirector;
+use Jmf\CrudEngine\Controller\Dependencies\RedirectionGenerator;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
-use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -18,7 +18,6 @@ use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @template E of object
@@ -26,21 +25,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 #[AsController]
 readonly class UpdateAction
 {
-    use WithEntityManagerTrait;
-
     /**
      * @psalm-param UpdateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        ManagerRegistry $managerRegistry,
+        private EntityFinder $entityFinder,
+        private EntityManagerResolver $entityManagerResolver,
         private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
-        private Redirector $redirector,
+        private RedirectionGenerator $redirectionGenerator,
         private ViewRenderer $viewRenderer,
         private FormCreator $formCreator,
         private UpdateActionHelperInterface $defaultActionHelper,
     ) {
-        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -64,9 +61,9 @@ readonly class UpdateAction
             $this->defaultActionHelper,
         );
 
-        $entity = $this->getEntity($entityClass, $id);
-        $form   = $this->formCreator->create($actionConfiguration, $entity);
+        $entity = $this->entityFinder->find($entityClass, $id);
 
+        $form = $this->formCreator->create($actionConfiguration, $entity);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -80,7 +77,7 @@ readonly class UpdateAction
                 $request,
                 $entity,
                 $form,
-                $this->getEntityManager($entityClass),
+                $this->entityManagerResolver->resolve($entityClass),
             );
 
             $actionHelper->hookAfterPersist(
@@ -89,7 +86,7 @@ readonly class UpdateAction
                 $form,
             );
 
-            return $this->redirector->redirect($actionConfiguration, $entity);
+            return $this->redirectionGenerator->generate($actionConfiguration, $entity);
         }
 
         return $this->viewRenderer->render(
@@ -102,22 +99,5 @@ readonly class UpdateAction
                 ],
             ),
         );
-    }
-
-    /**
-     * @param class-string<E> $entityClass
-     *
-     * @psalm-return E
-     *
-     * @throws CrudEngineEntityManagerNotFoundException
-     * @throws NotFoundHttpException
-     */
-    private function getEntity(
-        string $entityClass,
-        string $id,
-    ): object {
-        $entity = $this->getEntityManager($entityClass)->find($entityClass, $id);
-
-        return $entity ?? throw new NotFoundHttpException();
     }
 }

@@ -2,12 +2,12 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 
 interface ActionConfigurationRepositoryFactoryInterface
 {
     /**
-     * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineConfigurationException
      */
     public function make(): ActionConfigurationRepositoryInterface;
 }

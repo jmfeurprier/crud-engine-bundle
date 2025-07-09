@@ -2,8 +2,7 @@
 
 namespace Jmf\CrudEngine\Routing;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Override;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -24,24 +23,9 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
         );
     }
 
-    /**
-     * @throws CrudEngineMissingConfigurationException
-     */
     private function getRouteName(ActionConfiguration $actionConfiguration): string
     {
-        if (null !== $actionConfiguration->getRouteConfiguration()->getName()) {
-            return $actionConfiguration->getRouteConfiguration()->getName();
-        }
-
-        if (null !== $actionConfiguration->getEntityName()) {
-            return "{$actionConfiguration->getEntityName()}.{$this->getActionName()}";
-        }
-
-        // @todo Refine message.
-        throw new CrudEngineMissingConfigurationException(
-            $actionConfiguration->getEntityClass(),
-            $this->getActionName(),
-        );
+        return $actionConfiguration->getRouteConfiguration()->getName();
     }
 
     private function getRoute(ActionConfiguration $actionConfiguration): Route

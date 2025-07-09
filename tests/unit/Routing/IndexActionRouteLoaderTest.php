@@ -2,10 +2,10 @@
 
 namespace Jmf\CrudEngine\Tests\Routing;
 
-use Jmf\CrudEngine\Configuration\Action\ActionConfiguration;
-use Jmf\CrudEngine\Configuration\Action\Redirection\RedirectionConfiguration;
-use Jmf\CrudEngine\Configuration\Action\Route\RouteConfiguration;
-use Jmf\CrudEngine\Configuration\Action\View\ViewConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
@@ -35,7 +35,7 @@ class IndexActionRouteLoaderTest extends TestCase
         $actionConfiguration = $this->givenActionConfiguration(
             entityClass: \stdClass::class,
             action:      'index',
-            entityName:  'foo',
+            routeName:   'foo.index',
             routePath:   'foo/bar',
         );
 
@@ -55,13 +55,12 @@ class IndexActionRouteLoaderTest extends TestCase
     private function givenActionConfiguration(
         string $entityClass,
         string $action,
-        ?string $entityName = null,
+        string $routeName,
         string $redirectionRoute = '',
-        ?string $routeName = null,
         string $routePath = '',
         string $viewPath = '',
     ): ActionConfiguration {
-        $redirectionConfiguration = new RedirectionConfiguration(
+        $redirectionConfiguration = new ActionRedirectionConfiguration(
             route:      $redirectionRoute,
             parameters: new KeyStringCollection([]),
         );
@@ -72,7 +71,7 @@ class IndexActionRouteLoaderTest extends TestCase
             requirements: new KeyStringCollection([]),
         );
 
-        $viewConfiguration = new ViewConfiguration(
+        $viewConfiguration = new ActionViewConfiguration(
             path:      $viewPath,
             variables: new KeyStringCollection([]),
         );
@@ -80,7 +79,6 @@ class IndexActionRouteLoaderTest extends TestCase
         return new ActionConfiguration(
             entityClass:              $entityClass,
             action:                   $action,
-            entityName:               $entityName,
             formTypeClass:            null,
             helperClass:              null,
             redirectionConfiguration: $redirectionConfiguration,

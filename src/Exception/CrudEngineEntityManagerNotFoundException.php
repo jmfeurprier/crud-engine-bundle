@@ -4,7 +4,7 @@ namespace Jmf\CrudEngine\Exception;
 
 use Throwable;
 
-class CrudEngineEntityManagerNotFoundException extends CrudEngineException
+class CrudEngineEntityManagerNotFoundException extends CrudEngineRuntimeException
 {
     /**
      * @param class-string $entityClass

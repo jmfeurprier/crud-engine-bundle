@@ -2,21 +2,25 @@
 
 namespace Jmf\CrudEngine\Tests\Configuration\Action\FormType;
 
-use Jmf\CrudEngine\Configuration\Action\FormType\FormTypeClassConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Entities\Action\FormType\FormTypeClassResolver;
+use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
 
-class FormTypeClassConfigurationLoaderTest extends TestCase
+class FormTypeClassResolverTest extends TestCase
 {
-    private FormTypeClassConfigurationLoader $formTypeClassConfigurationLoader;
+    private FormTypeClassResolver $formTypeClassResolver;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->formTypeClassConfigurationLoader = new FormTypeClassConfigurationLoader();
+        $this->formTypeClassResolver = new FormTypeClassResolver();
     }
 
     /**
@@ -76,12 +80,17 @@ class FormTypeClassConfigurationLoaderTest extends TestCase
         array $actionConfig,
         ?string $formTypeClass,
     ): void {
+        $schemaConfiguration = new SchemaConfiguration(
+            new SchemaRouteConfiguration('foo'),
+            new SchemaViewConfiguration('bar', SchemaViewVariablesCollection::createEmpty()),
+        );
+
         if (null !== $formTypeClass && !class_exists($formTypeClass)) {
-            $newClass = $this->createMock(FormInterface::class);
+            $newClass = $this->createMock(FormTypeInterface::class);
             class_alias($newClass::class, $formTypeClass);
         }
 
-        $result = $this->formTypeClassConfigurationLoader->load($entityClass, $action, $actionConfig);
+        $result = $this->formTypeClassResolver->resolve($schemaConfiguration, $entityClass, $action, $actionConfig);
 
         self::assertSame($formTypeClass, $result);
     }

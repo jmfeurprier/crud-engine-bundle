@@ -3,9 +3,8 @@
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
-use Jmf\CrudEngine\Exception\CrudEngineException;
+use Jmf\CrudEngine\Exception\CrudEngineRuntimeException;
 use Override;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -43,16 +42,13 @@ abstract class DeleteActionHelperBase implements DeleteActionHelperInterface
         return [];
     }
 
-    /**
-     * @throws CrudEngineException
-     */
     #[Override]
     public function onFailure(
         object $entity,
         Throwable $e,
     ): Response {
-        // @todo Create specialized exception.
-        throw new CrudEngineException(
+        // @todo Create specialized exception?
+        throw new CrudEngineRuntimeException(
             message:  'Failed deleting entity.',
             previous: $e,
         );

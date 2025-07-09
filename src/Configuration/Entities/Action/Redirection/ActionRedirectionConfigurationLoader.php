@@ -1,12 +1,12 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration\Action\Redirection;
+namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
 
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
-readonly class RedirectionConfigurationLoader
+readonly class ActionRedirectionConfigurationLoader
 {
     /**
      * @param class-string         $entityClass
@@ -18,7 +18,7 @@ readonly class RedirectionConfigurationLoader
         string $entityClass,
         string $action,
         array $actionConfig,
-    ): ?RedirectionConfiguration {
+    ): ?ActionRedirectionConfiguration {
         if (!array_key_exists('redirection', $actionConfig)) {
             return null;
         }
@@ -27,7 +27,7 @@ readonly class RedirectionConfigurationLoader
 
         $redirectionConfig = $actionConfig['redirection'];
 
-        return new RedirectionConfiguration(
+        return new ActionRedirectionConfiguration(
             $this->getRoute($entityClass, $action, $redirectionConfig),
             $this->getParameters($redirectionConfig),
             $this->getFragment($redirectionConfig),

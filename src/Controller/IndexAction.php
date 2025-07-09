@@ -2,12 +2,11 @@
 
 namespace Jmf\CrudEngine\Controller;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
-use Jmf\CrudEngine\Controller\Traits\WithEntityManagerTrait;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -22,19 +21,16 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 readonly class IndexAction
 {
-    use WithEntityManagerTrait;
-
     /**
      * @psalm-param IndexActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        ManagerRegistry $managerRegistry,
+        private EntityManagerResolver $entityManagerResolver,
         private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
         private ViewRenderer $viewRenderer,
         private IndexActionHelperInterface $defaultActionHelper,
     ) {
-        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -85,7 +81,7 @@ readonly class IndexAction
         return $actionHelper->getEntities(
             $request,
             $entityClass,
-            $this->getEntityManager($entityClass),
+            $this->entityManagerResolver->resolve($entityClass),
         );
     }
 }
