@@ -3,10 +3,7 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Action\Helper;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Helper\HelperClassResolver;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Exception;
@@ -62,10 +59,7 @@ class HelperClassResolverTest extends TestCase
         array $actionConfig,
         string $helperClass,
     ): void {
-        $schemaConfiguration = new SchemaConfiguration(
-            new SchemaRouteConfiguration('foo'),
-            new SchemaViewConfiguration('bar', SchemaViewVariablesCollection::createEmpty()),
-        );
+        $schemaConfiguration = $this->createMock(SchemaConfiguration::class);
 
         $result = $this->helperClassResolver->resolve($schemaConfiguration, $class, $action, $actionConfig);
 

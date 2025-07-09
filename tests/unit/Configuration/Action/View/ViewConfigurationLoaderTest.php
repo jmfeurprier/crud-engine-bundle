@@ -3,6 +3,7 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Action\View;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
@@ -78,7 +79,7 @@ class ViewConfigurationLoaderTest extends TestCase
         array $viewVariables,
     ): void {
         $schemaConfiguration = new SchemaConfiguration(
-            new SchemaRouteConfiguration('foo'),
+            new SchemaRouteConfiguration('foo', SchemaRoutePathsCollection::createEmpty()),
             new SchemaViewConfiguration('bar', SchemaViewVariablesCollection::createEmpty()),
         );
 

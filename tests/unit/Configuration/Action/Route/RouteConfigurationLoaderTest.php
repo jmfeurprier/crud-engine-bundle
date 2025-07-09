@@ -3,6 +3,7 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Action\Route;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
@@ -13,8 +14,8 @@ use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\String\Inflector\EnglishInflector;
 use Twig\Environment;
+use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
 class RouteConfigurationLoaderTest extends TestCase
@@ -24,13 +25,11 @@ class RouteConfigurationLoaderTest extends TestCase
     #[Override]
     protected function setUp(): void
     {
+        $twigEnvironment = new Environment(new ArrayLoader());
+        $twigEnvironment->addExtension(new StringExtension());
+
         $this->routeConfigurationLoader = new RouteConfigurationLoader(
-            new TemplateRenderer(
-                new Environment(
-                    new ArrayLoader(),
-                ),
-            ),
-            new EnglishInflector(),
+            new TemplateRenderer($twigEnvironment),
         );
     }
 
@@ -89,7 +88,7 @@ class RouteConfigurationLoaderTest extends TestCase
         string $routePath,
     ): void {
         $schemaConfiguration = new SchemaConfiguration(
-            new SchemaRouteConfiguration('foo'),
+            new SchemaRouteConfiguration('foo', SchemaRoutePathsCollection::createEmpty()),
             new SchemaViewConfiguration('bar', SchemaViewVariablesCollection::createEmpty()),
         );
 

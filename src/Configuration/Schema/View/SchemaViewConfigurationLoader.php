@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema\View;
 
-use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
+use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaRoutePathsCollection;
 use Webmozart\Assert\Assert;
 
 readonly class SchemaViewConfigurationLoader
@@ -47,10 +47,10 @@ readonly class SchemaViewConfigurationLoader
     /**
      * @param array<string, mixed> $viewConfig
      */
-    private function getVariables(array $viewConfig): SchemaViewVariablesCollection
+    private function getVariables(array $viewConfig): SchemaRoutePathsCollection
     {
         if (!array_key_exists('variables', $viewConfig)) {
-            return SchemaViewVariablesCollection::createEmpty();
+            return SchemaRoutePathsCollection::createEmpty();
         }
 
         Assert::isMap($viewConfig['variables']);
@@ -63,7 +63,7 @@ readonly class SchemaViewConfigurationLoader
             $variables[$variableName] = $this->getVariableValues($variableValues);
         }
 
-        return new SchemaViewVariablesCollection($variables);
+        return new SchemaRoutePathsCollection($variables);
     }
 
     /**

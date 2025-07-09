@@ -7,16 +7,13 @@ use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
-use Symfony\Component\String\Inflector\InflectorInterface;
 use Throwable;
 use Webmozart\Assert\Assert;
-use function Symfony\Component\String\u;
 
 readonly class RouteConfigurationLoader
 {
     public function __construct(
         private TemplateRendererInterface $templateRenderer,
-        private InflectorInterface $inflector,
     ) {
     }
 
@@ -38,7 +35,7 @@ readonly class RouteConfigurationLoader
 
         return new RouteConfiguration(
             $this->getName($schemaConfiguration, $entityClass, $action, $routeConfig),
-            $this->getPath($entityClass, $action, $routeConfig),
+            $this->getPath($schemaConfiguration, $entityClass, $action, $routeConfig),
             $this->getRequirements($routeConfig),
         );
     }
@@ -123,58 +120,67 @@ readonly class RouteConfigurationLoader
      * @param non-empty-string     $action
      * @param array<string, mixed> $routeConfig
      *
+     * @throws CrudEngineInvalidConfigurationException
      * @throws CrudEngineMissingConfigurationException
      */
     private function getPath(
+        SchemaConfiguration $schemaConfiguration,
         string $entityClass,
         string $action,
         array $routeConfig,
     ): string {
-        if (!array_key_exists('path', $routeConfig)) {
-            return $this->tryGetFallbackPath(
-                $entityClass,
-                $action,
-            )
-                ??
-                throw new CrudEngineMissingConfigurationException(
-                    $entityClass,
-                    $action,
-                    'route.path',
-                );
+        if (array_key_exists('path', $routeConfig)) {
+            $path = $routeConfig['path'];
+
+            Assert::string($path);
+
+            return $path;
         }
 
-        Assert::stringNotEmpty($routeConfig['path']);
-
-        return $routeConfig['path'];
+        return $this->tryGetFallbackPath(
+            $schemaConfiguration,
+            $entityClass,
+            $action,
+        )
+            ??
+            throw new CrudEngineMissingConfigurationException(
+                $entityClass,
+                $action,
+                'route.path',
+            );
     }
 
     /**
      * @param class-string     $entityClass
      * @param non-empty-string $action
+     *
+     * @throws CrudEngineInvalidConfigurationException
      */
     public function tryGetFallbackPath(
+        SchemaConfiguration $schemaConfiguration,
         string $entityClass,
         string $action,
     ): ?string {
-        $token  = u($entityClass)->afterLast('\\');
-        $tokens = $this->inflector->pluralize($token);
+        $path = $schemaConfiguration->getRouteConfiguration()->getPaths()->tryGet($action);
 
-        if (1 !== count($tokens)) {
+        if (null === $path) {
             return null;
         }
 
-        $token = $tokens[0];
-        $token = u($token)->kebab()->toString();
-
-        // @todo Externalize logic.
-        return match ($action) {
-            'create' => "{$token}/create",
-            'delete' => "{$token}/{id}/delete",
-            'index' => "{$token}",
-            'read' => "{$token}/{id}",
-            'update' => "{$token}/{id}/update",
-            default => null,
-        };
+        try {
+            return $this->templateRenderer->renderFromString(
+                $path,
+                [
+                    'entityClass' => $entityClass,
+                    'action'      => $action,
+                ],
+            );
+        } catch (Throwable $e) {
+            // @todo Add mode context.
+            throw new CrudEngineInvalidConfigurationException(
+                previous: $e,
+            );
+        }
     }
 
     /**

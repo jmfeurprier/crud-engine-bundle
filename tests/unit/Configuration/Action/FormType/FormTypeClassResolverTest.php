@@ -3,10 +3,7 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Action\FormType;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\FormType\FormTypeClassResolver;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Exception;
@@ -80,10 +77,7 @@ class FormTypeClassResolverTest extends TestCase
         array $actionConfig,
         ?string $formTypeClass,
     ): void {
-        $schemaConfiguration = new SchemaConfiguration(
-            new SchemaRouteConfiguration('foo'),
-            new SchemaViewConfiguration('bar', SchemaViewVariablesCollection::createEmpty()),
-        );
+        $schemaConfiguration = $this->createMock(SchemaConfiguration::class);
 
         if (null !== $formTypeClass && !class_exists($formTypeClass)) {
             $newClass = $this->createMock(FormTypeInterface::class);
