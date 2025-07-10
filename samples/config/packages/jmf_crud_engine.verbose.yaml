@@ -5,9 +5,9 @@ jmf_crud_engine:
         #    - "App\Form\{{ entityClass|u.afterLast('\\') }}\{{ action|u.title }}Type" # "App\Form\FooBar\UpdateType"
         #    - "App\Form\{{ entityClass|u.afterLast('\\') }}{{ action|u.title }}Type"  # "App\Form\FooBarUpdateType"
         #    - "App\Form\{{ entityClass|u.afterLast('\\') }}Type"                      # "App\Form\FooBarType"
-        #helper:
-        #    - "App\Controller\{{ entityClass|u.afterLast('\\') }}\{{ action|u.title }}ActionHelper" # "App\Controller\FooBar\UpdateActionHelper"
-        #    - "App\Controller\{{ entityClass|u.afterLast('\\') }}{{ action|u.title }}ActionHelper"  # "App\Controller\FooBarUpdateActionHelper"
+        helper:
+            - "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}ActionHelper" # "App\Controller\FooBar\UpdateActionHelper"
+            - "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}ActionHelper"  # "App\Controller\FooBarUpdateActionHelper"
         #redirections:
         #    create: '{{ x }}.read'
         #    delete: '{{ x }}.index'

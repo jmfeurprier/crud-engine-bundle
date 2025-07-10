@@ -2,6 +2,8 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema;
 
+use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelperConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelperConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
@@ -11,6 +13,7 @@ use Webmozart\Assert\Assert;
 readonly class SchemaConfigurationLoader
 {
     public function __construct(
+        private SchemaHelperConfigurationLoader $helperConfigurationLoader,
         private SchemaRouteConfigurationLoader $routeConfigurationLoader,
         private SchemaViewConfigurationLoader $viewConfigurationLoader,
     ) {
@@ -24,6 +27,7 @@ readonly class SchemaConfigurationLoader
         $schemaConfig = $this->getSchemaConfig($config);
 
         return new SchemaConfiguration(
+            $this->getHelperConfiguration($schemaConfig),
             $this->getRouteConfiguration($schemaConfig),
             $this->getViewConfiguration($schemaConfig),
         );
@@ -45,6 +49,15 @@ readonly class SchemaConfigurationLoader
         Assert::isMap($schemaConfig);
 
         return $schemaConfig;
+    }
+
+    /**
+     * @param array<string, mixed> $schemaConfig
+     */
+    private function getHelperConfiguration(
+        array $schemaConfig,
+    ): SchemaHelperConfiguration {
+        return $this->helperConfigurationLoader->load($schemaConfig);
     }
 
     /**

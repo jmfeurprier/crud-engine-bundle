@@ -25,7 +25,11 @@ readonly class FormTypeClassResolver
         if (array_key_exists('formType', $actionConfig)) {
             $formTypeClass = $actionConfig['formType'];
         } else {
-            $formTypeClass = $this->tryGetFallBackFormTypeClass($entityClass, $action);
+            $formTypeClass = $this->tryGetFallBackFormTypeClass(
+                $schemaConfiguration,
+                $entityClass,
+                $action,
+            );
         }
 
         if (null === $formTypeClass) {
@@ -48,6 +52,7 @@ readonly class FormTypeClassResolver
      * @todo Retrieve from schema configuration instead.
      */
     private function tryGetFallBackFormTypeClass(
+        SchemaConfiguration $schemaConfiguration,
         string $entityClass,
         string $action,
     ): ?string {

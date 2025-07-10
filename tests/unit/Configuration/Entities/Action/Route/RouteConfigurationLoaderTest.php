@@ -3,6 +3,7 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelperConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
@@ -98,6 +99,7 @@ class RouteConfigurationLoaderTest extends TestCase
         string $routePath,
     ): void {
         $schemaConfiguration = new SchemaConfiguration(
+            $this->createMock(SchemaHelperConfiguration::class),
             new SchemaRouteConfiguration(
                 SchemaRouteConfiguration::DEFAULT_NAME,
                 SchemaRoutePathsCollection::createEmpty(),

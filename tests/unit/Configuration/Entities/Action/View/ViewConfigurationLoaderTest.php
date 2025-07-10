@@ -5,6 +5,7 @@ namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Path\ActionViewPathResolver;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
+use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelperConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
@@ -98,6 +99,7 @@ class ViewConfigurationLoaderTest extends TestCase
         array $viewVariables,
     ): void {
         $schemaConfiguration = new SchemaConfiguration(
+            $this->createMock(SchemaHelperConfiguration::class),
             new SchemaRouteConfiguration(
                 SchemaRouteConfiguration::DEFAULT_NAME,
                 SchemaRoutePathsCollection::createEmpty(),
