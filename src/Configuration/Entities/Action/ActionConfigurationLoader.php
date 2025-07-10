@@ -11,6 +11,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\Form\FormTypeInterface;
@@ -31,8 +32,7 @@ readonly class ActionConfigurationLoader
      * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      *
-     * @throws CrudEngineInvalidConfigurationException
-     * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineConfigurationException
      */
     public function load(
         SchemaConfiguration $schemaConfiguration,
@@ -78,6 +78,8 @@ readonly class ActionConfigurationLoader
      * @param array<string, mixed> $actionConfig
      *
      * @return null|class-string
+     *
+     * @throws CrudEngineInvalidConfigurationException
      */
     private function getHelperClass(
         SchemaConfiguration $schemaConfiguration,

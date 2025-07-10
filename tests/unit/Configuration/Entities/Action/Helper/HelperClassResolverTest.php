@@ -9,6 +9,7 @@ use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Exception;
@@ -67,6 +68,7 @@ class HelperClassResolverTest extends TestCase
      * @param array<string, mixed> $actionConfig
      * @param class-string         $helperClass
      *
+     * @throws CrudEngineInvalidConfigurationException
      * @throws Exception
      */
     #[DataProvider('dataProviderClassActionAndHelperClass')]
