@@ -29,7 +29,7 @@ readonly class ActionViewConfigurationLoader
         string $entityClass,
         string $action,
         array $actionConfig,
-    ): ?ActionViewConfiguration {
+    ): ActionViewConfiguration {
         $viewConfig = [];
 
         if (array_key_exists('view', $actionConfig)) {

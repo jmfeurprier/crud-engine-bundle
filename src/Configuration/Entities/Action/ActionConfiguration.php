@@ -22,7 +22,7 @@ readonly class ActionConfiguration
         private ?string $helperClass,
         private ?ActionRedirectionConfiguration $redirectionConfiguration,
         private RouteConfiguration $routeConfiguration,
-        private ?ActionViewConfiguration $viewConfiguration,
+        private ActionViewConfiguration $viewConfiguration,
     ) {
     }
 
@@ -70,12 +70,9 @@ readonly class ActionConfiguration
         return $this->routeConfiguration;
     }
 
-    /**
-     * @throws CrudEngineMissingConfigurationException
-     */
     public function getViewConfiguration(): ActionViewConfiguration
     {
-        return $this->viewConfiguration ?? $this->onMissingConfiguration('view');
+        return $this->viewConfiguration;
     }
 
     /**

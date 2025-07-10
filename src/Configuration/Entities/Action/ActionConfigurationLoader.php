@@ -145,7 +145,7 @@ readonly class ActionConfigurationLoader
         string $entityClass,
         string $action,
         array $actionConfig,
-    ): ?ActionViewConfiguration {
+    ): ActionViewConfiguration {
         return $this->viewConfigurationLoader->load(
             $schemaConfiguration,
             $entityClass,

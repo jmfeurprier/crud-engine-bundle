@@ -3,7 +3,6 @@
 namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,13 +26,11 @@ readonly class ViewRenderer
         array $viewVariables,
         array $defaults,
     ): Response {
-        // @todo Expand variables from action (schema) configuration.
-
-        //        foreach ($defaults as $key => $value) {
-        //            $tmp = $actionConfiguration->getViewConfiguration()->getVariables()->tryGet($key, []);
-        //        }
-
-        $parameters = array_merge($viewVariables, $defaults);
+        $parameters = $this->getViewParameters(
+            $viewVariables,
+            $defaults,
+            $actionConfiguration,
+        );
 
         try {
             return new Response(
@@ -50,11 +47,40 @@ readonly class ViewRenderer
         }
     }
 
-    /**
-     * @throws CrudEngineMissingConfigurationException
-     */
     private function getViewPath(ActionConfiguration $actionConfiguration): string
     {
         return $actionConfiguration->getViewConfiguration()->getPath();
+    }
+
+    /**
+     * @param array<string, mixed> $viewVariables
+     * @param array<string, mixed> $defaults
+     * @param ActionConfiguration  $actionConfiguration
+     *
+     * @return array<string, mixed>
+     */
+    private function getViewParameters(
+        array $viewVariables,
+        array $defaults,
+        ActionConfiguration $actionConfiguration,
+    ): array {
+        $parameters = array_merge($viewVariables, $defaults);
+        $configVars = $actionConfiguration->getViewConfiguration()->getVariables();
+
+        foreach ($parameters as $key => $value) {
+            $variables = $configVars->tryGet($key);
+
+            if ([] === $variables) {
+                continue;
+            }
+
+            unset($parameters[$key]);
+
+            foreach ($variables as $variable) {
+                $parameters[$variable] = $value;
+            }
+        }
+
+        return $parameters;
     }
 }
