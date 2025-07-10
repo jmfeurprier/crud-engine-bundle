@@ -14,7 +14,6 @@ readonly class ValueExpander
     }
 
     /**
-     * @param non-empty-string     $value
      * @param array<string, mixed> $arguments
      *
      * @throws CrudEngineInvalidConfigurationException

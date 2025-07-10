@@ -49,7 +49,6 @@ readonly class ActionViewPathResolver
         string $action,
     ): string {
         // @todo Validate file existence.
-
         return $this->valueExpander->expand(
             $schemaConfiguration->getViewConfiguration()->getPath(),
             [

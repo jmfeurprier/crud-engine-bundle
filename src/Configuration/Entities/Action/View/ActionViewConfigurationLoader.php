@@ -69,6 +69,8 @@ readonly class ActionViewConfigurationLoader
      * @param class-string         $entityClass
      * @param non-empty-string     $action
      * @param array<string, mixed> $viewConfig
+     *
+     * @throws CrudEngineInvalidConfigurationException
      */
     private function getVariables(
         SchemaConfiguration $schemaConfiguration,

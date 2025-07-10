@@ -8,6 +8,7 @@ use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 use Jmf\CrudEngine\Configuration\ValueExpander;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -132,6 +133,7 @@ class ActionViewVariablesResolverTest extends TestCase
      * @param array<string, mixed>                                $viewConfig
      * @param array<string, mixed>                                $expected
      *
+     * @throws CrudEngineInvalidConfigurationException
      * @throws Exception
      */
     #[DataProvider('dataProvider')]
