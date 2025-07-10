@@ -12,9 +12,8 @@
         "symfony/framework-bundle": "^7.0",
         "symfony/http-foundation": "^7.0",
         "symfony/routing": "^7.0",
-        "symfony/string": "^7.3",
-        "twig/extra-bundle": "^3.21",
-        "twig/string-extra": "^3.21",
+        "twig/extra-bundle": "^3.0",
+        "twig/string-extra": "^3.0",
         "webmozart/assert": "^1.0"
     },
     "require-dev": {
