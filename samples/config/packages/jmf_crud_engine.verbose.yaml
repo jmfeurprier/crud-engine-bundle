@@ -13,22 +13,22 @@ jmf_crud_engine:
         #    delete: '{{ x }}.index'
         #    update: '{{ x }}.read'
         route:
-            name: "{{ entityClass|u.afterLast('\\').snake }}.{{ action }}" # "foo_bar"
+            name: "{{ entityClass|u.afterLast('\\\\').snake }}.{{ action }}" # "foo_bar"
             paths:
-                create: "{{ entityClass|u.afterLast('\\').kebab|plural }}/create"      # "foo-bars/create"
-                delete: "{{ entityClass|u.afterLast('\\').kebab|plural }}/{id}/delete" # "foo-bars/{id}/delete"
-                index:  "{{ entityClass|u.afterLast('\\').kebab|plural }}"             # "foo-bars"
-                read:   "{{ entityClass|u.afterLast('\\').kebab|plural }}/{id}"        # "foo-bars/{id}"
-                update: "{{ entityClass|u.afterLast('\\').kebab|plural }}/{id}/update" # "foo-bars/{id}/update"
+                create: "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/create"      # "foo-bars/create"
+                delete: "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}/delete" # "foo-bars/{id}/delete"
+                index:  "{{ entityClass|u.afterLast('\\\\').kebab|plural }}"             # "foo-bars"
+                read:   "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}"        # "foo-bars/{id}"
+                update: "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}/update" # "foo-bars/{id}/update"
         view:
-            path: "{{ entityClass|u.afterLast('\\').snake }}/{{ action }}.html.twig" # "foo_bar/update.html.twig"
+            path: "{{ entityClass|u.afterLast('\\\\').snake }}/{{ action }}.html.twig" # "foo_bar/update.html.twig"
             variables:
                 entities:
                     - 'entities'
-                    - "{{ entityClass|u.afterLast('\\').camel|plural }}" # "fooBars"
+                    - "{{ entityClass|u.afterLast('\\\\').camel|plural }}" # "fooBars"
                 entity:
                     - 'entity'
-                    - "{{ entityClass|u.afterLast('\\').camel }}" # "fooBar"
+                    - "{{ entityClass|u.afterLast('\\\\').camel }}" # "fooBar"
 
     entities:
         App\Entity\Article:

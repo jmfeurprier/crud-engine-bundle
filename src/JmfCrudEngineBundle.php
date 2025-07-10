@@ -24,14 +24,31 @@ class JmfCrudEngineBundle extends AbstractBundle
         $definition->rootNode()
             ->fixXmlConfig('entity', 'entities')
             ->children()
+
                 ->arrayNode('schema')
-                    ->arrayPrototype()
-                        ->ignoreExtraKeys()
-                        ->children()
-                            // @todo
+                    ->children()
+
+                        ->arrayNode('view')
+                            ->children()
+                                ->scalarNode('path')->end()
+                                ->arrayNode('variables')
+                                    ->variablePrototype()->end()
+                                ->end()
+                            ->end()
                         ->end()
+
+                        ->arrayNode('route')
+                            ->children()
+                                ->scalarNode('name')->end()
+                                ->arrayNode('paths')
+                                    ->variablePrototype()->end()
+                                ->end()
+                            ->end()
+                        ->end()
+
                     ->end()
                 ->end()
+
                 ->arrayNode('entities')
                     ->info('Properties of CRUD entities.')
                     ->useAttributeAsKey('class')
@@ -123,7 +140,7 @@ class JmfCrudEngineBundle extends AbstractBundle
                 ->class(CacheableActionConfigurationsLoader::class)
                 ->autowire()
                 ->arg(
-                    '$actionConfigurationLoader',
+                    '$actionConfigurationsLoader',
                     new Reference(ActionConfigurationsLoader::class),
                 )
             ;
