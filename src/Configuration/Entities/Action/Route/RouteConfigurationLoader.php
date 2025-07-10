@@ -4,7 +4,7 @@ namespace Jmf\CrudEngine\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
-use Jmf\CrudEngine\Configuration\ValueExpander;
+use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
@@ -12,7 +12,7 @@ use Webmozart\Assert\Assert;
 readonly class RouteConfigurationLoader
 {
     public function __construct(
-        private ValueExpander $valueExpander,
+        private SchemaValueExpander $schemaValueExpander,
     ) {
     }
 
@@ -94,7 +94,7 @@ readonly class RouteConfigurationLoader
         string $entityClass,
         string $action,
     ): string {
-        $name = $this->valueExpander->expand(
+        $name = $this->schemaValueExpander->expand(
             $schemaConfiguration->getRouteConfiguration()->getName(),
             [
                 'entityClass' => $entityClass,
@@ -159,7 +159,7 @@ readonly class RouteConfigurationLoader
             return null;
         }
 
-        return $this->valueExpander->expand(
+        return $this->schemaValueExpander->expand(
             $path,
             [
                 'entityClass' => $entityClass,

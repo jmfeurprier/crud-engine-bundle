@@ -3,14 +3,14 @@
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View\Variables;
 
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
-use Jmf\CrudEngine\Configuration\ValueExpander;
+use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 
 readonly class ActionViewVariablesResolver
 {
     public function __construct(
-        private ValueExpander $valueExpander,
+        private SchemaValueExpander $schemaValueExpander,
     ) {
     }
 
@@ -33,7 +33,7 @@ readonly class ActionViewVariablesResolver
             $variables[$variableName] = [];
 
             foreach ($values as $value) {
-                $value = $this->valueExpander->expand(
+                $value = $this->schemaValueExpander->expand(
                     $value,
                     [
                         'entityClass' => $entityClass,
@@ -51,8 +51,6 @@ readonly class ActionViewVariablesResolver
             $variablesConfig = $viewConfig['variables'];
 
             Assert::isMap($variablesConfig);
-
-            //$variables = [];
 
             foreach ($variablesConfig as $variableName => $variableValues) {
                 Assert::stringNotEmpty($variableName);

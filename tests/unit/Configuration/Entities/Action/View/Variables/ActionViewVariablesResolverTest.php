@@ -7,7 +7,7 @@ use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
-use Jmf\CrudEngine\Configuration\ValueExpander;
+use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
@@ -29,7 +29,7 @@ class ActionViewVariablesResolverTest extends TestCase
         $twigEnvironment->addExtension(new StringExtension());
 
         $this->actionViewVariablesResolver = new ActionViewVariablesResolver(
-            new ValueExpander(new TemplateRenderer($twigEnvironment)),
+            new SchemaValueExpander(new TemplateRenderer($twigEnvironment)),
         );
     }
 

@@ -6,7 +6,7 @@ use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Throwable;
 
-readonly class ValueExpander
+readonly class SchemaValueExpander
 {
     public function __construct(
         private TemplateRendererInterface $templateRenderer,

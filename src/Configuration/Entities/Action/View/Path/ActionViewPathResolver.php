@@ -3,14 +3,14 @@
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View\Path;
 
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
-use Jmf\CrudEngine\Configuration\ValueExpander;
+use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 
 readonly class ActionViewPathResolver
 {
     public function __construct(
-        private ValueExpander $valueExpander,
+        private SchemaValueExpander $schemaValueExpander,
     ) {
     }
 
@@ -49,7 +49,7 @@ readonly class ActionViewPathResolver
         string $action,
     ): string {
         // @todo Validate file existence.
-        return $this->valueExpander->expand(
+        return $this->schemaValueExpander->expand(
             $schemaConfiguration->getViewConfiguration()->getPath(),
             [
                 'entityClass' => $entityClass,
