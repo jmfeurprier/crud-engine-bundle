@@ -7,6 +7,8 @@ use Webmozart\Assert\Assert;
 
 readonly class SchemaRouteConfiguration
 {
+    public const string DEFAULT_NAME = "{{ entityClass|u.afterLast('\\\\').snake }}.{{ action }}";
+
     public function __construct(
         private string $name,
         private SchemaRoutePathsCollection $paths,

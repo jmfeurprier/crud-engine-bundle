@@ -6,6 +6,8 @@ use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollec
 
 readonly class SchemaViewConfiguration
 {
+    public const string DEFAULT_PATH = "{{ entityClass|u.afterLast('\\\\').snake }}/{{ action }}.html.twig";
+
     public function __construct(
         private string $path,
         private SchemaViewVariablesCollection $variables,

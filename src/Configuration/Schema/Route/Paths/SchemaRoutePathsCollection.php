@@ -20,7 +20,7 @@ readonly class SchemaRoutePathsCollection
     }
 
     /**
-     * @param array<non-empty-string, non-empty-string> $paths
+     * @param array<non-empty-string, string> $paths
      */
     public function __construct(
         private array $paths,
@@ -30,7 +30,7 @@ readonly class SchemaRoutePathsCollection
     }
 
     /**
-     * @return array<non-empty-string, non-empty-string>
+     * @return array<non-empty-string, string>
      */
     public function all(): array
     {
@@ -39,8 +39,6 @@ readonly class SchemaRoutePathsCollection
 
     /**
      * @param non-empty-string $action
-     *
-     * @return null|non-empty-string
      */
     public function tryGet(string $action): ?string
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmf\CrudEngine\Tests\Configuration\Action\FormType;
+namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\FormType;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\FormType\FormTypeClassResolver;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;

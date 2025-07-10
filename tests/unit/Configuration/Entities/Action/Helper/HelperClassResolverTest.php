@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmf\CrudEngine\Tests\Configuration\Action\Helper;
+namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\Helper;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Helper\HelperClassResolver;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;

@@ -15,12 +15,6 @@ readonly class FormCreator
     }
 
     /**
-     * @template TE of object
-     *
-     * @psalm-param TE $entity
-     *
-     * @psalm-return FormInterface<TE>
-     *
      * @throws CrudEngineMissingConfigurationException
      */
     public function create(

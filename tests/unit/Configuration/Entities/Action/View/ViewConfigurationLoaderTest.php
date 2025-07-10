@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmf\CrudEngine\Tests\Configuration\Action\View;
+namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
@@ -8,17 +8,27 @@ use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
+use Jmf\TemplateRendering\TemplateRenderer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Twig\Environment;
+use Twig\Extra\String\StringExtension;
+use Twig\Loader\ArrayLoader;
 
 class ViewConfigurationLoaderTest extends TestCase
 {
-    private ActionViewConfigurationLoader $viewConfigurationLoader;
+    private ActionViewConfigurationLoader $actionViewConfigurationLoader;
 
     protected function setUp(): void
     {
-        $this->viewConfigurationLoader =
-            new \Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader();
+        $twigEnvironment = new Environment(new ArrayLoader());
+        $twigEnvironment->addExtension(new StringExtension());
+
+        $this->actionViewConfigurationLoader = new ActionViewConfigurationLoader(
+            new TemplateRenderer($twigEnvironment),
+
+        );
     }
 
     /**
@@ -69,6 +79,8 @@ class ViewConfigurationLoaderTest extends TestCase
      * @param array<string, mixed>  $actionConfig
      * @param class-string          $viewPath
      * @param array<string, string> $viewVariables
+     *
+     * @throws CrudEngineInvalidConfigurationException
      */
     #[DataProvider('dataProviderClassActionAndViewPath')]
     public function testLoad(
@@ -79,11 +91,22 @@ class ViewConfigurationLoaderTest extends TestCase
         array $viewVariables,
     ): void {
         $schemaConfiguration = new SchemaConfiguration(
-            new SchemaRouteConfiguration('foo', SchemaRoutePathsCollection::createEmpty()),
-            new SchemaViewConfiguration('bar', SchemaViewVariablesCollection::createEmpty()),
+            new SchemaRouteConfiguration(
+                SchemaRouteConfiguration::DEFAULT_NAME,
+                SchemaRoutePathsCollection::createEmpty(),
+            ),
+            new SchemaViewConfiguration(
+                SchemaViewConfiguration::DEFAULT_PATH,
+                SchemaViewVariablesCollection::createEmpty(),
+            ),
         );
 
-        $result = $this->viewConfigurationLoader->load($schemaConfiguration, $entityClass, $action, $actionConfig);
+        $result = $this->actionViewConfigurationLoader->load(
+            $schemaConfiguration,
+            $entityClass,
+            $action,
+            $actionConfig,
+        );
 
         self::assertNotNull($result);
         self::assertSame($viewPath, $result->getPath());

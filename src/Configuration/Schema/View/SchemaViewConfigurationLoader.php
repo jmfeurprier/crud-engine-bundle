@@ -2,13 +2,11 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema\View;
 
-use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaRoutePathsCollection;
+use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 use Webmozart\Assert\Assert;
 
 readonly class SchemaViewConfigurationLoader
 {
-    private const string PATH_DEFAULT = "{{ entityClass|u.afterLast('\\').snake }}/{{ action }}.html.twig";
-
     /**
      * @param array<string, mixed> $actionConfig
      */
@@ -36,7 +34,7 @@ readonly class SchemaViewConfigurationLoader
         array $viewConfig,
     ): string {
         if (!array_key_exists('path', $viewConfig)) {
-            return self::PATH_DEFAULT;
+            return SchemaViewConfiguration::DEFAULT_PATH;
         }
 
         Assert::string($viewConfig['path']);
@@ -47,10 +45,10 @@ readonly class SchemaViewConfigurationLoader
     /**
      * @param array<string, mixed> $viewConfig
      */
-    private function getVariables(array $viewConfig): SchemaRoutePathsCollection
+    private function getVariables(array $viewConfig): SchemaViewVariablesCollection
     {
         if (!array_key_exists('variables', $viewConfig)) {
-            return SchemaRoutePathsCollection::createEmpty();
+            return SchemaViewVariablesCollection::createEmpty();
         }
 
         Assert::isMap($viewConfig['variables']);
@@ -63,7 +61,7 @@ readonly class SchemaViewConfigurationLoader
             $variables[$variableName] = $this->getVariableValues($variableValues);
         }
 
-        return new SchemaRoutePathsCollection($variables);
+        return new SchemaViewVariablesCollection($variables);
     }
 
     /**

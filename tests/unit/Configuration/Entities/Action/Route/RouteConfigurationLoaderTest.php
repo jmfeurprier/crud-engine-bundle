@@ -1,6 +1,6 @@
 <?php
 
-namespace Jmf\CrudEngine\Tests\Configuration\Action\Route;
+namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
@@ -68,6 +68,16 @@ class RouteConfigurationLoaderTest extends TestCase
                 [],
                 'api-keys/{id}/update',
             ],
+            [
+                'App\\Entity\\ApiKey',
+                'update',
+                [
+                    'route' => [
+                        'path' => 'foo/bar',
+                    ],
+                ],
+                'foo/bar',
+            ],
         ];
     }
 
@@ -88,8 +98,14 @@ class RouteConfigurationLoaderTest extends TestCase
         string $routePath,
     ): void {
         $schemaConfiguration = new SchemaConfiguration(
-            new SchemaRouteConfiguration('foo', SchemaRoutePathsCollection::createEmpty()),
-            new SchemaViewConfiguration('bar', SchemaViewVariablesCollection::createEmpty()),
+            new SchemaRouteConfiguration(
+                SchemaRouteConfiguration::DEFAULT_NAME,
+                SchemaRoutePathsCollection::createEmpty(),
+            ),
+            new SchemaViewConfiguration(
+                SchemaViewConfiguration::DEFAULT_PATH,
+                SchemaViewVariablesCollection::createEmpty(),
+            ),
         );
 
         $result = $this->routeConfigurationLoader->load(

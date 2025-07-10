@@ -2,12 +2,11 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema\Route;
 
+use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
 use Webmozart\Assert\Assert;
 
 readonly class SchemaRouteConfigurationLoader
 {
-    private const string ROUTE_NAME_DEFAULT = "{{ entityClass|u.afterLast('\\').snake }}.{{ action }}";
-
     /**
      * @param array<string, mixed> $schemaConfig
      */
@@ -17,6 +16,7 @@ readonly class SchemaRouteConfigurationLoader
 
         return new SchemaRouteConfiguration(
             $this->getName($routeConfig),
+            $this->getPaths($routeConfig),
         );
     }
 
@@ -47,7 +47,7 @@ readonly class SchemaRouteConfigurationLoader
         array $routeConfig,
     ): string {
         if (!array_key_exists('name', $routeConfig)) {
-            return self::ROUTE_NAME_DEFAULT;
+            return SchemaRouteConfiguration::DEFAULT_NAME;
         }
 
         $name = $routeConfig['name'];
@@ -55,5 +55,31 @@ readonly class SchemaRouteConfigurationLoader
         Assert::stringNotEmpty($name);
 
         return $name;
+    }
+
+    /**
+     * @param array<string, mixed> $routeConfig
+     */
+    private function getPaths(
+        array $routeConfig,
+    ): SchemaRoutePathsCollection {
+        if (!array_key_exists('paths', $routeConfig)) {
+            return SchemaRoutePathsCollection::createEmpty();
+        }
+
+        $pathsConfig = $routeConfig['paths'];
+
+        Assert::isMap($pathsConfig);
+
+        $paths = [];
+
+        foreach ($pathsConfig as $action => $path) {
+            Assert::stringNotEmpty($action);
+            Assert::string($path);
+
+            $paths[$action] = $path;
+        }
+
+        return new SchemaRoutePathsCollection($paths);
     }
 }
