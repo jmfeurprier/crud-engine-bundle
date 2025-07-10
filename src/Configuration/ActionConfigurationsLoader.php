@@ -2,14 +2,13 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
-use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfigurationLoader;
-use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Override;
 use Webmozart\Assert\Assert;
 
-readonly class ActionConfigurationsLoader
+readonly class ActionConfigurationsLoader implements ActionConfigurationsLoaderInterface
 {
     public function __construct(
         private SchemaConfigurationLoader $schemaConfigurationLoader,
@@ -17,15 +16,8 @@ readonly class ActionConfigurationsLoader
     ) {
     }
 
-    /**
-     * @param array<string, mixed> $config
-     *
-     * @return ActionConfiguration[]
-     *
-     * @throws CrudEngineInvalidConfigurationException
-     * @throws CrudEngineMissingConfigurationException
-     */
-    public function load(array $config): iterable
+    #[Override]
+    public function load(array $config): ActionConfigurationsCollection
     {
         $schemaConfiguration = $this->schemaConfigurationLoader->load($config);
 
@@ -62,6 +54,6 @@ readonly class ActionConfigurationsLoader
             }
         }
 
-        return $actionConfigurations;
+        return new ActionConfigurationsCollection($actionConfigurations);
     }
 }

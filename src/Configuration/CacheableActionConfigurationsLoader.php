@@ -8,11 +8,11 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Webmozart\Assert\Assert;
 
-readonly class CacheableActionConfigurationRepositoryFactory implements ActionConfigurationRepositoryFactoryInterface
+readonly class CacheableActionConfigurationsLoader implements ActionConfigurationsLoaderInterface
 {
     public function __construct(
         private CacheInterface $cache,
-        private ActionConfigurationRepositoryFactoryInterface $actionConfigurationRepositoryFactory,
+        private ActionConfigurationsLoaderInterface $actionConfigurationsLoader,
     ) {
     }
 
@@ -20,16 +20,16 @@ readonly class CacheableActionConfigurationRepositoryFactory implements ActionCo
      * @throws InvalidArgumentException
      */
     #[Override]
-    public function make(): ActionConfigurationRepositoryInterface
+    public function load(array $config): ActionConfigurationsCollection
     {
-        $repository = $this->cache->get(
+        $actionConfigurations = $this->cache->get(
             $this->getCacheKey(),
-            $this->getCallback(),
+            $this->getCallback($config),
         );
 
-        Assert::isInstanceOf($repository, ActionConfigurationRepositoryInterface::class);
+        Assert::isInstanceOf($actionConfigurations, ActionConfigurationsCollection::class);
 
-        return $repository;
+        return $actionConfigurations;
     }
 
     private function getCacheKey(): string
@@ -43,10 +43,13 @@ readonly class CacheableActionConfigurationRepositoryFactory implements ActionCo
         );
     }
 
-    private function getCallback(): callable
+    /**
+     * @param array<string, mixed> $config
+     */
+    private function getCallback(array $config): callable
     {
         return fn(
             ItemInterface $item,
-        ): ActionConfigurationRepositoryInterface => $this->actionConfigurationRepositoryFactory->make();
+        ): ActionConfigurationsCollection => $this->actionConfigurationsLoader->load($config);
     }
 }

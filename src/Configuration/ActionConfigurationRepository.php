@@ -3,32 +3,19 @@
 namespace Jmf\CrudEngine\Configuration;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Override;
 use Webmozart\Assert\Assert;
 
 readonly class ActionConfigurationRepository implements ActionConfigurationRepositoryInterface
 {
     /**
-     * @var array<class-string, array<string, ActionConfiguration>>
-     */
-    private array $indexedConfigurations;
-
-    /**
-     * @param ActionConfiguration[] $configurations
+     * @param array<string, mixed> $config
      */
     public function __construct(
-        private iterable $configurations,
+        private ActionConfigurationsLoaderInterface $actionConfigurationsLoader,
+        private array $config,
     ) {
-        Assert::allIsInstanceOf($configurations, ActionConfiguration::class);
-
-        $indexed = [];
-
-        foreach ($configurations as $configuration) {
-            $indexed[$configuration->getEntityClass()][$configuration->getAction()] = $configuration;
-        }
-
-        $this->indexedConfigurations = $indexed;
+        Assert::isMap($config);
     }
 
     #[Override]
@@ -36,12 +23,7 @@ readonly class ActionConfigurationRepository implements ActionConfigurationRepos
         string $entityClass,
         string $action,
     ): ActionConfiguration {
-        return $this->tryGet($entityClass, $action)
-            ??
-            throw new CrudEngineMissingConfigurationException(
-                $entityClass,
-                $action,
-            );
+        return $this->actionConfigurationsLoader->load($this->config)->get($entityClass, $action);
     }
 
     #[Override]
@@ -49,15 +31,12 @@ readonly class ActionConfigurationRepository implements ActionConfigurationRepos
         string $entityClass,
         string $action,
     ): ?ActionConfiguration {
-        return $this->indexedConfigurations[$entityClass][$action] ?? null;
+        return $this->actionConfigurationsLoader->load($this->config)->tryGet($entityClass, $action);
     }
 
-    /**
-     * @return \Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration[]
-     */
     #[Override]
     public function all(): iterable
     {
-        return $this->configurations;
+        return $this->actionConfigurationsLoader->load($this->config)->all();
     }
 }

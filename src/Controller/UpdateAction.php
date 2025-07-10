@@ -10,9 +10,9 @@ use Jmf\CrudEngine\Controller\Dependencies\RedirectionGenerator;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
+use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,9 +43,9 @@ readonly class UpdateAction
     /**
      * @param class-string<E> $entityClass
      *
+     * @throws CrudEngineConfigurationException
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
-     * @throws CrudEngineMissingConfigurationException
      * @throws CrudEngineRedirectionParameterRenderingException
      * @throws CrudEngineViewRenderingException
      */

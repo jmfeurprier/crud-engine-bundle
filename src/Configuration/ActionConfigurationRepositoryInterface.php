@@ -3,14 +3,15 @@
 namespace Jmf\CrudEngine\Configuration;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 
 interface ActionConfigurationRepositoryInterface
 {
     /**
-     * @param class-string $entityClass
+     * @param class-string     $entityClass
+     * @param non-empty-string $action
      *
-     * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineConfigurationException
      */
     public function get(
         string $entityClass,
@@ -18,7 +19,10 @@ interface ActionConfigurationRepositoryInterface
     ): ActionConfiguration;
 
     /**
-     * @param class-string $entityClass
+     * @param class-string     $entityClass
+     * @param non-empty-string $action
+     *
+     * @throws CrudEngineConfigurationException
      */
     public function tryGet(
         string $entityClass,
@@ -26,7 +30,9 @@ interface ActionConfigurationRepositoryInterface
     ): ?ActionConfiguration;
 
     /**
-     * @return \Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration[]
+     * @return ActionConfiguration[]
+     *
+     * @throws CrudEngineConfigurationException
      */
     public function all(): iterable;
 }

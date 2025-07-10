@@ -4,7 +4,7 @@ namespace Jmf\CrudEngine\Routing;
 
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -36,7 +36,7 @@ readonly class RouteLoader implements RouteLoaderInterface
     }
 
     /**
-     * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineConfigurationException
      * @throws CrudEngineUnsupportedActionException
      */
     public function __invoke(): RouteCollection
@@ -51,7 +51,7 @@ readonly class RouteLoader implements RouteLoaderInterface
     }
 
     /**
-     * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineConfigurationException
      * @throws CrudEngineUnsupportedActionException
      */
     private function loadAction(

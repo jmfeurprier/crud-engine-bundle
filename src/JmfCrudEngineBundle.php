@@ -2,10 +2,9 @@
 
 namespace Jmf\CrudEngine;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryFactory;
-use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryFactoryInterface;
-use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
-use Jmf\CrudEngine\Configuration\CacheableActionConfigurationRepositoryFactory;
+use Jmf\CrudEngine\Configuration\ActionConfigurationsLoader;
+use Jmf\CrudEngine\Configuration\ActionConfigurationsLoaderInterface;
+use Jmf\CrudEngine\Configuration\CacheableActionConfigurationsLoader;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Routing\RouteLoader;
 use Override;
@@ -106,36 +105,26 @@ class JmfCrudEngineBundle extends AbstractBundle
             ->tag('routing.route_loader')
         ;
 
-        $container->services()
-            ->set(ActionConfigurationRepositoryInterface::class)
-            ->factory(
-                [
-                    new Reference(ActionConfigurationRepositoryFactoryInterface::class),
-                    'make',
-                ],
-            )
-        ;
-
         if (interface_exists(CacheInterface::class)) {
             $container->services()
-                ->set(ActionConfigurationRepositoryFactory::class)
+                ->set(ActionConfigurationsLoader::class)
                 ->autowire()
                 ->arg('$config', $config)
             ;
 
             $container->services()
-                ->set(ActionConfigurationRepositoryFactoryInterface::class)
-                ->class(CacheableActionConfigurationRepositoryFactory::class)
+                ->set(ActionConfigurationsLoaderInterface::class)
+                ->class(CacheableActionConfigurationsLoader::class)
                 ->autowire()
                 ->arg(
-                    '$actionConfigurationRepositoryFactory',
-                    new Reference(ActionConfigurationRepositoryFactory::class),
+                    '$actionConfigurationLoader',
+                    new Reference(ActionConfigurationsLoader::class),
                 )
             ;
         } else {
             $container->services()
-                ->set(ActionConfigurationRepositoryFactoryInterface::class)
-                ->class(ActionConfigurationRepositoryFactory::class)
+                ->set(ActionConfigurationsLoaderInterface::class)
+                ->class(ActionConfigurationsLoader::class)
                 ->autowire()
                 ->arg('$config', $config)
             ;

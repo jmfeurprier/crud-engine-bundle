@@ -4,10 +4,12 @@ namespace Jmf\CrudEngine\Configuration;
 
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 
-interface ActionConfigurationRepositoryFactoryInterface
+interface ActionConfigurationsLoaderInterface
 {
     /**
+     * @param array<string, mixed> $config
+     *
      * @throws CrudEngineConfigurationException
      */
-    public function make(): ActionConfigurationRepositoryInterface;
+    public function load(array $config): ActionConfigurationsCollection;
 }

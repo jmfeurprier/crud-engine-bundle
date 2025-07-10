@@ -36,11 +36,11 @@ services:
                 - '@Jmf\CrudEngine\Routing\ReadActionRouteLoader'
                 - '@Jmf\CrudEngine\Routing\UpdateActionRouteLoader'
 
-    Jmf\TemplateRendering\TemplateRendererInterface:
-        class: Jmf\TemplateRendering\TemplateRenderer
-
     Doctrine\Instantiator\InstantiatorInterface:
         class: Doctrine\Instantiator\Instantiator
+
+    Jmf\TemplateRendering\TemplateRendererInterface:
+        class: Jmf\TemplateRendering\TemplateRenderer
 
     Symfony\Component\String\Inflector\InflectorInterface:
         class: Symfony\Component\String\Inflector\EnglishInflector

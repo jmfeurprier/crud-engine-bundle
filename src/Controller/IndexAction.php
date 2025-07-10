@@ -7,9 +7,9 @@ use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
+use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,9 +36,9 @@ readonly class IndexAction
     /**
      * @param class-string<E> $entityClass
      *
+     * @throws CrudEngineConfigurationException
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInvalidActionHelperException
-     * @throws CrudEngineMissingConfigurationException
      * @throws CrudEngineViewRenderingException
      */
     public function __invoke(

@@ -56,7 +56,6 @@ readonly class ViewRenderer
     /**
      * @param array<string, mixed> $viewVariables
      * @param array<string, mixed> $defaults
-     * @param ActionConfiguration  $actionConfiguration
      *
      * @return array<string, mixed>
      */
