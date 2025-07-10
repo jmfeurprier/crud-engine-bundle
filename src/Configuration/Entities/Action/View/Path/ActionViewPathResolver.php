@@ -3,15 +3,14 @@
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View\Path;
 
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\ValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Jmf\TemplateRendering\TemplateRendererInterface;
-use Throwable;
 use Webmozart\Assert\Assert;
 
 readonly class ActionViewPathResolver
 {
     public function __construct(
-        private TemplateRendererInterface $templateRenderer,
+        private ValueExpander $valueExpander,
     ) {
     }
 
@@ -51,17 +50,12 @@ readonly class ActionViewPathResolver
     ): string {
         // @todo Validate file existence.
 
-        try {
-            return $this->templateRenderer->renderFromString(
-                $schemaConfiguration->getViewConfiguration()->getPath(),
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            );
-        } catch (Throwable $e) {
-            // @todo Add context.
-            throw new CrudEngineInvalidConfigurationException();
-        }
+        return $this->valueExpander->expand(
+            $schemaConfiguration->getViewConfiguration()->getPath(),
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
+        );
     }
 }

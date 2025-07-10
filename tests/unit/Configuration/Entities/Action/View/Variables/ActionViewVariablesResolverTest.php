@@ -7,9 +7,11 @@ use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
+use Jmf\CrudEngine\Configuration\ValueExpander;
 use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extra\String\StringExtension;
@@ -26,10 +28,19 @@ class ActionViewVariablesResolverTest extends TestCase
         $twigEnvironment->addExtension(new StringExtension());
 
         $this->actionViewVariablesResolver = new ActionViewVariablesResolver(
-            new TemplateRenderer($twigEnvironment),
+            new ValueExpander(new TemplateRenderer($twigEnvironment)),
         );
     }
 
+    /**
+     * @return array{
+     *     0: array<non-empty-string, iterable<non-empty-string>>,
+     *     1: non-empty-string,
+     *     2: non-empty-string,
+     *     3: array<string, mixed>,
+     *     4: array<string, mixed>,
+     * }[]
+     */
     public static function dataProvider(): iterable
     {
         return [
@@ -114,6 +125,15 @@ class ActionViewVariablesResolverTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<non-empty-string, iterable<non-empty-string>> $schemaVariables
+     * @param class-string                                        $entityClass
+     * @param non-empty-string                                    $action
+     * @param array<string, mixed>                                $viewConfig
+     * @param array<string, mixed>                                $expected
+     *
+     * @throws Exception
+     */
     #[DataProvider('dataProvider')]
     public function testLoad(
         array $schemaVariables,
@@ -121,7 +141,7 @@ class ActionViewVariablesResolverTest extends TestCase
         string $action,
         array $viewConfig,
         array $expected,
-    ) {
+    ): void {
         $schemaConfiguration = new SchemaConfiguration(
             $this->createMock(SchemaRouteConfiguration::class),
             new SchemaViewConfiguration(

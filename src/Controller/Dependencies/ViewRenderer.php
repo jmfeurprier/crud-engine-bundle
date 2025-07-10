@@ -18,6 +18,7 @@ readonly class ViewRenderer
 
     /**
      * @param array<string, mixed> $viewVariables
+     * @param array<string, mixed> $defaults
      *
      * @throws CrudEngineViewRenderingException
      */
@@ -28,9 +29,9 @@ readonly class ViewRenderer
     ): Response {
         // @todo Expand variables from action (schema) configuration.
 
-        foreach ($defaults as $key => $value) {
-            $tmp = $actionConfiguration->getViewConfiguration()->getVariables()->tryGet($key, []);
-        }
+        //        foreach ($defaults as $key => $value) {
+        //            $tmp = $actionConfiguration->getViewConfiguration()->getVariables()->tryGet($key, []);
+        //        }
 
         $parameters = array_merge($viewVariables, $defaults);
 

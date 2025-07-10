@@ -7,6 +7,7 @@ use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
+use Jmf\CrudEngine\Configuration\ValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
@@ -28,7 +29,7 @@ class RouteConfigurationLoaderTest extends TestCase
         $twigEnvironment->addExtension(new StringExtension());
 
         $this->routeConfigurationLoader = new RouteConfigurationLoader(
-            new TemplateRenderer($twigEnvironment),
+            new ValueExpander(new TemplateRenderer($twigEnvironment)),
         );
     }
 

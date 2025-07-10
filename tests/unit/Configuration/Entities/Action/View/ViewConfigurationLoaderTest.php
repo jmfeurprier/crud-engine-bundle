@@ -10,6 +10,7 @@ use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
+use Jmf\CrudEngine\Configuration\ValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -29,10 +30,10 @@ class ViewConfigurationLoaderTest extends TestCase
 
         $this->actionViewConfigurationLoader = new ActionViewConfigurationLoader(
             new ActionViewVariablesResolver(
-                new TemplateRenderer($twigEnvironment),
+                new ValueExpander(new TemplateRenderer($twigEnvironment)),
             ),
             new ActionViewPathResolver(
-                new TemplateRenderer($twigEnvironment),
+                new ValueExpander(new TemplateRenderer($twigEnvironment)),
             ),
         );
     }

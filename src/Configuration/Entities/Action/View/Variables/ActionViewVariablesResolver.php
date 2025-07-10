@@ -3,13 +3,14 @@
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View\Variables;
 
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
-use Jmf\TemplateRendering\TemplateRendererInterface;
+use Jmf\CrudEngine\Configuration\ValueExpander;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 
 readonly class ActionViewVariablesResolver
 {
     public function __construct(
-        private TemplateRendererInterface $templateRenderer,
+        private ValueExpander $valueExpander,
     ) {
     }
 
@@ -17,6 +18,8 @@ readonly class ActionViewVariablesResolver
      * @param class-string         $entityClass
      * @param non-empty-string     $action
      * @param array<string, mixed> $viewConfig
+     *
+     * @throws CrudEngineInvalidConfigurationException
      */
     public function resolve(
         SchemaConfiguration $schemaConfiguration,
@@ -30,13 +33,17 @@ readonly class ActionViewVariablesResolver
             $variables[$variableName] = [];
 
             foreach ($values as $value) {
-                $variables[$variableName][] = $this->templateRenderer->renderFromString(
+                $value = $this->valueExpander->expand(
                     $value,
                     [
                         'entityClass' => $entityClass,
                         'action'      => $action,
                     ],
                 );
+
+                Assert::stringNotEmpty($value);
+
+                $variables[$variableName][] = $value;
             }
         }
 

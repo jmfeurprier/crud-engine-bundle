@@ -4,16 +4,15 @@ namespace Jmf\CrudEngine\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\ValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\TemplateRendering\TemplateRendererInterface;
-use Throwable;
 use Webmozart\Assert\Assert;
 
 readonly class RouteConfigurationLoader
 {
     public function __construct(
-        private TemplateRendererInterface $templateRenderer,
+        private ValueExpander $valueExpander,
     ) {
     }
 
@@ -95,20 +94,13 @@ readonly class RouteConfigurationLoader
         string $entityClass,
         string $action,
     ): string {
-        try {
-            $name = $this->templateRenderer->renderFromString(
-                $schemaConfiguration->getRouteConfiguration()->getName(),
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            );
-        } catch (Throwable $e) {
-            // @todo Add mode context.
-            throw new CrudEngineInvalidConfigurationException(
-                previous: $e,
-            );
-        }
+        $name = $this->valueExpander->expand(
+            $schemaConfiguration->getRouteConfiguration()->getName(),
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
+        );
 
         Assert::stringNotEmpty($name);
 
@@ -167,20 +159,13 @@ readonly class RouteConfigurationLoader
             return null;
         }
 
-        try {
-            return $this->templateRenderer->renderFromString(
-                $path,
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            );
-        } catch (Throwable $e) {
-            // @todo Add mode context.
-            throw new CrudEngineInvalidConfigurationException(
-                previous: $e,
-            );
-        }
+        return $this->valueExpander->expand(
+            $path,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
+        );
     }
 
     /**

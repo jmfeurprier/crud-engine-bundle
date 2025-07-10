@@ -45,7 +45,7 @@ class HelperClassResolverTest extends TestCase
     }
 
     /**
-     * @param class-string         $class
+     * @param class-string         $entityClass
      * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      * @param class-string         $helperClass
@@ -54,21 +54,21 @@ class HelperClassResolverTest extends TestCase
      */
     #[DataProvider('dataProviderClassActionAndHelperClass')]
     public function testLoad(
-        string $class,
+        string $entityClass,
         string $action,
         array $actionConfig,
         string $helperClass,
     ): void {
         $schemaConfiguration = $this->createMock(SchemaConfiguration::class);
 
-        $result = $this->helperClassResolver->resolve($schemaConfiguration, $class, $action, $actionConfig);
+        $result = $this->helperClassResolver->resolve($schemaConfiguration, $entityClass, $action, $actionConfig);
 
         self::assertNull($result);
 
         $newClass = $this->createMock(ActionHelperInterface::class);
         class_alias($newClass::class, $helperClass);
 
-        $result = $this->helperClassResolver->resolve($schemaConfiguration, $class, $action, $actionConfig);
+        $result = $this->helperClassResolver->resolve($schemaConfiguration, $entityClass, $action, $actionConfig);
 
         self::assertSame($helperClass, $result);
     }
