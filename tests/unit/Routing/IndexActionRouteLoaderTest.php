@@ -6,6 +6,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
@@ -73,7 +74,7 @@ class IndexActionRouteLoaderTest extends TestCase
 
         $viewConfiguration = new ActionViewConfiguration(
             path:      $viewPath,
-            variables: new KeyStringCollection([]),
+            variables: new ActionViewVariablesCollection([]),
         );
 
         return new ActionConfiguration(

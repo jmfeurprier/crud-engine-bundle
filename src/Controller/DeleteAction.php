@@ -86,12 +86,10 @@ readonly class DeleteAction
 
         return $this->viewRenderer->render(
             $actionConfiguration,
-            array_merge(
-                $actionHelper->getViewVariables($request, $entity),
-                [
-                    'entity' => $entity,
-                ],
-            ),
+            $actionHelper->getViewVariables($request, $entity),
+            [
+                'entity' => $entity,
+            ],
         );
     }
 }

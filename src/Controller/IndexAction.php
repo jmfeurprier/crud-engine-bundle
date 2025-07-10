@@ -56,12 +56,10 @@ readonly class IndexAction
 
         return $this->viewRenderer->render(
             $actionConfiguration,
-            array_merge(
-                $actionHelper->getViewVariables($request),
-                [
-                    'entities' => $this->getEntities($request, $entityClass, $actionHelper),
-                ],
-            ),
+            $actionHelper->getViewVariables($request),
+            [
+                'entities' => $this->getEntities($request, $entityClass, $actionHelper),
+            ],
         );
     }
 

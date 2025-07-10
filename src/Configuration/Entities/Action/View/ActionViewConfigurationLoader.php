@@ -2,17 +2,18 @@
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View;
 
-use Jmf\CrudEngine\Configuration\KeyStringCollection;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\Path\ActionViewPathResolver;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Jmf\TemplateRendering\TemplateRenderer;
-use Throwable;
 use Webmozart\Assert\Assert;
 
 readonly class ActionViewConfigurationLoader
 {
     public function __construct(
-        private TemplateRenderer $templateRenderer,
+        private ActionViewVariablesResolver $variablesResolver,
+        private ActionViewPathResolver $pathResolver,
     ) {
     }
 
@@ -39,7 +40,7 @@ readonly class ActionViewConfigurationLoader
 
         return new ActionViewConfiguration(
             $this->getPath($schemaConfiguration, $entityClass, $action, $viewConfig),
-            $this->getVariables($viewConfig),
+            $this->getVariables($schemaConfiguration, $entityClass, $action, $viewConfig),
         );
     }
 
@@ -56,57 +57,30 @@ readonly class ActionViewConfigurationLoader
         string $action,
         array $viewConfig,
     ): string {
-        if (!array_key_exists('path', $viewConfig)) {
-            return $this->getFallbackPath($schemaConfiguration, $entityClass, $action);
-        }
-
-        Assert::string($viewConfig['path']);
-
-        return $viewConfig['path'];
+        return $this->pathResolver->resolve(
+            $schemaConfiguration,
+            $entityClass,
+            $action,
+            $viewConfig,
+        );
     }
 
-
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
-     *
-     * @throws CrudEngineInvalidConfigurationException
+     * @param class-string         $entityClass
+     * @param non-empty-string     $action
+     * @param array<string, mixed> $viewConfig
      */
-    private function getFallbackPath(
+    private function getVariables(
         SchemaConfiguration $schemaConfiguration,
         string $entityClass,
         string $action,
-    ): string {
-        // @todo Validate file existence.
-
-        try {
-            return $this->templateRenderer->renderFromString(
-                $schemaConfiguration->getViewConfiguration()->getPath(),
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            );
-        } catch (Throwable $e) {
-            // @todo Add context.
-            throw new CrudEngineInvalidConfigurationException();
-        }
-    }
-
-    /**
-     * @param array<string, mixed> $viewConfig
-     */
-    private function getVariables(array $viewConfig): KeyStringCollection
-    {
-        if (!array_key_exists('variables', $viewConfig)) {
-            return KeyStringCollection::createEmpty();
-        }
-
-        Assert::isMap($viewConfig['variables']);
-        Assert::allString($viewConfig['variables']);
-
-        return new KeyStringCollection(
-            $viewConfig['variables'],
+        array $viewConfig,
+    ): ActionViewVariablesCollection {
+        return $this->variablesResolver->resolve(
+            $schemaConfiguration,
+            $entityClass,
+            $action,
+            $viewConfig,
         );
     }
 }

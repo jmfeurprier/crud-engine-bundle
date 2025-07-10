@@ -91,13 +91,11 @@ readonly class UpdateAction
 
         return $this->viewRenderer->render(
             $actionConfiguration,
-            array_merge(
-                $actionHelper->getViewVariables($request, $entity),
-                [
-                    'entity' => $entity,
-                    'form'   => $form->createView(),
-                ],
-            ),
+            $actionHelper->getViewVariables($request, $entity),
+            [
+                'entity' => $entity,
+                'form'   => $form->createView(),
+            ],
         );
     }
 }

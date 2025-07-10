@@ -2,13 +2,13 @@
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View;
 
-use Jmf\CrudEngine\Configuration\KeyStringCollection;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
 
 readonly class ActionViewConfiguration
 {
     public function __construct(
         private string $path,
-        private KeyStringCollection $variables,
+        private ActionViewVariablesCollection $variables,
     ) {
     }
 
@@ -17,7 +17,7 @@ readonly class ActionViewConfiguration
         return $this->path;
     }
 
-    public function getVariables(): KeyStringCollection
+    public function getVariables(): ActionViewVariablesCollection
     {
         return $this->variables;
     }

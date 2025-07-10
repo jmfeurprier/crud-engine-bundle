@@ -22,7 +22,11 @@ readonly class HelperClassResolver
         array $actionConfig,
     ): ?string {
         if (!array_key_exists('helper', $actionConfig)) {
-            return $this->tryGetFallBackHelperClass($entityClass, $action);
+            return $this->tryGetFallBackHelperClass(
+                $schemaConfiguration,
+                $entityClass,
+                $action,
+            );
         }
 
         $helperClass = $actionConfig['helper'];
@@ -38,16 +42,19 @@ readonly class HelperClassResolver
     }
 
     /**
-     * @param class-string     $class
+     * @param class-string     $entityClass
      * @param non-empty-string $action
      *
      * @return null|class-string
+     *
+     * @todo Retrieve from schema configuration instead.
      */
     private function tryGetFallBackHelperClass(
-        string $class,
+        SchemaConfiguration $schemaConfiguration,
+        string $entityClass,
         string $action,
     ): ?string {
-        $classShortName  = u($class)->afterLast('\\')->toString();
+        $classShortName  = u($entityClass)->afterLast('\\')->toString();
         $actionCamelName = u($action)->camel()->title()->toString();
 
         $candidates = [

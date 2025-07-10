@@ -14,7 +14,6 @@ use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @template E of object
@@ -58,12 +57,10 @@ readonly class ReadAction
 
         return $this->viewRenderer->render(
             $actionConfiguration,
-            array_merge(
-                $actionHelper->getViewVariables($request, $entity),
-                [
-                    'entity' => $entity,
-                ],
-            ),
+            $actionHelper->getViewVariables($request, $entity),
+            [
+                'entity' => $entity,
+            ],
         );
     }
 }

@@ -40,16 +40,18 @@ readonly class FormTypeClassResolver
     }
 
     /**
-     * @param class-string     $class
+     * @param class-string     $entityClass
      * @param non-empty-string $action
      *
      * @return null|class-string<FormTypeInterface>
+     *
+     * @todo Retrieve from schema configuration instead.
      */
     private function tryGetFallBackFormTypeClass(
-        string $class,
+        string $entityClass,
         string $action,
     ): ?string {
-        $classShortName  = u($class)->afterLast('\\')->toString();
+        $classShortName  = u($entityClass)->afterLast('\\')->toString();
         $actionCamelName = u($action)->camel()->title()->toString();
 
         $candidates = [

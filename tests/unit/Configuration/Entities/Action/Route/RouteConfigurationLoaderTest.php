@@ -7,7 +7,6 @@ use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
@@ -102,10 +101,7 @@ class RouteConfigurationLoaderTest extends TestCase
                 SchemaRouteConfiguration::DEFAULT_NAME,
                 SchemaRoutePathsCollection::createEmpty(),
             ),
-            new SchemaViewConfiguration(
-                SchemaViewConfiguration::DEFAULT_PATH,
-                SchemaViewVariablesCollection::createEmpty(),
-            ),
+            $this->createMock(SchemaViewConfiguration::class),
         );
 
         $result = $this->routeConfigurationLoader->load(

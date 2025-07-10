@@ -3,6 +3,8 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\Path\ActionViewPathResolver;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
 use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
@@ -26,8 +28,12 @@ class ViewConfigurationLoaderTest extends TestCase
         $twigEnvironment->addExtension(new StringExtension());
 
         $this->actionViewConfigurationLoader = new ActionViewConfigurationLoader(
-            new TemplateRenderer($twigEnvironment),
-
+            new ActionViewVariablesResolver(
+                new TemplateRenderer($twigEnvironment),
+            ),
+            new ActionViewPathResolver(
+                new TemplateRenderer($twigEnvironment),
+            ),
         );
     }
 

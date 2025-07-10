@@ -17,19 +17,28 @@ readonly class ViewRenderer
     }
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<string, mixed> $viewVariables
      *
      * @throws CrudEngineViewRenderingException
      */
     public function render(
         ActionConfiguration $actionConfiguration,
-        array $context,
+        array $viewVariables,
+        array $defaults,
     ): Response {
+        // @todo Expand variables from action (schema) configuration.
+
+        foreach ($defaults as $key => $value) {
+            $tmp = $actionConfiguration->getViewConfiguration()->getVariables()->tryGet($key, []);
+        }
+
+        $parameters = array_merge($viewVariables, $defaults);
+
         try {
             return new Response(
                 $this->templateRenderer->renderFromFile(
                     $this->getViewPath($actionConfiguration),
-                    $context,
+                    $parameters,
                 ),
             );
         } catch (Throwable $e) {
