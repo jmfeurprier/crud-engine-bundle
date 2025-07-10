@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine;
 
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
 use Jmf\CrudEngine\Configuration\ActionConfigurationsLoader;
 use Jmf\CrudEngine\Configuration\ActionConfigurationsLoaderInterface;
 use Jmf\CrudEngine\Configuration\CacheableActionConfigurationsLoader;
@@ -101,6 +102,12 @@ class JmfCrudEngineBundle extends AbstractBundle
         ;
 
         $container->services()
+            ->set(ActionConfigurationRepository::class)
+            ->autowire()
+            ->arg('$config', $config)
+        ;
+
+        $container->services()
             ->get(RouteLoader::class)
             ->tag('routing.route_loader')
         ;
@@ -109,7 +116,6 @@ class JmfCrudEngineBundle extends AbstractBundle
             $container->services()
                 ->set(ActionConfigurationsLoader::class)
                 ->autowire()
-                ->arg('$config', $config)
             ;
 
             $container->services()
@@ -126,7 +132,6 @@ class JmfCrudEngineBundle extends AbstractBundle
                 ->set(ActionConfigurationsLoaderInterface::class)
                 ->class(ActionConfigurationsLoader::class)
                 ->autowire()
-                ->arg('$config', $config)
             ;
         }
     }
