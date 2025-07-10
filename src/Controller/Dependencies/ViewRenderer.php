@@ -7,6 +7,7 @@ use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
+use Webmozart\Assert\Assert;
 
 readonly class ViewRenderer
 {
@@ -68,6 +69,8 @@ readonly class ViewRenderer
         $configVars = $actionConfiguration->getViewConfiguration()->getVariables();
 
         foreach ($parameters as $key => $value) {
+            Assert::stringNotEmpty($key);
+
             $variables = $configVars->tryGet($key);
 
             if ([] === $variables) {

@@ -115,7 +115,6 @@ class ViewConfigurationLoaderTest extends TestCase
             $actionConfig,
         );
 
-        self::assertNotNull($result);
         self::assertSame($viewPath, $result->getPath());
         self::assertSame($viewVariables, $result->getVariables()->all());
     }
