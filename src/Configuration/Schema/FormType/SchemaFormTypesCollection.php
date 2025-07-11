@@ -1,33 +1,34 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration\Schema\Helper;
+namespace Jmf\CrudEngine\Configuration\Schema\FormType;
 
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaHelpersCollection
+readonly class SchemaFormTypesCollection
 {
     /**
      * @const non-empty-string[]
      */
-    public const iterable DEFAULT_CLASSES = [
-        "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}ActionHelper",
-        "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}ActionHelper",
+    public const iterable DEFAULT_FORM_TYPES = [
+        "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}Type",
+        "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}Type",
+        "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}Type",
     ];
 
     public static function createDefault(): self
     {
-        return new self(self::DEFAULT_CLASSES);
+        return new self(self::DEFAULT_FORM_TYPES);
     }
 
     /**
-     * @param non-empty-string[] $classes
+     * @param non-empty-string[] $formTypes
      */
     public function __construct(
-        private iterable $classes,
+        private iterable $formTypes,
     ) {
-        Assert::allStringNotEmpty($classes);
+        Assert::allStringNotEmpty($formTypes);
     }
 
     /**
@@ -35,7 +36,7 @@ readonly class SchemaHelpersCollection
      */
     public function all(): iterable
     {
-        return $this->classes;
+        return $this->formTypes;
     }
 
     /**
@@ -53,7 +54,7 @@ readonly class SchemaHelpersCollection
             static fn(
                 $value,
             ): string => $schemaValueExpander->expand($value, $arguments),
-            (array) $this->classes,
+            (array) $this->formTypes,
         );
 
         Assert::allStringNotEmpty($expanded);
