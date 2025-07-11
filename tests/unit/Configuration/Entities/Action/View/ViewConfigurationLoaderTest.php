@@ -98,7 +98,7 @@ class ViewConfigurationLoaderTest extends TestCase
         string $viewPath,
         array $viewVariables,
     ): void {
-        $schemaConfiguration = new Schema(
+        $schema = new Schema(
             $this->createMock(SchemaHelpersCollection::class),
             new SchemaRoute(
                 SchemaRoute::DEFAULT_NAME,
@@ -111,7 +111,7 @@ class ViewConfigurationLoaderTest extends TestCase
         );
 
         $result = $this->actionViewConfigurationLoader->load(
-            $schemaConfiguration,
+            $schema,
             $entityClass,
             $action,
             $actionConfig,

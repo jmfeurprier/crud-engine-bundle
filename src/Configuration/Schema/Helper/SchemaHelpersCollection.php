@@ -11,7 +11,7 @@ readonly class SchemaHelpersCollection
     /**
      * @const non-empty-string[]
      */
-    public const iterable DEFAULT_CLASSES = [
+    private const iterable DEFAULT_CLASSES = [
         "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}ActionHelper",
         "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}ActionHelper",
     ];

@@ -145,7 +145,7 @@ class ActionViewVariablesResolverTest extends TestCase
         array $viewConfig,
         array $expected,
     ): void {
-        $schemaConfiguration = new Schema(
+        $schema = new Schema(
             $this->createMock(SchemaHelpersCollection::class),
             $this->createMock(SchemaRoute::class),
             new SchemaView(
@@ -155,7 +155,7 @@ class ActionViewVariablesResolverTest extends TestCase
         );
 
         $result = $this->actionViewVariablesResolver->resolve(
-            $schemaConfiguration,
+            $schema,
             $entityClass,
             $action,
             $viewConfig,

@@ -98,7 +98,7 @@ class RouteConfigurationLoaderTest extends TestCase
         array $actionConfig,
         string $routePath,
     ): void {
-        $schemaConfiguration = new Schema(
+        $schema = new Schema(
             $this->createMock(SchemaHelpersCollection::class),
             new SchemaRoute(
                 SchemaRoute::DEFAULT_NAME,
@@ -108,7 +108,7 @@ class RouteConfigurationLoaderTest extends TestCase
         );
 
         $result = $this->routeConfigurationLoader->load(
-            $schemaConfiguration,
+            $schema,
             $entityClass,
             $action,
             $actionConfig,

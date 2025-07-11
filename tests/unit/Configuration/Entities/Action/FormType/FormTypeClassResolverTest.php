@@ -77,14 +77,14 @@ class FormTypeClassResolverTest extends TestCase
         array $actionConfig,
         ?string $formTypeClass,
     ): void {
-        $schemaConfiguration = $this->createMock(Schema::class);
+        $schema = $this->createMock(Schema::class);
 
         if (null !== $formTypeClass && !class_exists($formTypeClass)) {
             $newClass = $this->createMock(FormTypeInterface::class);
             class_alias($newClass::class, $formTypeClass);
         }
 
-        $result = $this->formTypeClassResolver->resolve($schemaConfiguration, $entityClass, $action, $actionConfig);
+        $result = $this->formTypeClassResolver->resolve($schema, $entityClass, $action, $actionConfig);
 
         self::assertSame($formTypeClass, $result);
     }

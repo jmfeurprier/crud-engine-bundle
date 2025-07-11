@@ -11,11 +11,11 @@ readonly class SchemaHelpersLoader
      */
     public function load(array $schemaConfig): SchemaHelpersCollection
     {
-        $helperClasses = $schemaConfig['helper'] ?? [];
-
-        if ([] === $helperClasses) {
+        if (!array_key_exists('helper', $schemaConfig)) {
             return SchemaHelpersCollection::createDefault();
         }
+
+        $helperClasses = $schemaConfig['helper'];
 
         Assert::allStringNotEmpty($helperClasses);
 

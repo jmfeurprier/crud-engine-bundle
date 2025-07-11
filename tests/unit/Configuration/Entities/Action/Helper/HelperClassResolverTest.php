@@ -34,7 +34,7 @@ class HelperClassResolverTest extends TestCase
 
     /**
      * @return array{
-     *     0: non-empty-string[],
+     *     0: SchemaHelpersCollection,
      *     1: non-empty-string,
      *     2: non-empty-string,
      *     3: array<string, mixed>,
@@ -45,14 +45,14 @@ class HelperClassResolverTest extends TestCase
     {
         return [
             [
-                SchemaHelpersCollection::DEFAULT_CLASSES,
+                SchemaHelpersCollection::createDefault(),
                 'App\\Entity\\Article',
                 'create',
                 [],
                 'App\\Controller\\ArticleCreateActionHelper',
             ],
             [
-                SchemaHelpersCollection::DEFAULT_CLASSES,
+                SchemaHelpersCollection::createDefault(),
                 'App\\Entity\\Article',
                 'update',
                 [],
@@ -62,7 +62,6 @@ class HelperClassResolverTest extends TestCase
     }
 
     /**
-     * @param non-empty-string[]   $schemaHelperClasses
      * @param class-string         $entityClass
      * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
@@ -73,26 +72,26 @@ class HelperClassResolverTest extends TestCase
      */
     #[DataProvider('dataProviderClassActionAndHelperClass')]
     public function testLoad(
-        iterable $schemaHelperClasses,
+        SchemaHelpersCollection $schemaHelpers,
         string $entityClass,
         string $action,
         array $actionConfig,
         string $helperClass,
     ): void {
-        $schemaConfiguration = new Schema(
-            new SchemaHelpersCollection($schemaHelperClasses),
+        $schema = new Schema(
+            $schemaHelpers,
             $this->createMock(SchemaRoute::class),
             $this->createMock(SchemaView::class),
         );
 
-        $result = $this->helperClassResolver->resolve($schemaConfiguration, $entityClass, $action, $actionConfig);
+        $result = $this->helperClassResolver->resolve($schema, $entityClass, $action, $actionConfig);
 
         self::assertNull($result);
 
         $newClass = $this->createMock(ActionHelperInterface::class);
         class_alias($newClass::class, $helperClass);
 
-        $result = $this->helperClassResolver->resolve($schemaConfiguration, $entityClass, $action, $actionConfig);
+        $result = $this->helperClassResolver->resolve($schema, $entityClass, $action, $actionConfig);
 
         self::assertSame($helperClass, $result);
     }
