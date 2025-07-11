@@ -65,7 +65,7 @@ readonly class ActionRedirectionConfigurationLoader
         array $redirectionConfig,
     ): KeyStringCollection {
         if (!array_key_exists('parameters', $redirectionConfig)) {
-            return KeyStringCollection::createEmpty();
+            return KeyStringCollection::createDefault();
         }
 
         $parametersConfig = $redirectionConfig['parameters'];

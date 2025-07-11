@@ -48,7 +48,7 @@ readonly class SchemaViewLoader
     private function getVariables(array $viewConfig): SchemaViewVariablesCollection
     {
         if (!array_key_exists('variables', $viewConfig)) {
-            return SchemaViewVariablesCollection::createEmpty();
+            return SchemaViewVariablesCollection::createDefault();
         }
 
         Assert::isMap($viewConfig['variables']);

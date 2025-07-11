@@ -6,7 +6,7 @@ use Webmozart\Assert\Assert;
 
 readonly class KeyStringCollection
 {
-    public static function createEmpty(): self
+    public static function createDefault(): self
     {
         return new self([]);
     }

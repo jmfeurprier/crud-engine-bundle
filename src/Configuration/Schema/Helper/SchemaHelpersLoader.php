@@ -14,7 +14,7 @@ readonly class SchemaHelpersLoader
         $helperClasses = $schemaConfig['helper'] ?? [];
 
         if ([] === $helperClasses) {
-            $helperClasses = SchemaHelpersCollection::DEFAULT_CLASSES;
+            return SchemaHelpersCollection::createDefault();
         }
 
         Assert::allStringNotEmpty($helperClasses);

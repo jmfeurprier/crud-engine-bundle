@@ -175,7 +175,7 @@ readonly class RouteConfigurationLoader
         array $routeConfig,
     ): KeyStringCollection {
         if (!array_key_exists('requirements', $routeConfig)) {
-            return KeyStringCollection::createEmpty();
+            return KeyStringCollection::createDefault();
         }
 
         $requirementsConfig = $routeConfig['requirements'];

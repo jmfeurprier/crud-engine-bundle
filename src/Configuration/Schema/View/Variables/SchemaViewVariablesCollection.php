@@ -6,7 +6,7 @@ use Webmozart\Assert\Assert;
 
 readonly class SchemaViewVariablesCollection
 {
-    public static function createEmpty(): self
+    public static function createDefault(): self
     {
         return new self([]);
     }
@@ -31,15 +31,5 @@ readonly class SchemaViewVariablesCollection
     public function all(): array
     {
         return $this->values;
-    }
-
-    /**
-     * @param non-empty-string $variable
-     *
-     * @return non-empty-string[]
-     */
-    public function tryGet(string $variable): iterable
-    {
-        return $this->values[$variable] ?? [];
     }
 }

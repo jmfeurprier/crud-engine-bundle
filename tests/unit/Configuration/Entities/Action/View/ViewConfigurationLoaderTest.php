@@ -106,7 +106,7 @@ class ViewConfigurationLoaderTest extends TestCase
             ),
             new SchemaView(
                 SchemaView::DEFAULT_PATH,
-                SchemaViewVariablesCollection::createEmpty(),
+                SchemaViewVariablesCollection::createDefault(),
             ),
         );
 

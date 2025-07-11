@@ -16,6 +16,11 @@ readonly class SchemaHelpersCollection
         "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}ActionHelper",
     ];
 
+    public static function createDefault(): self
+    {
+        return new self(self::DEFAULT_CLASSES);
+    }
+
     /**
      * @param non-empty-string[] $classes
      */
