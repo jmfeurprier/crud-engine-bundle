@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\FormType;
 
-use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Symfony\Component\Form\FormTypeInterface;
 use Webmozart\Assert\Assert;
 use function Symfony\Component\String\u;
@@ -17,7 +17,7 @@ readonly class FormTypeClassResolver
      * @return null|class-string<FormTypeInterface>
      */
     public function resolve(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -26,7 +26,7 @@ readonly class FormTypeClassResolver
             $formTypeClass = $actionConfig['formType'];
         } else {
             $formTypeClass = $this->tryGetFallBackFormTypeClass(
-                $schemaConfiguration,
+                $schema,
                 $entityClass,
                 $action,
             );
@@ -49,10 +49,10 @@ readonly class FormTypeClassResolver
      *
      * @return null|class-string<FormTypeInterface>
      *
-     * @todo Retrieve from schema configuration instead.
+     * @todo Retrieve from schema instead.
      */
     private function tryGetFallBackFormTypeClass(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
     ): ?string {

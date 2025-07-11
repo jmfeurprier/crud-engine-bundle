@@ -2,31 +2,31 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema;
 
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelperConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelperConfigurationLoader;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfigurationLoader;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
+use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersLoader;
+use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
+use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteLoader;
+use Jmf\CrudEngine\Configuration\Schema\View\SchemaView;
+use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewLoader;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaConfigurationLoader
+readonly class SchemaLoader
 {
     public function __construct(
-        private SchemaHelperConfigurationLoader $helperConfigurationLoader,
-        private SchemaRouteConfigurationLoader $routeConfigurationLoader,
-        private SchemaViewConfigurationLoader $viewConfigurationLoader,
+        private SchemaHelpersLoader $helperConfigurationLoader,
+        private SchemaRouteLoader $routeConfigurationLoader,
+        private SchemaViewLoader $viewConfigurationLoader,
     ) {
     }
 
     /**
      * @param array<string, mixed> $config
      */
-    public function load(array $config): SchemaConfiguration
+    public function load(array $config): Schema
     {
         $schemaConfig = $this->getSchemaConfig($config);
 
-        return new SchemaConfiguration(
+        return new Schema(
             $this->getHelperConfiguration($schemaConfig),
             $this->getRouteConfiguration($schemaConfig),
             $this->getViewConfiguration($schemaConfig),
@@ -56,7 +56,7 @@ readonly class SchemaConfigurationLoader
      */
     private function getHelperConfiguration(
         array $schemaConfig,
-    ): SchemaHelperConfiguration {
+    ): SchemaHelpersCollection {
         return $this->helperConfigurationLoader->load($schemaConfig);
     }
 
@@ -65,7 +65,7 @@ readonly class SchemaConfigurationLoader
      */
     private function getRouteConfiguration(
         array $schemaConfig,
-    ): SchemaRouteConfiguration {
+    ): SchemaRoute {
         return $this->routeConfigurationLoader->load($schemaConfig);
     }
 
@@ -74,7 +74,7 @@ readonly class SchemaConfigurationLoader
      */
     private function getViewConfiguration(
         array $schemaConfig,
-    ): SchemaViewConfiguration {
+    ): SchemaView {
         return $this->viewConfigurationLoader->load($schemaConfig);
     }
 }

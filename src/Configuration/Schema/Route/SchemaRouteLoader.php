@@ -5,16 +5,16 @@ namespace Jmf\CrudEngine\Configuration\Schema\Route;
 use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaRouteConfigurationLoader
+readonly class SchemaRouteLoader
 {
     /**
      * @param array<string, mixed> $schemaConfig
      */
-    public function load(array $schemaConfig): SchemaRouteConfiguration
+    public function load(array $schemaConfig): SchemaRoute
     {
         $routeConfig = $this->getRouteConfig($schemaConfig);
 
-        return new SchemaRouteConfiguration(
+        return new SchemaRoute(
             $this->getName($routeConfig),
             $this->getPaths($routeConfig),
         );
@@ -47,7 +47,7 @@ readonly class SchemaRouteConfigurationLoader
         array $routeConfig,
     ): string {
         if (!array_key_exists('name', $routeConfig)) {
-            return SchemaRouteConfiguration::DEFAULT_NAME;
+            return SchemaRoute::DEFAULT_NAME;
         }
 
         $name = $routeConfig['name'];
@@ -64,7 +64,7 @@ readonly class SchemaRouteConfigurationLoader
         array $routeConfig,
     ): SchemaRoutePathsCollection {
         if (!array_key_exists('paths', $routeConfig)) {
-            return SchemaRoutePathsCollection::createEmpty();
+            return SchemaRoutePathsCollection::createDefault();
         }
 
         $pathsConfig = $routeConfig['paths'];

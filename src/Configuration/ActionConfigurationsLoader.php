@@ -3,7 +3,7 @@
 namespace Jmf\CrudEngine\Configuration;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfigurationLoader;
-use Jmf\CrudEngine\Configuration\Schema\SchemaConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Schema\SchemaLoader;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Override;
 use Webmozart\Assert\Assert;
@@ -11,7 +11,7 @@ use Webmozart\Assert\Assert;
 readonly class ActionConfigurationsLoader implements ActionConfigurationsLoaderInterface
 {
     public function __construct(
-        private SchemaConfigurationLoader $schemaConfigurationLoader,
+        private SchemaLoader $schemaLoader,
         private ActionConfigurationLoader $actionConfigurationLoader,
     ) {
     }
@@ -19,7 +19,7 @@ readonly class ActionConfigurationsLoader implements ActionConfigurationsLoaderI
     #[Override]
     public function load(array $config): ActionConfigurationsCollection
     {
-        $schemaConfiguration = $this->schemaConfigurationLoader->load($config);
+        $schema = $this->schemaLoader->load($config);
 
         Assert::keyExists($config, 'entities');
         $entitiesConfig = $config['entities'];
@@ -46,7 +46,7 @@ readonly class ActionConfigurationsLoader implements ActionConfigurationsLoaderI
                 Assert::isMap($actionConfig);
 
                 $actionConfigurations[] = $this->actionConfigurationLoader->load(
-                    $schemaConfiguration,
+                    $schema,
                     $entityClass,
                     $action,
                     $actionConfig,

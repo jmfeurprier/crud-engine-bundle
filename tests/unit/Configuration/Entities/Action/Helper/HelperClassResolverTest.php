@@ -3,10 +3,10 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\Helper;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Helper\HelperClassResolver;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelperConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
+use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
+use Jmf\CrudEngine\Configuration\Schema\Schema;
+use Jmf\CrudEngine\Configuration\Schema\View\SchemaView;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
@@ -45,14 +45,14 @@ class HelperClassResolverTest extends TestCase
     {
         return [
             [
-                SchemaHelperConfiguration::DEFAULT_CLASSES,
+                SchemaHelpersCollection::DEFAULT_CLASSES,
                 'App\\Entity\\Article',
                 'create',
                 [],
                 'App\\Controller\\ArticleCreateActionHelper',
             ],
             [
-                SchemaHelperConfiguration::DEFAULT_CLASSES,
+                SchemaHelpersCollection::DEFAULT_CLASSES,
                 'App\\Entity\\Article',
                 'update',
                 [],
@@ -79,10 +79,10 @@ class HelperClassResolverTest extends TestCase
         array $actionConfig,
         string $helperClass,
     ): void {
-        $schemaConfiguration = new SchemaConfiguration(
-            new SchemaHelperConfiguration($schemaHelperClasses),
-            $this->createMock(SchemaRouteConfiguration::class),
-            $this->createMock(SchemaViewConfiguration::class),
+        $schemaConfiguration = new Schema(
+            new SchemaHelpersCollection($schemaHelperClasses),
+            $this->createMock(SchemaRoute::class),
+            $this->createMock(SchemaView::class),
         );
 
         $result = $this->helperClassResolver->resolve($schemaConfiguration, $entityClass, $action, $actionConfig);

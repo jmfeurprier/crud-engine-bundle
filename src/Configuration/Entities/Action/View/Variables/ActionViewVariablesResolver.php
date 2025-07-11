@@ -2,7 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View\Variables;
 
-use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
@@ -22,14 +22,14 @@ readonly class ActionViewVariablesResolver
      * @throws CrudEngineInvalidConfigurationException
      */
     public function resolve(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $viewConfig,
     ): ActionViewVariablesCollection {
         $variables = [];
 
-        foreach ($schemaConfiguration->getViewConfiguration()->getVariables()->all() as $variableName => $values) {
+        foreach ($schema->getView()->getVariables()->all() as $variableName => $values) {
             $variables[$variableName] = [];
 
             foreach ($values as $value) {

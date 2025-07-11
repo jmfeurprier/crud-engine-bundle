@@ -10,7 +10,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
-use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -35,7 +35,7 @@ readonly class ActionConfigurationLoader
      * @throws CrudEngineConfigurationException
      */
     public function load(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -43,11 +43,11 @@ readonly class ActionConfigurationLoader
         return new ActionConfiguration(
             $entityClass,
             $action,
-            $this->getFormTypeClass($schemaConfiguration, $entityClass, $action, $actionConfig),
-            $this->getHelperClass($schemaConfiguration, $entityClass, $action, $actionConfig),
+            $this->getFormTypeClass($schema, $entityClass, $action, $actionConfig),
+            $this->getHelperClass($schema, $entityClass, $action, $actionConfig),
             $this->getRedirectionConfiguration($entityClass, $action, $actionConfig),
-            $this->getRouteConfiguration($schemaConfiguration, $entityClass, $action, $actionConfig),
-            $this->getViewConfiguration($schemaConfiguration, $entityClass, $action, $actionConfig),
+            $this->getRouteConfiguration($schema, $entityClass, $action, $actionConfig),
+            $this->getViewConfiguration($schema, $entityClass, $action, $actionConfig),
         );
     }
 
@@ -59,13 +59,13 @@ readonly class ActionConfigurationLoader
      * @return null|class-string<FormTypeInterface>
      */
     private function getFormTypeClass(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): ?string {
         return $this->formTypeClassConfigurationLoader->resolve(
-            $schemaConfiguration,
+            $schema,
             $entityClass,
             $action,
             $actionConfig,
@@ -82,13 +82,13 @@ readonly class ActionConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getHelperClass(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): ?string {
         return $this->helperClassConfigurationLoader->resolve(
-            $schemaConfiguration,
+            $schema,
             $entityClass,
             $action,
             $actionConfig,
@@ -122,13 +122,13 @@ readonly class ActionConfigurationLoader
      * @throws CrudEngineMissingConfigurationException
      */
     private function getRouteConfiguration(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): RouteConfiguration {
         return $this->routeConfigurationLoader->load(
-            $schemaConfiguration,
+            $schema,
             $entityClass,
             $action,
             $actionConfig,
@@ -143,13 +143,13 @@ readonly class ActionConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getViewConfiguration(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): ActionViewConfiguration {
         return $this->viewConfigurationLoader->load(
-            $schemaConfiguration,
+            $schema,
             $entityClass,
             $action,
             $actionConfig,

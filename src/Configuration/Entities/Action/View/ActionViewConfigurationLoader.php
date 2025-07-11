@@ -5,7 +5,7 @@ namespace Jmf\CrudEngine\Configuration\Entities\Action\View;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Path\ActionViewPathResolver;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
-use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 
@@ -25,7 +25,7 @@ readonly class ActionViewConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     public function load(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -39,8 +39,8 @@ readonly class ActionViewConfigurationLoader
         }
 
         return new ActionViewConfiguration(
-            $this->getPath($schemaConfiguration, $entityClass, $action, $viewConfig),
-            $this->getVariables($schemaConfiguration, $entityClass, $action, $viewConfig),
+            $this->getPath($schema, $entityClass, $action, $viewConfig),
+            $this->getVariables($schema, $entityClass, $action, $viewConfig),
         );
     }
 
@@ -52,13 +52,13 @@ readonly class ActionViewConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getPath(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $viewConfig,
     ): string {
         return $this->pathResolver->resolve(
-            $schemaConfiguration,
+            $schema,
             $entityClass,
             $action,
             $viewConfig,
@@ -73,13 +73,13 @@ readonly class ActionViewConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getVariables(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $viewConfig,
     ): ActionViewVariablesCollection {
         return $this->variablesResolver->resolve(
-            $schemaConfiguration,
+            $schema,
             $entityClass,
             $action,
             $viewConfig,

@@ -4,7 +4,7 @@ namespace Jmf\CrudEngine\Configuration\Schema\View;
 
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 
-readonly class SchemaViewConfiguration
+readonly class SchemaView
 {
     public const string DEFAULT_PATH = "{{ entityClass|u.afterLast('\\\\').snake }}/{{ action }}.html.twig";
 

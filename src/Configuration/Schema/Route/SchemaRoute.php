@@ -5,7 +5,7 @@ namespace Jmf\CrudEngine\Configuration\Schema\Route;
 use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaRouteConfiguration
+readonly class SchemaRoute
 {
     public const string DEFAULT_NAME = "{{ entityClass|u.afterLast('\\\\').snake }}.{{ action }}";
 

@@ -3,7 +3,7 @@
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
-use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -25,7 +25,7 @@ readonly class RouteConfigurationLoader
      * @throws CrudEngineMissingConfigurationException
      */
     public function load(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -33,8 +33,8 @@ readonly class RouteConfigurationLoader
         $routeConfig = $this->getRouteConfig($actionConfig);
 
         return new RouteConfiguration(
-            $this->getName($schemaConfiguration, $entityClass, $action, $routeConfig),
-            $this->getPath($schemaConfiguration, $entityClass, $action, $routeConfig),
+            $this->getName($schema, $entityClass, $action, $routeConfig),
+            $this->getPath($schema, $entityClass, $action, $routeConfig),
             $this->getRequirements($routeConfig),
         );
     }
@@ -67,13 +67,13 @@ readonly class RouteConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getName(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $routeConfig,
     ): string {
         if (!array_key_exists('name', $routeConfig)) {
-            return $this->getFallbackName($schemaConfiguration, $entityClass, $action);
+            return $this->getFallbackName($schema, $entityClass, $action);
         }
 
         Assert::stringNotEmpty($routeConfig['name']);
@@ -90,12 +90,12 @@ readonly class RouteConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     public function getFallbackName(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
     ): string {
         $name = $this->schemaValueExpander->expand(
-            $schemaConfiguration->getRouteConfiguration()->getName(),
+            $schema->getRoute()->getName(),
             [
                 'entityClass' => $entityClass,
                 'action'      => $action,
@@ -116,7 +116,7 @@ readonly class RouteConfigurationLoader
      * @throws CrudEngineMissingConfigurationException
      */
     private function getPath(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
         array $routeConfig,
@@ -130,7 +130,7 @@ readonly class RouteConfigurationLoader
         }
 
         return $this->tryGetFallbackPath(
-            $schemaConfiguration,
+            $schema,
             $entityClass,
             $action,
         )
@@ -149,11 +149,11 @@ readonly class RouteConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     public function tryGetFallbackPath(
-        SchemaConfiguration $schemaConfiguration,
+        Schema $schema,
         string $entityClass,
         string $action,
     ): ?string {
-        $path = $schemaConfiguration->getRouteConfiguration()->getPaths()->tryGet($action);
+        $path = $schema->getRoute()->getPaths()->tryGet($action);
 
         if (null === $path) {
             return null;

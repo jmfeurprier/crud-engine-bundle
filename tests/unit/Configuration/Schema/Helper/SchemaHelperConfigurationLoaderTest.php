@@ -2,19 +2,19 @@
 
 namespace Jmf\CrudEngine\Tests\Configuration\Schema\Helper;
 
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelperConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelperConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
+use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersLoader;
 use Override;
 use PHPUnit\Framework\TestCase;
 
 class SchemaHelperConfigurationLoaderTest extends TestCase
 {
-    private SchemaHelperConfigurationLoader $schemaHelperConfigurationLoader;
+    private SchemaHelpersLoader $schemaHelperConfigurationLoader;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->schemaHelperConfigurationLoader = new SchemaHelperConfigurationLoader();
+        $this->schemaHelperConfigurationLoader = new SchemaHelpersLoader();
     }
 
     public function testLoadDefault(): void
@@ -23,7 +23,7 @@ class SchemaHelperConfigurationLoaderTest extends TestCase
 
         $result = $this->schemaHelperConfigurationLoader->load($schemaConfig);
 
-        self::assertSame(SchemaHelperConfiguration::DEFAULT_CLASSES, $result->getClasses());
+        self::assertSame(SchemaHelpersCollection::DEFAULT_CLASSES, $result->all());
     }
 
     public function testLoadWithEmptyConfig(): void
@@ -34,7 +34,7 @@ class SchemaHelperConfigurationLoaderTest extends TestCase
 
         $result = $this->schemaHelperConfigurationLoader->load($schemaConfig);
 
-        self::assertSame(SchemaHelperConfiguration::DEFAULT_CLASSES, $result->getClasses());
+        self::assertSame(SchemaHelpersCollection::DEFAULT_CLASSES, $result->all());
     }
 
     public function testLoad(): void
@@ -53,7 +53,7 @@ class SchemaHelperConfigurationLoaderTest extends TestCase
                 'foo',
                 'bar',
             ],
-            $result->getClasses(),
+            $result->all(),
         );
     }
 }

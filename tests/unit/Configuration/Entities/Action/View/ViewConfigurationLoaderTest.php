@@ -5,11 +5,11 @@ namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Path\ActionViewPathResolver;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelperConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
 use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\SchemaConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
+use Jmf\CrudEngine\Configuration\Schema\Schema;
+use Jmf\CrudEngine\Configuration\Schema\View\SchemaView;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
@@ -98,14 +98,14 @@ class ViewConfigurationLoaderTest extends TestCase
         string $viewPath,
         array $viewVariables,
     ): void {
-        $schemaConfiguration = new SchemaConfiguration(
-            $this->createMock(SchemaHelperConfiguration::class),
-            new SchemaRouteConfiguration(
-                SchemaRouteConfiguration::DEFAULT_NAME,
-                SchemaRoutePathsCollection::createEmpty(),
+        $schemaConfiguration = new Schema(
+            $this->createMock(SchemaHelpersCollection::class),
+            new SchemaRoute(
+                SchemaRoute::DEFAULT_NAME,
+                SchemaRoutePathsCollection::createDefault(),
             ),
-            new SchemaViewConfiguration(
-                SchemaViewConfiguration::DEFAULT_PATH,
+            new SchemaView(
+                SchemaView::DEFAULT_PATH,
                 SchemaViewVariablesCollection::createEmpty(),
             ),
         );

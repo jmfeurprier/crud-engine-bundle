@@ -14,9 +14,9 @@ readonly class SchemaRoutePathsCollection
         'update' => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}/update",
     ];
 
-    public static function createEmpty(): self
+    public static function createDefault(): self
     {
-        return new self([]);
+        return new self(self::DEFAULT_PATHS);
     }
 
     /**
@@ -27,14 +27,6 @@ readonly class SchemaRoutePathsCollection
     ) {
         Assert::isMap($paths);
         Assert::allStringNotEmpty($paths);
-    }
-
-    /**
-     * @return array<non-empty-string, string>
-     */
-    public function all(): array
-    {
-        return $this->paths;
     }
 
     /**

@@ -5,14 +5,14 @@ namespace Jmf\CrudEngine\Configuration\Schema\View;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaViewConfigurationLoader
+readonly class SchemaViewLoader
 {
     /**
      * @param array<string, mixed> $actionConfig
      */
     public function load(
         array $actionConfig,
-    ): SchemaViewConfiguration {
+    ): SchemaView {
         $viewConfig = [];
 
         if (array_key_exists('view', $actionConfig)) {
@@ -21,7 +21,7 @@ readonly class SchemaViewConfigurationLoader
             $viewConfig = $actionConfig['view'];
         }
 
-        return new SchemaViewConfiguration(
+        return new SchemaView(
             $this->getPath($viewConfig),
             $this->getVariables($viewConfig),
         );
@@ -34,7 +34,7 @@ readonly class SchemaViewConfigurationLoader
         array $viewConfig,
     ): string {
         if (!array_key_exists('path', $viewConfig)) {
-            return SchemaViewConfiguration::DEFAULT_PATH;
+            return SchemaView::DEFAULT_PATH;
         }
 
         Assert::string($viewConfig['path']);
