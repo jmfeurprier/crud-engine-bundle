@@ -7,7 +7,7 @@ use Webmozart\Assert\Assert;
 readonly class SchemaFormTypesLoader
 {
     /**
-     * @param array<non-empty-string, mixed> $schemaConfig
+     * @param array<string, mixed> $schemaConfig
      */
     public function load(array $schemaConfig): SchemaFormTypesCollection
     {

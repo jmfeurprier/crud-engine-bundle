@@ -57,6 +57,8 @@ readonly class ActionConfigurationLoader
      * @param array<string, mixed> $actionConfig
      *
      * @return null|class-string<FormTypeInterface>
+     *
+     * @throws CrudEngineInvalidConfigurationException
      */
     private function getFormTypeClass(
         Schema $schema,

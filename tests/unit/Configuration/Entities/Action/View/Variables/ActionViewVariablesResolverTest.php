@@ -3,6 +3,7 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View\Variables;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
+use Jmf\CrudEngine\Configuration\Schema\FormType\SchemaFormTypesCollection;
 use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
@@ -146,6 +147,7 @@ class ActionViewVariablesResolverTest extends TestCase
         array $expected,
     ): void {
         $schema = new Schema(
+            $this->createMock(SchemaFormTypesCollection::class),
             $this->createMock(SchemaHelpersCollection::class),
             $this->createMock(SchemaRoute::class),
             new SchemaView(

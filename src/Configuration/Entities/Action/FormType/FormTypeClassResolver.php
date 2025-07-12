@@ -3,18 +3,26 @@
 namespace Jmf\CrudEngine\Configuration\Entities\Action\FormType;
 
 use Jmf\CrudEngine\Configuration\Schema\Schema;
+use Jmf\CrudEngine\Configuration\SchemaValueExpander;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Symfony\Component\Form\FormTypeInterface;
 use Webmozart\Assert\Assert;
-use function Symfony\Component\String\u;
 
 readonly class FormTypeClassResolver
 {
+    public function __construct(
+        private SchemaValueExpander $schemaValueExpander,
+    ) {
+    }
+
     /**
      * @param class-string         $entityClass
      * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      *
      * @return null|class-string<FormTypeInterface>
+     *
+     * @throws CrudEngineInvalidConfigurationException
      */
     public function resolve(
         Schema $schema,
@@ -49,27 +57,26 @@ readonly class FormTypeClassResolver
      *
      * @return null|class-string<FormTypeInterface>
      *
-     * @todo Retrieve from schema instead.
+     * @throws CrudEngineInvalidConfigurationException
      */
     private function tryGetFallBackFormTypeClass(
         Schema $schema,
         string $entityClass,
         string $action,
     ): ?string {
-        $classShortName  = u($entityClass)->afterLast('\\')->toString();
-        $actionCamelName = u($action)->camel()->title()->toString();
+        $classes = $schema->getFormTypes()->expand(
+            $this->schemaValueExpander,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
+        );
 
-        $candidates = [
-            "App\\Form\\{$classShortName}\\{$actionCamelName}Type",
-            "App\\Form\\{$classShortName}{$actionCamelName}Type",
-            "App\\Form\\{$classShortName}Type",
-        ];
+        foreach ($classes as $class) {
+            if (class_exists($class)) {
+                Assert::subclassOf($class, FormTypeInterface::class);
 
-        foreach ($candidates as $candidate) {
-            if (class_exists($candidate)) {
-                Assert::subclassOf($candidate, FormTypeInterface::class);
-
-                return $candidate;
+                return $class;
             }
         }
 

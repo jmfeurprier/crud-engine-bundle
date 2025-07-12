@@ -2,6 +2,8 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema;
 
+use Jmf\CrudEngine\Configuration\Schema\FormType\SchemaFormTypesCollection;
+use Jmf\CrudEngine\Configuration\Schema\FormType\SchemaFormTypesLoader;
 use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
 use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersLoader;
 use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
@@ -13,9 +15,10 @@ use Webmozart\Assert\Assert;
 readonly class SchemaLoader
 {
     public function __construct(
-        private SchemaHelpersLoader $helperConfigurationLoader,
-        private SchemaRouteLoader $routeConfigurationLoader,
-        private SchemaViewLoader $viewConfigurationLoader,
+        private SchemaHelpersLoader $helpersLoader,
+        private SchemaFormTypesLoader $formTypesLoader,
+        private SchemaRouteLoader $routeLoader,
+        private SchemaViewLoader $viewLoader,
     ) {
     }
 
@@ -27,9 +30,10 @@ readonly class SchemaLoader
         $schemaConfig = $this->getSchemaConfig($config);
 
         return new Schema(
-            $this->getHelperConfiguration($schemaConfig),
-            $this->getRouteConfiguration($schemaConfig),
-            $this->getViewConfiguration($schemaConfig),
+            $this->getFormTypes($schemaConfig),
+            $this->getHelpers($schemaConfig),
+            $this->getRoute($schemaConfig),
+            $this->getView($schemaConfig),
         );
     }
 
@@ -54,27 +58,36 @@ readonly class SchemaLoader
     /**
      * @param array<string, mixed> $schemaConfig
      */
-    private function getHelperConfiguration(
+    private function getFormTypes(
+        array $schemaConfig,
+    ): SchemaFormTypesCollection {
+        return $this->formTypesLoader->load($schemaConfig);
+    }
+
+    /**
+     * @param array<string, mixed> $schemaConfig
+     */
+    private function getHelpers(
         array $schemaConfig,
     ): SchemaHelpersCollection {
-        return $this->helperConfigurationLoader->load($schemaConfig);
+        return $this->helpersLoader->load($schemaConfig);
     }
 
     /**
      * @param array<string, mixed> $schemaConfig
      */
-    private function getRouteConfiguration(
+    private function getRoute(
         array $schemaConfig,
     ): SchemaRoute {
-        return $this->routeConfigurationLoader->load($schemaConfig);
+        return $this->routeLoader->load($schemaConfig);
     }
 
     /**
      * @param array<string, mixed> $schemaConfig
      */
-    private function getViewConfiguration(
+    private function getView(
         array $schemaConfig,
     ): SchemaView {
-        return $this->viewConfigurationLoader->load($schemaConfig);
+        return $this->viewLoader->load($schemaConfig);
     }
 }
