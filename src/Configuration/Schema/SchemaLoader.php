@@ -2,23 +2,23 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema;
 
-use Jmf\CrudEngine\Configuration\Schema\FormType\SchemaFormTypesCollection;
-use Jmf\CrudEngine\Configuration\Schema\FormType\SchemaFormTypesLoader;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersLoader;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRouteLoader;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaView;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaViewLoader;
+use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
+use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchemaLoader;
+use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
+use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchemaLoader;
+use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
+use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchemaLoader;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewSchemaLoader;
 use Webmozart\Assert\Assert;
 
 readonly class SchemaLoader
 {
     public function __construct(
-        private SchemaHelpersLoader $helpersLoader,
-        private SchemaFormTypesLoader $formTypesLoader,
-        private SchemaRouteLoader $routeLoader,
-        private SchemaViewLoader $viewLoader,
+        private HelperSchemaLoader $helpersLoader,
+        private FormTypeSchemaLoader $formTypesLoader,
+        private RouteSchemaLoader $routeLoader,
+        private ViewSchemaLoader $viewLoader,
     ) {
     }
 
@@ -60,7 +60,7 @@ readonly class SchemaLoader
      */
     private function getFormTypes(
         array $schemaConfig,
-    ): SchemaFormTypesCollection {
+    ): FormTypeSchema {
         return $this->formTypesLoader->load($schemaConfig);
     }
 
@@ -69,7 +69,7 @@ readonly class SchemaLoader
      */
     private function getHelpers(
         array $schemaConfig,
-    ): SchemaHelpersCollection {
+    ): HelperSchema {
         return $this->helpersLoader->load($schemaConfig);
     }
 
@@ -78,7 +78,7 @@ readonly class SchemaLoader
      */
     private function getRoute(
         array $schemaConfig,
-    ): SchemaRoute {
+    ): RouteSchema {
         return $this->routeLoader->load($schemaConfig);
     }
 
@@ -87,7 +87,7 @@ readonly class SchemaLoader
      */
     private function getView(
         array $schemaConfig,
-    ): SchemaView {
+    ): ViewSchema {
         return $this->viewLoader->load($schemaConfig);
     }
 }

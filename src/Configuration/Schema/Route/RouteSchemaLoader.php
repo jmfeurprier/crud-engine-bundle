@@ -2,19 +2,19 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema\Route;
 
-use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
+use Jmf\CrudEngine\Configuration\Schema\Route\Paths\RoutePathSchema;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaRouteLoader
+readonly class RouteSchemaLoader
 {
     /**
      * @param array<string, mixed> $schemaConfig
      */
-    public function load(array $schemaConfig): SchemaRoute
+    public function load(array $schemaConfig): RouteSchema
     {
         $routeConfig = $this->getRouteConfig($schemaConfig);
 
-        return new SchemaRoute(
+        return new RouteSchema(
             $this->getName($routeConfig),
             $this->getPaths($routeConfig),
         );
@@ -47,7 +47,7 @@ readonly class SchemaRouteLoader
         array $routeConfig,
     ): string {
         if (!array_key_exists('name', $routeConfig)) {
-            return SchemaRoute::DEFAULT_NAME;
+            return RouteSchema::DEFAULT_NAME;
         }
 
         $name = $routeConfig['name'];
@@ -62,9 +62,9 @@ readonly class SchemaRouteLoader
      */
     private function getPaths(
         array $routeConfig,
-    ): SchemaRoutePathsCollection {
+    ): RoutePathSchema {
         if (!array_key_exists('paths', $routeConfig)) {
-            return SchemaRoutePathsCollection::createDefault();
+            return RoutePathSchema::createDefault();
         }
 
         $pathsConfig = $routeConfig['paths'];
@@ -80,6 +80,6 @@ readonly class SchemaRouteLoader
             $paths[$action] = $path;
         }
 
-        return new SchemaRoutePathsCollection($paths);
+        return new RoutePathSchema($paths);
     }
 }

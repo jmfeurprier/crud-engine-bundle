@@ -4,8 +4,11 @@ namespace Jmf\CrudEngine\Configuration\Schema\Route\Paths;
 
 use Webmozart\Assert\Assert;
 
-readonly class SchemaRoutePathsCollection
+readonly class RoutePathSchema
 {
+    /**
+     * @const array<non-empty-string, non-empty-string>
+     */
     private const array DEFAULT_PATHS = [
         'create' => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/create",
         'delete' => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}/delete",

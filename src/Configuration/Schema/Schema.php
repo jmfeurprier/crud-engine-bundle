@@ -2,37 +2,37 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema;
 
-use Jmf\CrudEngine\Configuration\Schema\FormType\SchemaFormTypesCollection;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaView;
+use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
+use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
+use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 
 readonly class Schema
 {
     public function __construct(
-        private SchemaFormTypesCollection $formTypes,
-        private SchemaHelpersCollection $helpers,
-        private SchemaRoute $route,
-        private SchemaView $view,
+        private FormTypeSchema $formTypes,
+        private HelperSchema $helpers,
+        private RouteSchema $route,
+        private ViewSchema $view,
     ) {
     }
 
-    public function getFormTypes(): SchemaFormTypesCollection
+    public function getFormTypes(): FormTypeSchema
     {
         return $this->formTypes;
     }
 
-    public function getHelpers(): SchemaHelpersCollection
+    public function getHelpers(): HelperSchema
     {
         return $this->helpers;
     }
 
-    public function getRoute(): SchemaRoute
+    public function getRoute(): RouteSchema
     {
         return $this->route;
     }
 
-    public function getView(): SchemaView
+    public function getView(): ViewSchema
     {
         return $this->view;
     }

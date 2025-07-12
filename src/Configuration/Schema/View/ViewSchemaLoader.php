@@ -2,17 +2,17 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema\View;
 
-use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
+use Jmf\CrudEngine\Configuration\Schema\View\Variables\ViewVariablesSchema;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaViewLoader
+readonly class ViewSchemaLoader
 {
     /**
      * @param array<string, mixed> $actionConfig
      */
     public function load(
         array $actionConfig,
-    ): SchemaView {
+    ): ViewSchema {
         $viewConfig = [];
 
         if (array_key_exists('view', $actionConfig)) {
@@ -21,7 +21,7 @@ readonly class SchemaViewLoader
             $viewConfig = $actionConfig['view'];
         }
 
-        return new SchemaView(
+        return new ViewSchema(
             $this->getPath($viewConfig),
             $this->getVariables($viewConfig),
         );
@@ -34,7 +34,7 @@ readonly class SchemaViewLoader
         array $viewConfig,
     ): string {
         if (!array_key_exists('path', $viewConfig)) {
-            return SchemaView::DEFAULT_PATH;
+            return ViewSchema::DEFAULT_PATH;
         }
 
         Assert::string($viewConfig['path']);
@@ -45,10 +45,10 @@ readonly class SchemaViewLoader
     /**
      * @param array<string, mixed> $viewConfig
      */
-    private function getVariables(array $viewConfig): SchemaViewVariablesCollection
+    private function getVariables(array $viewConfig): ViewVariablesSchema
     {
         if (!array_key_exists('variables', $viewConfig)) {
-            return SchemaViewVariablesCollection::createDefault();
+            return ViewVariablesSchema::createDefault();
         }
 
         Assert::isMap($viewConfig['variables']);
@@ -61,7 +61,7 @@ readonly class SchemaViewLoader
             $variables[$variableName] = $this->getVariableValues($variableValues);
         }
 
-        return new SchemaViewVariablesCollection($variables);
+        return new ViewVariablesSchema($variables);
     }
 
     /**

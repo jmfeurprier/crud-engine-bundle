@@ -4,16 +4,16 @@ namespace Jmf\CrudEngine\Configuration\Schema\Keys;
 
 use Webmozart\Assert\Assert;
 
-readonly class SchemaKeysLoader
+readonly class KeySchemaLoader
 {
     /**
      * @param array<string, mixed> $actionConfig
      */
     public function load(
         array $actionConfig,
-    ): SchemaKeysCollection {
+    ): KeySchema {
         if (!array_key_exists('keys', $actionConfig)) {
-            return SchemaKeysCollection::createDefault();
+            return KeySchema::createDefault();
         }
 
         $keysConfig = $actionConfig['keys'];
@@ -29,6 +29,6 @@ readonly class SchemaKeysLoader
             $keys[$key] = $value;
         }
 
-        return new SchemaKeysCollection($keys);
+        return new KeySchema($keys);
     }
 }

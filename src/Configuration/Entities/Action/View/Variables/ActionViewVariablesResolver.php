@@ -27,25 +27,13 @@ readonly class ActionViewVariablesResolver
         string $action,
         array $viewConfig,
     ): ActionViewVariablesCollection {
-        $variables = [];
-
-        foreach ($schema->getView()->getVariables()->all() as $variableName => $values) {
-            $variables[$variableName] = [];
-
-            foreach ($values as $value) {
-                $value = $this->schemaValueExpander->expand(
-                    $value,
-                    [
-                        'entityClass' => $entityClass,
-                        'action'      => $action,
-                    ],
-                );
-
-                Assert::stringNotEmpty($value);
-
-                $variables[$variableName][] = $value;
-            }
-        }
+        $variables = $schema->getView()->getVariables()->expand(
+            $this->schemaValueExpander,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
+        );
 
         if (array_key_exists('variables', $viewConfig)) {
             $variablesConfig = $viewConfig['variables'];

@@ -4,22 +4,22 @@ namespace Jmf\CrudEngine\Configuration\Schema\Helper;
 
 use Webmozart\Assert\Assert;
 
-readonly class SchemaHelpersLoader
+readonly class HelperSchemaLoader
 {
     /**
      * @param array<string, mixed> $schemaConfig
      */
-    public function load(array $schemaConfig): SchemaHelpersCollection
+    public function load(array $schemaConfig): HelperSchema
     {
         if (!array_key_exists('helper', $schemaConfig)) {
-            return SchemaHelpersCollection::createDefault();
+            return HelperSchema::createDefault();
         }
 
         $helperClasses = $schemaConfig['helper'];
 
         Assert::allStringNotEmpty($helperClasses);
 
-        return new SchemaHelpersCollection(
+        return new HelperSchema(
             $helperClasses,
         );
     }

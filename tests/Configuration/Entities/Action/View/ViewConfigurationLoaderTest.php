@@ -5,13 +5,13 @@ namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Path\ActionViewPathResolver;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
-use Jmf\CrudEngine\Configuration\Schema\FormType\SchemaFormTypesCollection;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
-use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
+use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
+use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
+use Jmf\CrudEngine\Configuration\Schema\Route\Paths\RoutePathSchema;
+use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaView;
-use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
+use Jmf\CrudEngine\Configuration\Schema\View\Variables\ViewVariablesSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
@@ -100,15 +100,15 @@ class ViewConfigurationLoaderTest extends TestCase
         array $viewVariables,
     ): void {
         $schema = new Schema(
-            $this->createMock(SchemaFormTypesCollection::class),
-            $this->createMock(SchemaHelpersCollection::class),
-            new SchemaRoute(
-                SchemaRoute::DEFAULT_NAME,
-                SchemaRoutePathsCollection::createDefault(),
+            $this->createMock(FormTypeSchema::class),
+            $this->createMock(HelperSchema::class),
+            new RouteSchema(
+                RouteSchema::DEFAULT_NAME,
+                RoutePathSchema::createDefault(),
             ),
-            new SchemaView(
-                SchemaView::DEFAULT_PATH,
-                SchemaViewVariablesCollection::createDefault(),
+            new ViewSchema(
+                ViewSchema::DEFAULT_PATH,
+                ViewVariablesSchema::createDefault(),
             ),
         );
 

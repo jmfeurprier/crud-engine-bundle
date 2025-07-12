@@ -4,22 +4,22 @@ namespace Jmf\CrudEngine\Configuration\Schema\FormType;
 
 use Webmozart\Assert\Assert;
 
-readonly class SchemaFormTypesLoader
+readonly class FormTypeSchemaLoader
 {
     /**
      * @param array<string, mixed> $schemaConfig
      */
-    public function load(array $schemaConfig): SchemaFormTypesCollection
+    public function load(array $schemaConfig): FormTypeSchema
     {
         if (!array_key_exists('formTypes', $schemaConfig)) {
-            return SchemaFormTypesCollection::createDefault();
+            return FormTypeSchema::createDefault();
         }
 
         $formTypeClasses = $schemaConfig['formType'];
 
         Assert::allStringNotEmpty($formTypeClasses);
 
-        return new SchemaFormTypesCollection(
+        return new FormTypeSchema(
             $formTypeClasses,
         );
     }

@@ -2,16 +2,19 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema\Route;
 
-use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
+use Jmf\CrudEngine\Configuration\Schema\Route\Paths\RoutePathSchema;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaRoute
+readonly class RouteSchema
 {
+    /**
+     * @const non-empty-string
+     */
     public const string DEFAULT_NAME = "{{ entityClass|u.afterLast('\\\\').snake }}.{{ action }}";
 
     public function __construct(
         private string $name,
-        private SchemaRoutePathsCollection $paths,
+        private RoutePathSchema $paths,
     ) {
         Assert::stringNotEmpty($name);
     }
@@ -21,7 +24,7 @@ readonly class SchemaRoute
         return $this->name;
     }
 
-    public function getPaths(): SchemaRoutePathsCollection
+    public function getPaths(): RoutePathSchema
     {
         return $this->paths;
     }

@@ -3,11 +3,11 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\Helper;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Helper\HelperClassResolver;
-use Jmf\CrudEngine\Configuration\Schema\FormType\SchemaFormTypesCollection;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
+use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
+use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
+use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaView;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
@@ -35,7 +35,7 @@ class HelperClassResolverTest extends TestCase
 
     /**
      * @return array{
-     *     0: SchemaHelpersCollection,
+     *     0: HelperSchema,
      *     1: non-empty-string,
      *     2: non-empty-string,
      *     3: array<string, mixed>,
@@ -46,14 +46,14 @@ class HelperClassResolverTest extends TestCase
     {
         return [
             [
-                SchemaHelpersCollection::createDefault(),
+                HelperSchema::createDefault(),
                 'App\\Entity\\Article',
                 'create',
                 [],
                 'App\\Controller\\ArticleCreateActionHelper',
             ],
             [
-                SchemaHelpersCollection::createDefault(),
+                HelperSchema::createDefault(),
                 'App\\Entity\\Article',
                 'update',
                 [],
@@ -73,17 +73,17 @@ class HelperClassResolverTest extends TestCase
      */
     #[DataProvider('dataProviderClassActionAndHelperClass')]
     public function testLoad(
-        SchemaHelpersCollection $schemaHelpers,
+        HelperSchema $schemaHelpers,
         string $entityClass,
         string $action,
         array $actionConfig,
         string $helperClass,
     ): void {
         $schema = new Schema(
-            $this->createMock(SchemaFormTypesCollection::class),
+            $this->createMock(FormTypeSchema::class),
             $schemaHelpers,
-            $this->createMock(SchemaRoute::class),
-            $this->createMock(SchemaView::class),
+            $this->createMock(RouteSchema::class),
+            $this->createMock(ViewSchema::class),
         );
 
         $result = $this->helperClassResolver->resolve($schema, $entityClass, $action, $actionConfig);

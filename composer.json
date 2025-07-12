@@ -34,7 +34,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Jmf\\CrudEngine\\Tests\\": "tests/unit"
+            "Jmf\\CrudEngine\\Tests\\": "tests"
         }
     }
 }

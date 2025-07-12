@@ -6,8 +6,11 @@ use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaKeysCollection
+readonly class KeySchema
 {
+    /**
+     * @const array<non-empty-string, non-empty-string>
+     */
     private const array DEFAULT_KEYS = [
         'ActionKey'   => "{{ action|u.camel.title }}",
         'ActionKeys'  => "{{ action|u.camel.title|plural }}",
@@ -52,14 +55,6 @@ readonly class SchemaKeysCollection
             self::DEFAULT_KEYS,
             $keys,
         );
-    }
-
-    /**
-     * @return array<non-empty-string, non-empty-string>
-     */
-    public function all(): array
-    {
-        return $this->keys;
     }
 
     /**

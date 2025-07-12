@@ -2,18 +2,18 @@
 
 namespace Jmf\CrudEngine\Tests\Configuration\Schema\Helper;
 
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersLoader;
+use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchemaLoader;
 use Override;
 use PHPUnit\Framework\TestCase;
 
 class SchemaHelpersLoaderTest extends TestCase
 {
-    private SchemaHelpersLoader $schemaHelpersLoader;
+    private HelperSchemaLoader $schemaHelpersLoader;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->schemaHelpersLoader = new SchemaHelpersLoader();
+        $this->schemaHelpersLoader = new HelperSchemaLoader();
     }
 
     public function testLoadDefault(): void

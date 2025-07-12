@@ -3,12 +3,12 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
-use Jmf\CrudEngine\Configuration\Schema\FormType\SchemaFormTypesCollection;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
-use Jmf\CrudEngine\Configuration\Schema\Route\Paths\SchemaRoutePathsCollection;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
+use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
+use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
+use Jmf\CrudEngine\Configuration\Schema\Route\Paths\RoutePathSchema;
+use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaView;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -100,13 +100,13 @@ class RouteConfigurationLoaderTest extends TestCase
         string $routePath,
     ): void {
         $schema = new Schema(
-            $this->createMock(SchemaFormTypesCollection::class),
-            $this->createMock(SchemaHelpersCollection::class),
-            new SchemaRoute(
-                SchemaRoute::DEFAULT_NAME,
-                SchemaRoutePathsCollection::createDefault(),
+            $this->createMock(FormTypeSchema::class),
+            $this->createMock(HelperSchema::class),
+            new RouteSchema(
+                RouteSchema::DEFAULT_NAME,
+                RoutePathSchema::createDefault(),
             ),
-            $this->createMock(SchemaView::class),
+            $this->createMock(ViewSchema::class),
         );
 
         $result = $this->routeConfigurationLoader->load(

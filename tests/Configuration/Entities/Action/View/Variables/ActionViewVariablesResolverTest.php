@@ -3,12 +3,12 @@
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View\Variables;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
-use Jmf\CrudEngine\Configuration\Schema\FormType\SchemaFormTypesCollection;
-use Jmf\CrudEngine\Configuration\Schema\Helper\SchemaHelpersCollection;
-use Jmf\CrudEngine\Configuration\Schema\Route\SchemaRoute;
+use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
+use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
+use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
-use Jmf\CrudEngine\Configuration\Schema\View\SchemaView;
-use Jmf\CrudEngine\Configuration\Schema\View\Variables\SchemaViewVariablesCollection;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
+use Jmf\CrudEngine\Configuration\Schema\View\Variables\ViewVariablesSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
@@ -147,12 +147,12 @@ class ActionViewVariablesResolverTest extends TestCase
         array $expected,
     ): void {
         $schema = new Schema(
-            $this->createMock(SchemaFormTypesCollection::class),
-            $this->createMock(SchemaHelpersCollection::class),
-            $this->createMock(SchemaRoute::class),
-            new SchemaView(
+            $this->createMock(FormTypeSchema::class),
+            $this->createMock(HelperSchema::class),
+            $this->createMock(RouteSchema::class),
+            new ViewSchema(
                 'foo',
-                new SchemaViewVariablesCollection($schemaVariables),
+                new ViewVariablesSchema($schemaVariables),
             ),
         );
 

@@ -6,7 +6,7 @@ use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaHelpersCollection
+readonly class HelperSchema
 {
     /**
      * @const non-empty-string[]

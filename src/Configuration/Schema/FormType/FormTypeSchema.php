@@ -6,12 +6,12 @@ use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 
-readonly class SchemaFormTypesCollection
+readonly class FormTypeSchema
 {
     /**
      * @const non-empty-string[]
      */
-    public const iterable DEFAULT_FORM_TYPES = [
+    private const iterable DEFAULT_FORM_TYPES = [
         "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}Type",
         "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}Type",
         "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}Type",
