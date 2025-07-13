@@ -22,8 +22,8 @@ readonly class ActionConfigurationLoader
         private ActionRedirectionConfigurationLoader $redirectionConfigurationLoader,
         private RouteConfigurationLoader $routeConfigurationLoader,
         private ActionViewConfigurationLoader $viewConfigurationLoader,
-        private FormTypeClassResolver $formTypeClassConfigurationLoader,
-        private HelperClassResolver $helperClassConfigurationLoader,
+        private FormTypeClassResolver $formTypeClassResolver,
+        private HelperClassResolver $helperClassResolver,
     ) {
     }
 
@@ -66,7 +66,7 @@ readonly class ActionConfigurationLoader
         string $action,
         array $actionConfig,
     ): ?string {
-        return $this->formTypeClassConfigurationLoader->resolve(
+        return $this->formTypeClassResolver->resolve(
             $schema,
             $entityClass,
             $action,
@@ -89,7 +89,7 @@ readonly class ActionConfigurationLoader
         string $action,
         array $actionConfig,
     ): ?string {
-        return $this->helperClassConfigurationLoader->resolve(
+        return $this->helperClassResolver->resolve(
             $schema,
             $entityClass,
             $action,

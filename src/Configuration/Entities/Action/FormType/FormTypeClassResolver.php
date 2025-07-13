@@ -64,7 +64,7 @@ readonly class FormTypeClassResolver
         string $entityClass,
         string $action,
     ): ?string {
-        $classes = $schema->getFormTypes()->expand(
+        $classes = $schema->getFormTypeSchema()->expand(
             $this->schemaValueExpander,
             [
                 'entityClass' => $entityClass,

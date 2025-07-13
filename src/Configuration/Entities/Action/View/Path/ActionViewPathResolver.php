@@ -50,7 +50,7 @@ readonly class ActionViewPathResolver
     ): string {
         // @todo Validate file existence.
         return $this->schemaValueExpander->expand(
-            $schema->getView()->getPath(),
+            $schema->getViewSchema()->getPath(),
             [
                 'entityClass' => $entityClass,
                 'action'      => $action,

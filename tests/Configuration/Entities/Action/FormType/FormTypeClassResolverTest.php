@@ -5,6 +5,7 @@ namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\FormType;
 use Jmf\CrudEngine\Configuration\Entities\Action\FormType\FormTypeClassResolver;
 use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
 use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
+use Jmf\CrudEngine\Configuration\Schema\Keys\KeySchema;
 use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
@@ -95,6 +96,7 @@ class FormTypeClassResolverTest extends TestCase
         ?string $formTypeClass,
     ): void {
         $schema = new Schema(
+            $this->createMock(KeySchema::class),
             FormTypeSchema::createDefault(),
             $this->createMock(HelperSchema::class),
             $this->createMock(RouteSchema::class),

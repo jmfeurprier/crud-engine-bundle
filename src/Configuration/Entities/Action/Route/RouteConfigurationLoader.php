@@ -94,12 +94,14 @@ readonly class RouteConfigurationLoader
         string $entityClass,
         string $action,
     ): string {
+        $arguments = [
+            'entityClass' => $entityClass,
+            'action'      => $action,
+        ];
+
         $name = $this->schemaValueExpander->expand(
-            $schema->getRoute()->getName(),
-            [
-                'entityClass' => $entityClass,
-                'action'      => $action,
-            ],
+            $schema->getRouteSchema()->getName(),
+            $arguments,
         );
 
         Assert::stringNotEmpty($name);
@@ -153,7 +155,7 @@ readonly class RouteConfigurationLoader
         string $entityClass,
         string $action,
     ): ?string {
-        $path = $schema->getRoute()->getPaths()->tryGet($action);
+        $path = $schema->getRouteSchema()->getPaths()->tryGet($action);
 
         if (null === $path) {
             return null;

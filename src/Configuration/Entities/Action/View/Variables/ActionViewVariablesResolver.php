@@ -27,7 +27,7 @@ readonly class ActionViewVariablesResolver
         string $action,
         array $viewConfig,
     ): ActionViewVariablesCollection {
-        $variables = $schema->getView()->getVariables()->expand(
+        $variables = $schema->getViewSchema()->getVariables()->expand(
             $this->schemaValueExpander,
             [
                 'entityClass' => $entityClass,

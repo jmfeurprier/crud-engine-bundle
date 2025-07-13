@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration\Schema\Helper;
 
+use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;

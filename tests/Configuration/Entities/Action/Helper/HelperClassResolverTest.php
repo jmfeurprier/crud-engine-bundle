@@ -5,6 +5,7 @@ namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\Helper;
 use Jmf\CrudEngine\Configuration\Entities\Action\Helper\HelperClassResolver;
 use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
 use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
+use Jmf\CrudEngine\Configuration\Schema\Keys\KeySchema;
 use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
@@ -80,6 +81,7 @@ class HelperClassResolverTest extends TestCase
         string $helperClass,
     ): void {
         $schema = new Schema(
+            $this->createMock(KeySchema::class),
             $this->createMock(FormTypeSchema::class),
             $schemaHelpers,
             $this->createMock(RouteSchema::class),

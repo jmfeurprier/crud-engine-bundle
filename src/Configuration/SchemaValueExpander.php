@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration;
 
+use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Throwable;

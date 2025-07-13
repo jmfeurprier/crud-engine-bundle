@@ -2,7 +2,6 @@
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Helper;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationsCollection;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
@@ -63,17 +62,18 @@ readonly class HelperClassResolver
         string $entityClass,
         string $action,
     ): ?string {
-        foreach ($schema->getHelpers()->all() as $schemaClass) {
-            $class = $this->schemaValueExpander->expand(
-                $schemaClass,
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            );
+        $helperClasses = $schema->getHelperSchema()->expand(
+            $this->schemaValueExpander,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
+        );
 
-            if (class_exists($class)) {
-                return $class;
+        foreach ($helperClasses as $helperClass) {
+            if (class_exists($helperClass)) {
+                // @todo Validate "subclass of".
+                return $helperClass;
             }
         }
 

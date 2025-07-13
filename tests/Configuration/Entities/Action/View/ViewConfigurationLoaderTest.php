@@ -7,6 +7,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\View\Path\ActionViewPathResolve
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
 use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
 use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
+use Jmf\CrudEngine\Configuration\Schema\Keys\KeySchema;
 use Jmf\CrudEngine\Configuration\Schema\Route\Paths\RoutePathSchema;
 use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
@@ -100,6 +101,7 @@ class ViewConfigurationLoaderTest extends TestCase
         array $viewVariables,
     ): void {
         $schema = new Schema(
+            $this->createMock(KeySchema::class),
             $this->createMock(FormTypeSchema::class),
             $this->createMock(HelperSchema::class),
             new RouteSchema(
