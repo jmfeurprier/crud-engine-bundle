@@ -4,6 +4,7 @@ namespace Jmf\CrudEngine\Tests\Routing;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
@@ -69,7 +70,7 @@ class IndexActionRouteLoaderTest extends TestCase
         $routeConfiguration = new RouteConfiguration(
             name:         $routeName,
             path:         $routePath,
-            requirements: new KeyStringCollection([]),
+            requirements: ActionRouteRequirementCollection::createDefault(),
         );
 
         $viewConfiguration = new ActionViewConfiguration(
