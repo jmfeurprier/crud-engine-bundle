@@ -2,6 +2,7 @@
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Route;
 
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
 use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
@@ -175,9 +176,9 @@ readonly class RouteConfigurationLoader
      */
     private function getRequirements(
         array $routeConfig,
-    ): KeyStringCollection {
+    ): ActionRouteRequirementCollection {
         if (!array_key_exists('requirements', $routeConfig)) {
-            return KeyStringCollection::createDefault();
+            return ActionRouteRequirementCollection::createDefault();
         }
 
         $requirementsConfig = $routeConfig['requirements'];
@@ -185,6 +186,6 @@ readonly class RouteConfigurationLoader
         Assert::isMap($requirementsConfig);
         Assert::allString($requirementsConfig);
 
-        return new KeyStringCollection($requirementsConfig);
+        return new ActionRouteRequirementCollection($requirementsConfig);
     }
 }
