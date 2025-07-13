@@ -25,11 +25,11 @@ readonly class ReadAction
      * @psalm-param ReadActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private EntityFinder $entityFinder,
-        private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
-        private ViewRenderer $viewRenderer,
+        private ActionHelperResolver $actionHelperResolver,
         private ReadActionHelperInterface $defaultActionHelper,
+        private EntityFinder $entityFinder,
+        private ViewRenderer $viewRenderer,
     ) {
     }
 

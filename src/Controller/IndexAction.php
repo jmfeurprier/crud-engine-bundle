@@ -25,11 +25,11 @@ readonly class IndexAction
      * @psalm-param IndexActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private EntityManagerResolver $entityManagerResolver,
-        private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
-        private ViewRenderer $viewRenderer,
+        private ActionHelperResolver $actionHelperResolver,
         private IndexActionHelperInterface $defaultActionHelper,
+        private EntityManagerResolver $entityManagerResolver,
+        private ViewRenderer $viewRenderer,
     ) {
     }
 

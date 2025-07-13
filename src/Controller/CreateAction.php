@@ -29,13 +29,13 @@ readonly class CreateAction
      * @psalm-param CreateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private EntityManagerResolver $entityManagerResolver,
-        private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionHelperResolver $actionHelperResolver,
+        private CreateActionHelperInterface $defaultActionHelper,
+        private FormCreator $formCreator,
+        private EntityManagerResolver $entityManagerResolver,
         private RedirectionGenerator $redirectionGenerator,
         private ViewRenderer $viewRenderer,
-        private FormCreator $formCreator,
-        private CreateActionHelperInterface $defaultActionHelper,
     ) {
     }
 

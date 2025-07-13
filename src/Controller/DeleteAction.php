@@ -29,13 +29,13 @@ readonly class DeleteAction
      * @param DeleteActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
+        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionHelperResolver $actionHelperResolver,
+        private DeleteActionHelperInterface $defaultActionHelper,
         private EntityFinder $entityFinder,
         private EntityManagerResolver $entityManagerResolver,
-        private ActionHelperResolver $actionHelperResolver,
-        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
         private RedirectionGenerator $redirectionGenerator,
         private ViewRenderer $viewRenderer,
-        private DeleteActionHelperInterface $defaultActionHelper,
     ) {
     }
 

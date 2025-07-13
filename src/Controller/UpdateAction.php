@@ -29,14 +29,14 @@ readonly class UpdateAction
      * @psalm-param UpdateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private EntityFinder $entityFinder,
-        private EntityManagerResolver $entityManagerResolver,
-        private ActionHelperResolver $actionHelperResolver,
         private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionHelperResolver $actionHelperResolver,
+        private UpdateActionHelperInterface $defaultActionHelper,
+        private EntityFinder $entityFinder,
+        private FormCreator $formCreator,
+        private EntityManagerResolver $entityManagerResolver,
         private RedirectionGenerator $redirectionGenerator,
         private ViewRenderer $viewRenderer,
-        private FormCreator $formCreator,
-        private UpdateActionHelperInterface $defaultActionHelper,
     ) {
     }
 
