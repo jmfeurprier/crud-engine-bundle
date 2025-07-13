@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
+use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -26,6 +27,7 @@ readonly class ActionConfigurationLoader
         private ActionViewConfigurationLoader $viewConfigurationLoader,
         private FormTypeClassResolver $formTypeClassResolver,
         private HelperClassResolver $helperClassResolver,
+        private SchemaValueExpander $schemaValueExpander,
     ) {
     }
 
@@ -42,6 +44,15 @@ readonly class ActionConfigurationLoader
         string $action,
         array $actionConfig,
     ): ActionConfiguration {
+        // @todo Pass $keys to sub-loaders.
+        $keys = $schema->getKeySchema()->expand(
+            $this->schemaValueExpander,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
+        );
+
         return new ActionConfiguration(
             $entityClass,
             $action,

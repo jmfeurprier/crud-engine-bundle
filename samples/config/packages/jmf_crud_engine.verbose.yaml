@@ -19,7 +19,6 @@ jmf_crud_engine:
             'entity_keys': "{{ entityClass|u.afterLast('\\\\').snake|plural }}"
             'entity-key':  "{{ entityClass|u.afterLast('\\\\').kebab }}"
             'entity-keys': "{{ entityClass|u.afterLast('\\\\').kebab|plural }}"
-        # @todo
         formType:
             # "App\Form\FooBar\UpdateType"
             - "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}Type"
@@ -32,6 +31,7 @@ jmf_crud_engine:
             - "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}ActionHelper"
             # "App\Controller\FooBarUpdateActionHelper"
             - "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}ActionHelper"
+        # @todo
         redirection:
             create:
                 route: "{{ entityClass|u.afterLast('\\\\').snake }}.read"
