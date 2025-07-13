@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
 
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
@@ -22,7 +24,7 @@ use Twig\Environment;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
-class ViewConfigurationLoaderTest extends TestCase
+final class ViewConfigurationLoaderTest extends TestCase
 {
     private ActionViewConfigurationLoader $actionViewConfigurationLoader;
 
@@ -114,14 +116,14 @@ class ViewConfigurationLoaderTest extends TestCase
             ),
         );
 
-        $result = $this->actionViewConfigurationLoader->load(
+        $actionViewConfiguration = $this->actionViewConfigurationLoader->load(
             $schema,
             $entityClass,
             $action,
             $actionConfig,
         );
 
-        self::assertSame($viewPath, $result->getPath());
-        self::assertSame($viewVariables, $result->getVariables()->all());
+        $this->assertSame($viewPath, $actionViewConfiguration->getPath());
+        $this->assertSame($viewVariables, $actionViewConfiguration->getVariables()->all());
     }
 }

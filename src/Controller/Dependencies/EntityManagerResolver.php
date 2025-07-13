@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,10 +24,10 @@ readonly class EntityManagerResolver
     {
         $entityManager = $this->managerRegistry->getManagerForClass($entityClass);
 
-        if (null === $entityManager) {
-            throw new CrudEngineEntityManagerNotFoundException($entityClass);
+        if ($entityManager instanceof ObjectManager) {
+            return $entityManager;
         }
 
-        return $entityManager;
+        throw new CrudEngineEntityManagerNotFoundException($entityClass);
     }
 }

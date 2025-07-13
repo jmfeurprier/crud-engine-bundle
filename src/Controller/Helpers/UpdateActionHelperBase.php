@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
@@ -9,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @template E of object
+ *
  * @implements UpdateActionHelperInterface<E>
  */
 abstract class UpdateActionHelperBase implements UpdateActionHelperInterface

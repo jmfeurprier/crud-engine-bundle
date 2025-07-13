@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Tests\Routing;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
@@ -13,18 +15,19 @@ use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
 use Override;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class IndexActionRouteLoaderTest extends TestCase
+final class IndexActionRouteLoaderTest extends TestCase
 {
-    private IndexActionRouteLoader $loader;
+    private IndexActionRouteLoader $indexActionRouteLoader;
 
     private RouteCollection $routeCollection;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->loader = new IndexActionRouteLoader();
+        $this->indexActionRouteLoader = new IndexActionRouteLoader();
 
         $this->routeCollection = new RouteCollection();
     }
@@ -41,13 +44,13 @@ class IndexActionRouteLoaderTest extends TestCase
             routePath:   'foo/bar',
         );
 
-        $this->loader->load($this->routeCollection, $actionConfiguration);
+        $this->indexActionRouteLoader->load($this->routeCollection, $actionConfiguration);
 
         $this->assertCount(1, $this->routeCollection->all());
 
         $route = $this->routeCollection->get('foo.index');
 
-        $this->assertNotNull($route);
+        $this->assertInstanceOf(Route::class, $route);
         $this->assertSame('/foo/bar', $route->getPath());
     }
 
@@ -62,7 +65,7 @@ class IndexActionRouteLoaderTest extends TestCase
         string $routePath = '',
         string $viewPath = '',
     ): ActionConfiguration {
-        $redirectionConfiguration = new ActionRedirectionConfiguration(
+        $actionRedirectionConfiguration = new ActionRedirectionConfiguration(
             route:      $redirectionRoute,
             parameters: ActionRedirectionParameterCollection::createDefault(),
         );
@@ -73,7 +76,7 @@ class IndexActionRouteLoaderTest extends TestCase
             requirements: ActionRouteRequirementCollection::createDefault(),
         );
 
-        $viewConfiguration = new ActionViewConfiguration(
+        $actionViewConfiguration = new ActionViewConfiguration(
             path:      $viewPath,
             variables: new ActionViewVariablesCollection([]),
         );
@@ -83,9 +86,9 @@ class IndexActionRouteLoaderTest extends TestCase
             action:                   $action,
             formTypeClass:            null,
             helperClass:              null,
-            redirectionConfiguration: $redirectionConfiguration,
+            redirectionConfiguration: $actionRedirectionConfiguration,
             routeConfiguration:       $routeConfiguration,
-            viewConfiguration:        $viewConfiguration,
+            viewConfiguration:        $actionViewConfiguration,
         );
     }
 }

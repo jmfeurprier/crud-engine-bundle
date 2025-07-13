@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
@@ -21,7 +23,7 @@ use Twig\Environment;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
-class RouteConfigurationLoaderTest extends TestCase
+final class RouteConfigurationLoaderTest extends TestCase
 {
     private RouteConfigurationLoader $routeConfigurationLoader;
 
@@ -111,13 +113,13 @@ class RouteConfigurationLoaderTest extends TestCase
             $this->createMock(ViewSchema::class),
         );
 
-        $result = $this->routeConfigurationLoader->load(
+        $routeConfiguration = $this->routeConfigurationLoader->load(
             $schema,
             $entityClass,
             $action,
             $actionConfig,
         );
 
-        self::assertSame($routePath, $result->getPath());
+        $this->assertSame($routePath, $routeConfiguration->getPath());
     }
 }

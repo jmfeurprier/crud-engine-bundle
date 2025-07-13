@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Tests\Configuration\Schema\Keys;
 
 use Jmf\CrudEngine\Configuration\Schema\Keys\KeySchemaLoader;
@@ -12,7 +14,7 @@ use Twig\Environment;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
-class KeySchemaLoaderTest extends TestCase
+final class KeySchemaLoaderTest extends TestCase
 {
     private KeySchemaLoader $keySchemaLoader;
 
@@ -38,9 +40,9 @@ class KeySchemaLoaderTest extends TestCase
     {
         $schemaConfig = [];
 
-        $result = $this->keySchemaLoader->load($schemaConfig);
+        $keySchema = $this->keySchemaLoader->load($schemaConfig);
 
-        self::assertNotEmpty($result->expand($this->schemaValueExpander, []));
+        $this->assertNotEmpty($keySchema->expand($this->schemaValueExpander, []));
     }
 
     /**
@@ -52,9 +54,9 @@ class KeySchemaLoaderTest extends TestCase
             'keys' => [],
         ];
 
-        $result = $this->keySchemaLoader->load($schemaConfig);
+        $keySchema = $this->keySchemaLoader->load($schemaConfig);
 
-        self::assertNotEmpty($result->expand($this->schemaValueExpander, []));
+        $this->assertNotEmpty($keySchema->expand($this->schemaValueExpander, []));
     }
 
     /**
@@ -69,14 +71,14 @@ class KeySchemaLoaderTest extends TestCase
             ],
         ];
 
-        $result = $this->keySchemaLoader->load($schemaConfig);
+        $keySchema = $this->keySchemaLoader->load($schemaConfig);
 
-        $expanded = $result->expand($this->schemaValueExpander, []);
+        $expanded = $keySchema->expand($this->schemaValueExpander, []);
 
-        self::assertArrayHasKey('foo', $expanded);
-        self::assertSame($expanded['foo'], 'bar');
-        self::assertArrayHasKey('baz', $expanded);
-        self::assertSame($expanded['baz'], 'qux');
+        $this->assertArrayHasKey('foo', $expanded);
+        $this->assertSame('bar', $expanded['foo']);
+        $this->assertArrayHasKey('baz', $expanded);
+        $this->assertSame('qux', $expanded['baz']);
     }
 
     /**
@@ -86,9 +88,9 @@ class KeySchemaLoaderTest extends TestCase
     {
         $schemaConfig = [];
 
-        $result = $this->keySchemaLoader->load($schemaConfig);
+        $keySchema = $this->keySchemaLoader->load($schemaConfig);
 
-        self::assertSame(
+        $this->assertSame(
             [
                 'ActionKey'   => 'DoSomething',
                 'ActionKeys'  => 'DoSomethings',
@@ -107,7 +109,7 @@ class KeySchemaLoaderTest extends TestCase
                 'entity-key'  => 'article-category',
                 'entity-keys' => 'article-categories',
             ],
-            $result->expand($this->schemaValueExpander, [
+            $keySchema->expand($this->schemaValueExpander, [
                 'entityClass' => 'App\\Entity\\ArticleCategory',
                 'action'      => 'do_something',
             ]),

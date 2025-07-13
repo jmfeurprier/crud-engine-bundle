@@ -1,28 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Tests\Configuration\Schema\Helper;
 
 use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchemaLoader;
 use Override;
 use PHPUnit\Framework\TestCase;
 
-class SchemaHelpersLoaderTest extends TestCase
+final class HelperSchemaLoaderTest extends TestCase
 {
-    private HelperSchemaLoader $schemaHelpersLoader;
+    private HelperSchemaLoader $helperSchemaLoader;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->schemaHelpersLoader = new HelperSchemaLoader();
+        $this->helperSchemaLoader = new HelperSchemaLoader();
     }
 
     public function testLoadDefault(): void
     {
         $schemaConfig = [];
 
-        $result = $this->schemaHelpersLoader->load($schemaConfig);
+        $helperSchema = $this->helperSchemaLoader->load($schemaConfig);
 
-        self::assertNotEmpty($result->all());
+        $this->assertNotEmpty($helperSchema->all());
     }
 
     public function testLoadWithEmptyConfig(): void
@@ -31,9 +33,9 @@ class SchemaHelpersLoaderTest extends TestCase
             'helper' => [],
         ];
 
-        $result = $this->schemaHelpersLoader->load($schemaConfig);
+        $helperSchema = $this->helperSchemaLoader->load($schemaConfig);
 
-        self::assertSame([], $result->all());
+        $this->assertSame([], $helperSchema->all());
     }
 
     public function testLoad(): void
@@ -45,14 +47,14 @@ class SchemaHelpersLoaderTest extends TestCase
             ],
         ];
 
-        $result = $this->schemaHelpersLoader->load($schemaConfig);
+        $helperSchema = $this->helperSchemaLoader->load($schemaConfig);
 
-        self::assertSame(
+        $this->assertSame(
             [
                 'foo',
                 'bar',
             ],
-            $result->all(),
+            $helperSchema->all(),
         );
     }
 }

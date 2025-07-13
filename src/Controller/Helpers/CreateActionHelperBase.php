@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
@@ -9,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @template E of object
+ *
  * @implements CreateActionHelperInterface<E>
  */
 abstract class CreateActionHelperBase implements CreateActionHelperInterface
@@ -35,10 +38,10 @@ abstract class CreateActionHelperBase implements CreateActionHelperInterface
         Request $request,
         object $entity,
         FormInterface $form,
-        ObjectManager $entityManager,
+        ObjectManager $objectManager,
     ): void {
-        $entityManager->persist($entity);
-        $entityManager->flush();
+        $objectManager->persist($entity);
+        $objectManager->flush();
     }
 
     #[Override]

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Controller;
 
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;

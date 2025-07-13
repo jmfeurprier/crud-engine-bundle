@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
@@ -8,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @template E of object
+ *
  * @implements IndexActionHelperInterface<E>
  */
 abstract class IndexActionHelperBase implements IndexActionHelperInterface
@@ -22,9 +25,9 @@ abstract class IndexActionHelperBase implements IndexActionHelperInterface
     public function getEntities(
         Request $request,
         string $entityClass,
-        ObjectManager $entityManager,
+        ObjectManager $objectManager,
     ): iterable {
-        return $entityManager->getRepository($entityClass)->findAll();
+        return $objectManager->getRepository($entityClass)->findAll();
     }
 
     #[Override]

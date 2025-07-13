@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View\Variables;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
@@ -21,7 +23,7 @@ use Twig\Environment;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
-class ActionViewVariablesResolverTest extends TestCase
+final class ActionViewVariablesResolverTest extends TestCase
 {
     private ActionViewVariablesResolver $actionViewVariablesResolver;
 
@@ -158,13 +160,13 @@ class ActionViewVariablesResolverTest extends TestCase
             ),
         );
 
-        $result = $this->actionViewVariablesResolver->resolve(
+        $actionViewVariablesCollection = $this->actionViewVariablesResolver->resolve(
             $schema,
             $entityClass,
             $action,
             $viewConfig,
         );
 
-        self::assertSame($expected, $result->all());
+        $this->assertSame($expected, $actionViewVariablesCollection->all());
     }
 }

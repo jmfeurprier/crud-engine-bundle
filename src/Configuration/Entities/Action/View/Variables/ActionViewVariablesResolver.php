@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View\Variables;
 
 use Jmf\CrudEngine\Configuration\Schema\Schema;

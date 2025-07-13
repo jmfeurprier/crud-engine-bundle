@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Instantiator\Exception\ExceptionInterface;
@@ -10,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @template E of object
+ *
  * @extends  CreateActionHelperBase<E>
  */
 final class CreateActionHelperDefault extends CreateActionHelperBase

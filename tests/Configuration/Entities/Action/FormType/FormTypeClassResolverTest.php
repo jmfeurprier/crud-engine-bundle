@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\FormType;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\FormType\FormTypeClassResolver;
@@ -21,7 +23,7 @@ use Twig\Environment;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
-class FormTypeClassResolverTest extends TestCase
+final class FormTypeClassResolverTest extends TestCase
 {
     private FormTypeClassResolver $formTypeClassResolver;
 
@@ -110,6 +112,6 @@ class FormTypeClassResolverTest extends TestCase
 
         $result = $this->formTypeClassResolver->resolve($schema, $entityClass, $action, $actionConfig);
 
-        self::assertSame($formTypeClass, $result);
+        $this->assertSame($formTypeClass, $result);
     }
 }

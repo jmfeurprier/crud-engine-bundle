@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Configuration\Schema\Keys;
 
 use Webmozart\Assert\Assert;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
@@ -20,7 +22,7 @@ interface IndexActionHelperInterface extends ActionHelperInterface
     public function getEntities(
         Request $request,
         string $entityClass,
-        ObjectManager $entityManager,
+        ObjectManager $objectManager,
     ): iterable;
 
     /**

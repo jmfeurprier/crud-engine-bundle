@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
@@ -42,7 +44,7 @@ interface CreateActionHelperInterface extends ActionHelperInterface
         Request $request,
         object $entity,
         FormInterface $form,
-        ObjectManager $entityManager,
+        ObjectManager $objectManager,
     ): void;
 
     /**

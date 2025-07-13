@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\Helper;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Helper\HelperClassResolver;
@@ -20,7 +22,7 @@ use Twig\Environment;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
-class HelperClassResolverTest extends TestCase
+final class HelperClassResolverTest extends TestCase
 {
     private HelperClassResolver $helperClassResolver;
 
@@ -74,7 +76,7 @@ class HelperClassResolverTest extends TestCase
      */
     #[DataProvider('dataProviderClassActionAndHelperClass')]
     public function testLoad(
-        HelperSchema $schemaHelpers,
+        HelperSchema $helperSchema,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -83,20 +85,20 @@ class HelperClassResolverTest extends TestCase
         $schema = new Schema(
             $this->createMock(KeySchema::class),
             $this->createMock(FormTypeSchema::class),
-            $schemaHelpers,
+            $helperSchema,
             $this->createMock(RouteSchema::class),
             $this->createMock(ViewSchema::class),
         );
 
         $result = $this->helperClassResolver->resolve($schema, $entityClass, $action, $actionConfig);
 
-        self::assertNull($result);
+        $this->assertNull($result);
 
         $newClass = $this->createMock(ActionHelperInterface::class);
         class_alias($newClass::class, $helperClass);
 
         $result = $this->helperClassResolver->resolve($schema, $entityClass, $action, $actionConfig);
 
-        self::assertSame($helperClass, $result);
+        $this->assertSame($helperClass, $result);
     }
 }

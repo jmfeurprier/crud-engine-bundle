@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
@@ -11,6 +13,7 @@ use Throwable;
 
 /**
  * @template E of object
+ *
  * @implements DeleteActionHelperInterface<E>
  */
 abstract class DeleteActionHelperBase implements DeleteActionHelperInterface
