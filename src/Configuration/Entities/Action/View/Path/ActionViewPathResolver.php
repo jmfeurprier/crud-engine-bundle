@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View\Path;
 
-use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;

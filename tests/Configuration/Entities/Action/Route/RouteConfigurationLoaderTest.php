@@ -5,13 +5,8 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
-use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
-use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
-use Jmf\CrudEngine\Configuration\Schema\Keys\KeySchema;
 use Jmf\CrudEngine\Configuration\Schema\Route\Paths\RoutePathSchema;
 use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
-use Jmf\CrudEngine\Configuration\Schema\Schema;
-use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -102,19 +97,13 @@ final class RouteConfigurationLoaderTest extends TestCase
         array $actionConfig,
         string $routePath,
     ): void {
-        $schema = new Schema(
-            $this->createMock(KeySchema::class),
-            $this->createMock(FormTypeSchema::class),
-            $this->createMock(HelperSchema::class),
-            new RouteSchema(
-                RouteSchema::DEFAULT_NAME,
-                RoutePathSchema::createDefault(),
-            ),
-            $this->createMock(ViewSchema::class),
+        $routeSchema = new RouteSchema(
+            RouteSchema::DEFAULT_NAME,
+            RoutePathSchema::createDefault(),
         );
 
         $routeConfiguration = $this->routeConfigurationLoader->load(
-            $schema,
+            $routeSchema,
             $entityClass,
             $action,
             $actionConfig,

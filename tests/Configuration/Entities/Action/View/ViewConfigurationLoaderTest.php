@@ -7,14 +7,8 @@ namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Path\ActionViewPathResolver;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
-use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
-use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
-use Jmf\CrudEngine\Configuration\Schema\Keys\KeySchema;
-use Jmf\CrudEngine\Configuration\Schema\Route\Paths\RoutePathSchema;
-use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
-use Jmf\CrudEngine\Configuration\Schema\Schema;
-use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\ViewVariablesSchema;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
@@ -102,22 +96,13 @@ final class ViewConfigurationLoaderTest extends TestCase
         string $viewPath,
         array $viewVariables,
     ): void {
-        $schema = new Schema(
-            $this->createMock(KeySchema::class),
-            $this->createMock(FormTypeSchema::class),
-            $this->createMock(HelperSchema::class),
-            new RouteSchema(
-                RouteSchema::DEFAULT_NAME,
-                RoutePathSchema::createDefault(),
-            ),
-            new ViewSchema(
-                ViewSchema::DEFAULT_PATH,
-                ViewVariablesSchema::createDefault(),
-            ),
+        $viewSchema = new ViewSchema(
+            ViewSchema::DEFAULT_PATH,
+            ViewVariablesSchema::createDefault(),
         );
 
         $actionViewConfiguration = $this->actionViewConfigurationLoader->load(
-            $schema,
+            $viewSchema,
             $entityClass,
             $action,
             $actionConfig,

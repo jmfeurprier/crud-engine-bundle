@@ -143,7 +143,7 @@ readonly class ActionConfigurationLoader
         array $actionConfig,
     ): RouteConfiguration {
         return $this->routeConfigurationLoader->load(
-            $schema,
+            $schema->getRouteSchema(),
             $entityClass,
             $action,
             $actionConfig,
@@ -164,7 +164,7 @@ readonly class ActionConfigurationLoader
         array $actionConfig,
     ): ActionViewConfiguration {
         return $this->viewConfigurationLoader->load(
-            $schema,
+            $schema->getViewSchema(),
             $entityClass,
             $action,
             $actionConfig,
