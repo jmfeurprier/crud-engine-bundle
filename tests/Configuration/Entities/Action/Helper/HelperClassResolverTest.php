@@ -82,22 +82,14 @@ final class HelperClassResolverTest extends TestCase
         array $actionConfig,
         string $helperClass,
     ): void {
-        $schema = new Schema(
-            $this->createMock(KeySchema::class),
-            $this->createMock(FormTypeSchema::class),
-            $helperSchema,
-            $this->createMock(RouteSchema::class),
-            $this->createMock(ViewSchema::class),
-        );
-
-        $result = $this->helperClassResolver->resolve($schema, $entityClass, $action, $actionConfig);
+        $result = $this->helperClassResolver->resolve($helperSchema, $entityClass, $action, $actionConfig);
 
         $this->assertNull($result);
 
         $newClass = $this->createMock(ActionHelperInterface::class);
         class_alias($newClass::class, $helperClass);
 
-        $result = $this->helperClassResolver->resolve($schema, $entityClass, $action, $actionConfig);
+        $result = $this->helperClassResolver->resolve($helperSchema, $entityClass, $action, $actionConfig);
 
         $this->assertSame($helperClass, $result);
     }

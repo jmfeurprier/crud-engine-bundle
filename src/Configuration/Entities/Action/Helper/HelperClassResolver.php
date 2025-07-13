@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Helper;
 
-use Jmf\CrudEngine\Configuration\Schema\Schema;
+use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
@@ -26,14 +26,14 @@ readonly class HelperClassResolver
      * @throws CrudEngineInvalidConfigurationException
      */
     public function resolve(
-        Schema $schema,
+        HelperSchema $helperSchema,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): ?string {
         if (!array_key_exists('helper', $actionConfig)) {
             return $this->tryGetFallBackHelperClass(
-                $schema,
+                $helperSchema,
                 $entityClass,
                 $action,
             );
@@ -60,11 +60,11 @@ readonly class HelperClassResolver
      * @throws CrudEngineInvalidConfigurationException
      */
     private function tryGetFallBackHelperClass(
-        Schema $schema,
+        HelperSchema $helperSchema,
         string $entityClass,
         string $action,
     ): ?string {
-        $helperClasses = $schema->getHelperSchema()->expand(
+        $helperClasses = $helperSchema->expand(
             $this->schemaValueExpander,
             [
                 'entityClass' => $entityClass,

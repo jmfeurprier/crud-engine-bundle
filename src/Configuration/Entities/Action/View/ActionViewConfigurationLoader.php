@@ -8,6 +8,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\View\Path\ActionViewPathResolve
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 
@@ -41,8 +42,8 @@ readonly class ActionViewConfigurationLoader
         }
 
         return new ActionViewConfiguration(
-            $this->getPath($schema, $entityClass, $action, $viewConfig),
-            $this->getVariables($schema, $entityClass, $action, $viewConfig),
+            $this->getPath($schema->getViewSchema(), $entityClass, $action, $viewConfig),
+            $this->getVariables($schema->getViewSchema(), $entityClass, $action, $viewConfig),
         );
     }
 
@@ -54,13 +55,13 @@ readonly class ActionViewConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getPath(
-        Schema $schema,
+        ViewSchema $viewSchema,
         string $entityClass,
         string $action,
         array $viewConfig,
     ): string {
         return $this->pathResolver->resolve(
-            $schema,
+            $viewSchema,
             $entityClass,
             $action,
             $viewConfig,
@@ -75,13 +76,13 @@ readonly class ActionViewConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getVariables(
-        Schema $schema,
+        ViewSchema $viewSchema,
         string $entityClass,
         string $action,
         array $viewConfig,
     ): ActionViewVariablesCollection {
         return $this->variablesResolver->resolve(
-            $schema,
+            $viewSchema,
             $entityClass,
             $action,
             $viewConfig,

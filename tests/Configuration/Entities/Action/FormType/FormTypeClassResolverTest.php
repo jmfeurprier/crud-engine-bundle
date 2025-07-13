@@ -6,11 +6,6 @@ namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\FormType;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\FormType\FormTypeClassResolver;
 use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
-use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
-use Jmf\CrudEngine\Configuration\Schema\Keys\KeySchema;
-use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
-use Jmf\CrudEngine\Configuration\Schema\Schema;
-use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
@@ -97,20 +92,14 @@ final class FormTypeClassResolverTest extends TestCase
         array $actionConfig,
         ?string $formTypeClass,
     ): void {
-        $schema = new Schema(
-            $this->createMock(KeySchema::class),
-            FormTypeSchema::createDefault(),
-            $this->createMock(HelperSchema::class),
-            $this->createMock(RouteSchema::class),
-            $this->createMock(ViewSchema::class),
-        );
+        $formTypeSchema = FormTypeSchema::createDefault();
 
         if (null !== $formTypeClass && !class_exists($formTypeClass)) {
             $newClass = $this->createMock(FormTypeInterface::class);
             class_alias($newClass::class, $formTypeClass);
         }
 
-        $result = $this->formTypeClassResolver->resolve($schema, $entityClass, $action, $actionConfig);
+        $result = $this->formTypeClassResolver->resolve($formTypeSchema, $entityClass, $action, $actionConfig);
 
         $this->assertSame($formTypeClass, $result);
     }

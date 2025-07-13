@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View\Variables;
 
-use Jmf\CrudEngine\Configuration\Schema\Schema;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
@@ -24,12 +24,12 @@ readonly class ActionViewVariablesResolver
      * @throws CrudEngineInvalidConfigurationException
      */
     public function resolve(
-        Schema $schema,
+        ViewSchema $viewSchema,
         string $entityClass,
         string $action,
         array $viewConfig,
     ): ActionViewVariablesCollection {
-        $variables = $schema->getViewSchema()->getVariables()->expand(
+        $variables = $viewSchema->getVariables()->expand(
             $this->schemaValueExpander,
             [
                 'entityClass' => $entityClass,

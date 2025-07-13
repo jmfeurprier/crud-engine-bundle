@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\FormType;
 
-use Jmf\CrudEngine\Configuration\Schema\Schema;
+use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Symfony\Component\Form\FormTypeInterface;
@@ -27,7 +27,7 @@ readonly class FormTypeClassResolver
      * @throws CrudEngineInvalidConfigurationException
      */
     public function resolve(
-        Schema $schema,
+        FormTypeSchema $formTypeSchema,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -36,7 +36,7 @@ readonly class FormTypeClassResolver
             $formTypeClass = $actionConfig['formType'];
         } else {
             $formTypeClass = $this->tryGetFallBackFormTypeClass(
-                $schema,
+                $formTypeSchema,
                 $entityClass,
                 $action,
             );
@@ -62,11 +62,11 @@ readonly class FormTypeClassResolver
      * @throws CrudEngineInvalidConfigurationException
      */
     private function tryGetFallBackFormTypeClass(
-        Schema $schema,
+        FormTypeSchema $formTypeSchema,
         string $entityClass,
         string $action,
     ): ?string {
-        $classes = $schema->getFormTypeSchema()->expand(
+        $classes = $formTypeSchema->expand(
             $this->schemaValueExpander,
             [
                 'entityClass' => $entityClass,

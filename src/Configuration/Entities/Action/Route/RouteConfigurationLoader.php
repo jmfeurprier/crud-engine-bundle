@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
+use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
@@ -75,7 +76,11 @@ readonly class RouteConfigurationLoader
         array $routeConfig,
     ): string {
         if (!array_key_exists('name', $routeConfig)) {
-            return $this->getFallbackName($schema, $entityClass, $action);
+            return $this->getFallbackName(
+                $schema->getRouteSchema(),
+                $entityClass,
+                $action,
+            );
         }
 
         Assert::stringNotEmpty($routeConfig['name']);
@@ -92,7 +97,7 @@ readonly class RouteConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     public function getFallbackName(
-        Schema $schema,
+        RouteSchema $routeSchema,
         string $entityClass,
         string $action,
     ): string {
@@ -102,7 +107,7 @@ readonly class RouteConfigurationLoader
         ];
 
         $name = $this->schemaValueExpander->expand(
-            $schema->getRouteSchema()->getName(),
+            $routeSchema->getName(),
             $arguments,
         );
 
@@ -134,7 +139,7 @@ readonly class RouteConfigurationLoader
         }
 
         return $this->tryGetFallbackPath(
-            $schema,
+            $schema->getRouteSchema(),
             $entityClass,
             $action,
         )
@@ -153,11 +158,11 @@ readonly class RouteConfigurationLoader
      * @throws CrudEngineInvalidConfigurationException
      */
     public function tryGetFallbackPath(
-        Schema $schema,
+        RouteSchema $routeSchema,
         string $entityClass,
         string $action,
     ): ?string {
-        $path = $schema->getRouteSchema()->getPaths()->tryGet($action);
+        $path = $routeSchema->getPaths()->tryGet($action);
 
         if (null === $path) {
             return null;

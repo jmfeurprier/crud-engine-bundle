@@ -7,6 +7,7 @@ namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
+// @todo Use schema.
 readonly class ActionRedirectionConfigurationLoader
 {
     /**

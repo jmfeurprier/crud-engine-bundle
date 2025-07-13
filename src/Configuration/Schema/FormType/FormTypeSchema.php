@@ -35,14 +35,6 @@ readonly class FormTypeSchema
     }
 
     /**
-     * @return non-empty-string[]
-     */
-    public function all(): iterable
-    {
-        return $this->formTypes;
-    }
-
-    /**
      * @param array<non-empty-string, mixed> $arguments
      *
      * @return non-empty-string[]

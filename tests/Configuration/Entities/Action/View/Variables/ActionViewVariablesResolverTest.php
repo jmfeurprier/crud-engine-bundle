@@ -5,11 +5,6 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View\Variables;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
-use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
-use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
-use Jmf\CrudEngine\Configuration\Schema\Keys\KeySchema;
-use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
-use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\ViewVariablesSchema;
 use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
@@ -149,19 +144,13 @@ final class ActionViewVariablesResolverTest extends TestCase
         array $viewConfig,
         array $expected,
     ): void {
-        $schema = new Schema(
-            $this->createMock(KeySchema::class),
-            $this->createMock(FormTypeSchema::class),
-            $this->createMock(HelperSchema::class),
-            $this->createMock(RouteSchema::class),
-            new ViewSchema(
-                'foo',
-                new ViewVariablesSchema($schemaVariables),
-            ),
+        $viewSchema = new ViewSchema(
+            'foo',
+            new ViewVariablesSchema($schemaVariables),
         );
 
         $actionViewVariablesCollection = $this->actionViewVariablesResolver->resolve(
-            $schema,
+            $viewSchema,
             $entityClass,
             $action,
             $viewConfig,

@@ -80,7 +80,7 @@ readonly class ActionConfigurationLoader
         array $actionConfig,
     ): ?string {
         return $this->formTypeClassResolver->resolve(
-            $schema,
+            $schema->getFormTypeSchema(),
             $entityClass,
             $action,
             $actionConfig,
@@ -103,7 +103,7 @@ readonly class ActionConfigurationLoader
         array $actionConfig,
     ): ?string {
         return $this->helperClassResolver->resolve(
-            $schema,
+            $schema->getHelperSchema(),
             $entityClass,
             $action,
             $actionConfig,
