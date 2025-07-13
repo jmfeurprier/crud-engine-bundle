@@ -20,14 +20,16 @@ readonly class ActionViewConfigurationLoader
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $actionConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     public function load(
         ViewSchema $viewSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -41,26 +43,29 @@ readonly class ActionViewConfigurationLoader
         }
 
         return new ActionViewConfiguration(
-            $this->getPath($viewSchema, $entityClass, $action, $viewConfig),
-            $this->getVariables($viewSchema, $entityClass, $action, $viewConfig),
+            $this->getPath($viewSchema, $keys, $entityClass, $action, $viewConfig),
+            $this->getVariables($viewSchema, $keys, $entityClass, $action, $viewConfig),
         );
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $viewConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $viewConfig
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getPath(
         ViewSchema $viewSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $viewConfig,
     ): string {
         return $this->pathResolver->resolve(
             $viewSchema,
+            $keys,
             $entityClass,
             $action,
             $viewConfig,
@@ -68,20 +73,23 @@ readonly class ActionViewConfigurationLoader
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $viewConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $viewConfig
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getVariables(
         ViewSchema $viewSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $viewConfig,
     ): ActionViewVariablesCollection {
         return $this->variablesResolver->resolve(
             $viewSchema,
+            $keys,
             $entityClass,
             $action,
             $viewConfig,

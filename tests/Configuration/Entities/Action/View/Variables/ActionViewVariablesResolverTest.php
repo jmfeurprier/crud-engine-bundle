@@ -151,6 +151,7 @@ final class ActionViewVariablesResolverTest extends TestCase
 
         $actionViewVariablesCollection = $this->actionViewVariablesResolver->resolve(
             $viewSchema,
+            [],
             $entityClass,
             $action,
             $viewConfig,

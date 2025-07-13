@@ -17,9 +17,10 @@ readonly class HelperClassResolver
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $actionConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @return null|class-string
      *
@@ -27,6 +28,7 @@ readonly class HelperClassResolver
      */
     public function resolve(
         HelperSchema $helperSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -34,6 +36,7 @@ readonly class HelperClassResolver
         if (!array_key_exists('helper', $actionConfig)) {
             return $this->tryGetFallBackHelperClass(
                 $helperSchema,
+                $keys,
                 $entityClass,
                 $action,
             );
@@ -52,8 +55,9 @@ readonly class HelperClassResolver
     }
 
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
      *
      * @return null|class-string
      *
@@ -61,15 +65,19 @@ readonly class HelperClassResolver
      */
     private function tryGetFallBackHelperClass(
         HelperSchema $helperSchema,
+        array $keys,
         string $entityClass,
         string $action,
     ): ?string {
         $helperClasses = $helperSchema->expand(
             $this->schemaValueExpander,
-            [
-                'entityClass' => $entityClass,
-                'action'      => $action,
-            ],
+            array_merge(
+                $keys,
+                [
+                    'entityClass' => $entityClass,
+                    'action'      => $action,
+                ],
+            ),
         );
 
         foreach ($helperClasses as $helperClass) {

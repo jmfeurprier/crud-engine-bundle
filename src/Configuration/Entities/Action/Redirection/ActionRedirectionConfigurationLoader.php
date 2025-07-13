@@ -4,25 +4,37 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
 
+use Jmf\CrudEngine\Configuration\Schema\Redirection\RedirectionSchema;
+use Jmf\CrudEngine\Configuration\SchemaValueExpander;
+use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
-// @todo Use schema.
 readonly class ActionRedirectionConfigurationLoader
 {
+    public function __construct(
+        private SchemaValueExpander $schemaValueExpander,
+    ) {
+    }
+
     /**
-     * @param class-string         $entityClass
-     * @param array<string, mixed> $actionConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
-     * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineConfigurationException
      */
     public function load(
+        RedirectionSchema $redirectionSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): ?ActionRedirectionConfiguration {
         if (!array_key_exists('redirection', $actionConfig)) {
-            return null;
+            return $this->getFallBack($redirectionSchema, $keys, $entityClass, $action);
         }
 
         Assert::isMap($actionConfig['redirection']);
@@ -33,6 +45,43 @@ readonly class ActionRedirectionConfigurationLoader
             $this->getRoute($entityClass, $action, $redirectionConfig),
             $this->getParameters($redirectionConfig),
             $this->getFragment($redirectionConfig),
+        );
+    }
+
+    /**
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param non-empty-string                          $action
+     *
+     * @throws CrudEngineInvalidConfigurationException
+     */
+    private function getFallback(
+        RedirectionSchema $redirectionSchema,
+        array $keys,
+        string $entityClass,
+        string $action,
+    ): ?ActionRedirectionConfiguration {
+        $redirectionRouteSchema = $redirectionSchema->tryGet($action);
+
+        if (null === $redirectionRouteSchema) {
+            return null;
+        }
+
+        $route = $this->schemaValueExpander->expand(
+            $redirectionRouteSchema->getRoute(),
+            array_merge(
+                $keys,
+                [
+                    'entityClass' => $entityClass,
+                    'action'      => $action,
+                ],
+            ),
+        );
+
+        $parameters = $redirectionRouteSchema->getParameters();
+
+        return new ActionRedirectionConfiguration(
+            $route,
+            new ActionRedirectionParameterCollection($parameters),
         );
     }
 
@@ -81,8 +130,9 @@ readonly class ActionRedirectionConfigurationLoader
     /**
      * @param array<string, mixed> $redirectionConfig
      */
-    private function getFragment(array $redirectionConfig): ?string
-    {
+    private function getFragment(
+        array $redirectionConfig,
+    ): ?string {
         if (!array_key_exists('fragment', $redirectionConfig)) {
             return null;
         }

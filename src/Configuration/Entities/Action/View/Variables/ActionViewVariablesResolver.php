@@ -17,24 +17,29 @@ readonly class ActionViewVariablesResolver
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $viewConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $viewConfig
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     public function resolve(
         ViewSchema $viewSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $viewConfig,
     ): ActionViewVariablesCollection {
         $variables = $viewSchema->getVariables()->expand(
             $this->schemaValueExpander,
-            [
-                'entityClass' => $entityClass,
-                'action'      => $action,
-            ],
+            array_merge(
+                $keys,
+                [
+                    'entityClass' => $entityClass,
+                    'action'      => $action,
+                ],
+            ),
         );
 
         if (array_key_exists('variables', $viewConfig)) {

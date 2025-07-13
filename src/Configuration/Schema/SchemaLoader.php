@@ -7,6 +7,7 @@ namespace Jmf\CrudEngine\Configuration\Schema;
 use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchemaLoader;
 use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchemaLoader;
 use Jmf\CrudEngine\Configuration\Schema\Keys\KeySchemaLoader;
+use Jmf\CrudEngine\Configuration\Schema\Redirection\RedirectionSchemaLoader;
 use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchemaLoader;
 use Jmf\CrudEngine\Configuration\Schema\View\ViewSchemaLoader;
 use Webmozart\Assert\Assert;
@@ -17,6 +18,7 @@ readonly class SchemaLoader
         private KeySchemaLoader $keySchemaLoader,
         private HelperSchemaLoader $helperSchemaLoader,
         private FormTypeSchemaLoader $formTypeSchemaLoader,
+        private RedirectionSchemaLoader $redirectionSchemaLoader,
         private RouteSchemaLoader $routeSchemaLoader,
         private ViewSchemaLoader $viewSchemaLoader,
     ) {
@@ -33,6 +35,7 @@ readonly class SchemaLoader
             $this->keySchemaLoader->load($schemaConfig),
             $this->formTypeSchemaLoader->load($schemaConfig),
             $this->helperSchemaLoader->load($schemaConfig),
+            $this->redirectionSchemaLoader->load($schemaConfig),
             $this->routeSchemaLoader->load($schemaConfig),
             $this->viewSchemaLoader->load($schemaConfig),
         );

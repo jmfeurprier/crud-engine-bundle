@@ -42,7 +42,15 @@ final class KeySchemaLoaderTest extends TestCase
 
         $keySchema = $this->keySchemaLoader->load($schemaConfig);
 
-        $this->assertNotEmpty($keySchema->expand($this->schemaValueExpander, []));
+        $this->assertNotEmpty(
+            $keySchema->expand(
+                $this->schemaValueExpander,
+                [
+                    'entityClass' => 'App\\Entity\\ArticleCategory',
+                    'action'      => 'do_something',
+                ],
+            ),
+        );
     }
 
     /**
@@ -56,7 +64,15 @@ final class KeySchemaLoaderTest extends TestCase
 
         $keySchema = $this->keySchemaLoader->load($schemaConfig);
 
-        $this->assertNotEmpty($keySchema->expand($this->schemaValueExpander, []));
+        $this->assertNotEmpty(
+            $keySchema->expand(
+                $this->schemaValueExpander,
+                [
+                    'entityClass' => 'App\\Entity\\ArticleCategory',
+                    'action'      => 'do_something',
+                ],
+            ),
+        );
     }
 
     /**
@@ -73,7 +89,13 @@ final class KeySchemaLoaderTest extends TestCase
 
         $keySchema = $this->keySchemaLoader->load($schemaConfig);
 
-        $expanded = $keySchema->expand($this->schemaValueExpander, []);
+        $expanded = $keySchema->expand(
+            $this->schemaValueExpander,
+            [
+                'entityClass' => 'App\\Entity\\ArticleCategory',
+                'action'      => 'do_something',
+            ],
+        );
 
         $this->assertArrayHasKey('foo', $expanded);
         $this->assertSame('bar', $expanded['foo']);
@@ -109,10 +131,13 @@ final class KeySchemaLoaderTest extends TestCase
                 'entity-key'  => 'article-category',
                 'entity-keys' => 'article-categories',
             ],
-            $keySchema->expand($this->schemaValueExpander, [
-                'entityClass' => 'App\\Entity\\ArticleCategory',
-                'action'      => 'do_something',
-            ]),
+            $keySchema->expand(
+                $this->schemaValueExpander,
+                [
+                    'entityClass' => 'App\\Entity\\ArticleCategory',
+                    'action'      => 'do_something',
+                ],
+            ),
         );
     }
 }

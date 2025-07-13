@@ -19,15 +19,17 @@ readonly class RouteConfigurationLoader
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $actionConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @throws CrudEngineInvalidConfigurationException
      * @throws CrudEngineMissingConfigurationException
      */
     public function load(
         RouteSchema $routeSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -35,8 +37,8 @@ readonly class RouteConfigurationLoader
         $routeConfig = $this->getRouteConfig($actionConfig);
 
         return new RouteConfiguration(
-            $this->getName($routeSchema, $entityClass, $action, $routeConfig),
-            $this->getPath($routeSchema, $entityClass, $action, $routeConfig),
+            $this->getName($routeSchema, $keys, $entityClass, $action, $routeConfig),
+            $this->getPath($routeSchema, $keys, $entityClass, $action, $routeConfig),
             $this->getRequirements($routeConfig),
         );
     }
@@ -60,9 +62,10 @@ readonly class RouteConfigurationLoader
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param array<string, mixed> $routeConfig
-     * @param non-empty-string     $action
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param array<string, mixed>                      $routeConfig
+     * @param non-empty-string                          $action
      *
      * @return non-empty-string
      *
@@ -70,6 +73,7 @@ readonly class RouteConfigurationLoader
      */
     private function getName(
         RouteSchema $routeSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $routeConfig,
@@ -77,6 +81,7 @@ readonly class RouteConfigurationLoader
         if (!array_key_exists('name', $routeConfig)) {
             return $this->getFallbackName(
                 $routeSchema,
+                $keys,
                 $entityClass,
                 $action,
             );
@@ -88,8 +93,9 @@ readonly class RouteConfigurationLoader
     }
 
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
      *
      * @return non-empty-string
      *
@@ -97,17 +103,19 @@ readonly class RouteConfigurationLoader
      */
     public function getFallbackName(
         RouteSchema $routeSchema,
+        array $keys,
         string $entityClass,
         string $action,
     ): string {
-        $arguments = [
-            'entityClass' => $entityClass,
-            'action'      => $action,
-        ];
-
         $name = $this->schemaValueExpander->expand(
             $routeSchema->getName(),
-            $arguments,
+            array_merge(
+                $keys,
+                [
+                    'entityClass' => $entityClass,
+                    'action'      => $action,
+                ],
+            ),
         );
 
         Assert::stringNotEmpty($name);
@@ -116,15 +124,17 @@ readonly class RouteConfigurationLoader
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $routeConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $routeConfig
      *
      * @throws CrudEngineInvalidConfigurationException
      * @throws CrudEngineMissingConfigurationException
      */
     private function getPath(
         RouteSchema $routeSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $routeConfig,
@@ -139,6 +149,7 @@ readonly class RouteConfigurationLoader
 
         return $this->tryGetFallbackPath(
             $routeSchema,
+            $keys,
             $entityClass,
             $action,
         )
@@ -151,13 +162,15 @@ readonly class RouteConfigurationLoader
     }
 
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     public function tryGetFallbackPath(
         RouteSchema $routeSchema,
+        array $keys,
         string $entityClass,
         string $action,
     ): ?string {
@@ -169,10 +182,13 @@ readonly class RouteConfigurationLoader
 
         return $this->schemaValueExpander->expand(
             $path,
-            [
-                'entityClass' => $entityClass,
-                'action'      => $action,
-            ],
+            array_merge(
+                $keys,
+                [
+                    'entityClass' => $entityClass,
+                    'action'      => $action,
+                ],
+            ),
         );
     }
 

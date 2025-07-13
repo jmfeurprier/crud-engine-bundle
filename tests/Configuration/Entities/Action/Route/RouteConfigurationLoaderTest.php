@@ -104,6 +104,7 @@ final class RouteConfigurationLoaderTest extends TestCase
 
         $routeConfiguration = $this->routeConfigurationLoader->load(
             $routeSchema,
+            [],
             $entityClass,
             $action,
             $actionConfig,

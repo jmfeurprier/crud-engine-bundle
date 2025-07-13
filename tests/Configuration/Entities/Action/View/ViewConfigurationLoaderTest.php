@@ -103,6 +103,7 @@ final class ViewConfigurationLoaderTest extends TestCase
 
         $actionViewConfiguration = $this->actionViewConfigurationLoader->load(
             $viewSchema,
+            [],
             $entityClass,
             $action,
             $actionConfig,

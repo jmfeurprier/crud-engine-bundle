@@ -14,13 +14,13 @@ readonly class ActionRedirectionParameterCollection
     }
 
     /**
-     * @param array<string, string> $values
+     * @param array<string, string> $parameters
      */
     public function __construct(
-        private array $values,
+        private array $parameters,
     ) {
-        Assert::isMap($this->values);
-        Assert::allString($this->values);
+        Assert::isMap($this->parameters);
+        Assert::allString($this->parameters);
     }
 
     /**
@@ -28,13 +28,13 @@ readonly class ActionRedirectionParameterCollection
      */
     public function all(): array
     {
-        return $this->values;
+        return $this->parameters;
     }
 
     public function tryGet(
         string $key,
         string $default,
     ): string {
-        return $this->values[$key] ?? $default;
+        return $this->parameters[$key] ?? $default;
     }
 }

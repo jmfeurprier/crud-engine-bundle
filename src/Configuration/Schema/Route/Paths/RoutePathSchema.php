@@ -19,6 +19,11 @@ readonly class RoutePathSchema
         'update' => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}/update",
     ];
 
+    /**
+     * @var array<non-empty-string, string> $paths
+     */
+    private array $paths;
+
     public static function createDefault(): self
     {
         return new self(self::DEFAULT_PATHS);
@@ -28,10 +33,15 @@ readonly class RoutePathSchema
      * @param array<non-empty-string, string> $paths
      */
     public function __construct(
-        private array $paths,
+        array $paths,
     ) {
         Assert::isMap($paths);
-        Assert::allStringNotEmpty($paths);
+        Assert::allString($paths);
+
+        $this->paths = array_merge(
+            self::DEFAULT_PATHS,
+            $paths,
+        );
     }
 
     /**
@@ -39,10 +49,6 @@ readonly class RoutePathSchema
      */
     public function tryGet(string $action): ?string
     {
-        return $this->paths[$action]
-            ??
-            self::DEFAULT_PATHS[$action]
-            ??
-            null;
+        return $this->paths[$action] ?? null;
     }
 }

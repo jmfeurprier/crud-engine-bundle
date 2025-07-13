@@ -17,20 +17,22 @@ readonly class ActionViewPathResolver
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $viewConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $viewConfig
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     public function resolve(
         ViewSchema $viewSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $viewConfig,
     ): string {
         if (!array_key_exists('path', $viewConfig)) {
-            return $this->getFallbackPath($viewSchema, $entityClass, $action);
+            return $this->getFallbackPath($viewSchema, $keys, $entityClass, $action);
         }
 
         Assert::string($viewConfig['path']);
@@ -40,23 +42,28 @@ readonly class ActionViewPathResolver
 
 
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getFallbackPath(
         ViewSchema $viewSchema,
+        array $keys,
         string $entityClass,
         string $action,
     ): string {
         // @todo Validate file existence.
         return $this->schemaValueExpander->expand(
             $viewSchema->getPath(),
-            [
-                'entityClass' => $entityClass,
-                'action'      => $action,
-            ],
+            array_merge(
+                $keys,
+                [
+                    'entityClass' => $entityClass,
+                    'action'      => $action,
+                ],
+            ),
         );
     }
 }

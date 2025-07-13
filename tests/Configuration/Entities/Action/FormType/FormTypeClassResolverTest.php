@@ -99,7 +99,13 @@ final class FormTypeClassResolverTest extends TestCase
             class_alias($newClass::class, $formTypeClass);
         }
 
-        $result = $this->formTypeClassResolver->resolve($formTypeSchema, $entityClass, $action, $actionConfig);
+        $result = $this->formTypeClassResolver->resolve(
+            $formTypeSchema,
+            [],
+            $entityClass,
+            $action,
+            $actionConfig,
+        );
 
         $this->assertSame($formTypeClass, $result);
     }

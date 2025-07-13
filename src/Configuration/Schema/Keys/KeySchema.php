@@ -62,7 +62,7 @@ readonly class KeySchema
     /**
      * @param array<string, mixed> $arguments
      *
-     * @return array<non-empty-string, string>
+     * @return array<non-empty-string, non-empty-string>
      *
      * @throws CrudEngineInvalidConfigurationException
      */
@@ -70,11 +70,15 @@ readonly class KeySchema
         SchemaValueExpander $schemaValueExpander,
         array $arguments,
     ): array {
-        return array_map(
+        $keys = array_map(
             static fn(
                 $value,
             ): string => $schemaValueExpander->expand($value, $arguments),
             $this->keys,
         );
+
+        Assert::allStringNotEmpty($keys);
+
+        return $keys;
     }
 }

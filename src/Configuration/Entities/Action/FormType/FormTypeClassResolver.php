@@ -18,9 +18,10 @@ readonly class FormTypeClassResolver
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $actionConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @return null|class-string<FormTypeInterface>
      *
@@ -28,6 +29,7 @@ readonly class FormTypeClassResolver
      */
     public function resolve(
         FormTypeSchema $formTypeSchema,
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -37,6 +39,7 @@ readonly class FormTypeClassResolver
         } else {
             $formTypeClass = $this->tryGetFallBackFormTypeClass(
                 $formTypeSchema,
+                $keys,
                 $entityClass,
                 $action,
             );
@@ -54,8 +57,9 @@ readonly class FormTypeClassResolver
     }
 
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
      *
      * @return null|class-string<FormTypeInterface>
      *
@@ -63,15 +67,19 @@ readonly class FormTypeClassResolver
      */
     private function tryGetFallBackFormTypeClass(
         FormTypeSchema $formTypeSchema,
+        array $keys,
         string $entityClass,
         string $action,
     ): ?string {
         $classes = $formTypeSchema->expand(
             $this->schemaValueExpander,
-            [
-                'entityClass' => $entityClass,
-                'action'      => $action,
-            ],
+            array_merge(
+                $keys,
+                [
+                    'entityClass' => $entityClass,
+                    'action'      => $action,
+                ],
+            ),
         );
 
         foreach ($classes as $class) {

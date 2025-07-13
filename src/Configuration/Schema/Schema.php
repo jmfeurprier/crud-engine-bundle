@@ -7,6 +7,7 @@ namespace Jmf\CrudEngine\Configuration\Schema;
 use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
 use Jmf\CrudEngine\Configuration\Schema\Helper\HelperSchema;
 use Jmf\CrudEngine\Configuration\Schema\Keys\KeySchema;
+use Jmf\CrudEngine\Configuration\Schema\Redirection\RedirectionSchema;
 use Jmf\CrudEngine\Configuration\Schema\Route\RouteSchema;
 use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 
@@ -16,6 +17,7 @@ readonly class Schema
         private KeySchema $keySchema,
         private FormTypeSchema $formTypeSchema,
         private HelperSchema $helperSchema,
+        private RedirectionSchema $redirectionSchema,
         private RouteSchema $routeSchema,
         private ViewSchema $viewSchema,
     ) {
@@ -34,6 +36,11 @@ readonly class Schema
     public function getHelperSchema(): HelperSchema
     {
         return $this->helperSchema;
+    }
+
+    public function getRedirectionSchema(): RedirectionSchema
+    {
+        return $this->redirectionSchema;
     }
 
     public function getRouteSchema(): RouteSchema

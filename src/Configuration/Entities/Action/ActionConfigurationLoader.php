@@ -16,7 +16,6 @@ use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\Form\FormTypeInterface;
 
 readonly class ActionConfigurationLoader
@@ -44,7 +43,6 @@ readonly class ActionConfigurationLoader
         string $action,
         array $actionConfig,
     ): ActionConfiguration {
-        // @todo Pass $keys to sub-loaders.
         $keys = $schema->getKeySchema()->expand(
             $this->schemaValueExpander,
             [
@@ -56,18 +54,19 @@ readonly class ActionConfigurationLoader
         return new ActionConfiguration(
             $entityClass,
             $action,
-            $this->getFormTypeClass($schema, $entityClass, $action, $actionConfig),
-            $this->getHelperClass($schema, $entityClass, $action, $actionConfig),
-            $this->getRedirectionConfiguration($entityClass, $action, $actionConfig),
-            $this->getRouteConfiguration($schema, $entityClass, $action, $actionConfig),
-            $this->getViewConfiguration($schema, $entityClass, $action, $actionConfig),
+            $this->getFormTypeClass($schema, $keys, $entityClass, $action, $actionConfig),
+            $this->getHelperClass($schema, $keys, $entityClass, $action, $actionConfig),
+            $this->getRedirectionConfiguration($schema, $keys, $entityClass, $action, $actionConfig),
+            $this->getRouteConfiguration($schema, $keys, $entityClass, $action, $actionConfig),
+            $this->getViewConfiguration($schema, $keys, $entityClass, $action, $actionConfig),
         );
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $actionConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @return null|class-string<FormTypeInterface>
      *
@@ -75,12 +74,14 @@ readonly class ActionConfigurationLoader
      */
     private function getFormTypeClass(
         Schema $schema,
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): ?string {
         return $this->formTypeClassResolver->resolve(
             $schema->getFormTypeSchema(),
+            $keys,
             $entityClass,
             $action,
             $actionConfig,
@@ -88,9 +89,10 @@ readonly class ActionConfigurationLoader
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $actionConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @return null|class-string
      *
@@ -98,12 +100,14 @@ readonly class ActionConfigurationLoader
      */
     private function getHelperClass(
         Schema $schema,
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): ?string {
         return $this->helperClassResolver->resolve(
             $schema->getHelperSchema(),
+            $keys,
             $entityClass,
             $action,
             $actionConfig,
@@ -111,17 +115,23 @@ readonly class ActionConfigurationLoader
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param array<string, mixed> $actionConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
-     * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineConfigurationException
      */
     private function getRedirectionConfiguration(
+        Schema $schema,
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): ?ActionRedirectionConfiguration {
         return $this->redirectionConfigurationLoader->load(
+            $schema->getRedirectionSchema(),
+            $keys,
             $entityClass,
             $action,
             $actionConfig,
@@ -129,21 +139,23 @@ readonly class ActionConfigurationLoader
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $actionConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
-     * @throws CrudEngineInvalidConfigurationException
-     * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineConfigurationException
      */
     private function getRouteConfiguration(
         Schema $schema,
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): RouteConfiguration {
         return $this->routeConfigurationLoader->load(
             $schema->getRouteSchema(),
+            $keys,
             $entityClass,
             $action,
             $actionConfig,
@@ -151,20 +163,23 @@ readonly class ActionConfigurationLoader
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $actionConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     private function getViewConfiguration(
         Schema $schema,
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
     ): ActionViewConfiguration {
         return $this->viewConfigurationLoader->load(
             $schema->getViewSchema(),
+            $keys,
             $entityClass,
             $action,
             $actionConfig,
