@@ -2,13 +2,11 @@
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
 
-use Jmf\CrudEngine\Configuration\KeyStringCollection;
-
 readonly class ActionRedirectionConfiguration
 {
     public function __construct(
         private string $route,
-        private KeyStringCollection $parameters,
+        private ActionRedirectionParameterCollection $parameters,
         private ?string $fragment = null,
     ) {
     }
@@ -18,7 +16,7 @@ readonly class ActionRedirectionConfiguration
         return $this->route;
     }
 
-    public function getParameters(): KeyStringCollection
+    public function getParameters(): ActionRedirectionParameterCollection
     {
         return $this->parameters;
     }

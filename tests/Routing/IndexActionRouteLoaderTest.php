@@ -4,11 +4,11 @@ namespace Jmf\CrudEngine\Tests\Routing;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionParameterCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
-use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
 use Override;
@@ -64,7 +64,7 @@ class IndexActionRouteLoaderTest extends TestCase
     ): ActionConfiguration {
         $redirectionConfiguration = new ActionRedirectionConfiguration(
             route:      $redirectionRoute,
-            parameters: new KeyStringCollection([]),
+            parameters: ActionRedirectionParameterCollection::createDefault(),
         );
 
         $routeConfiguration = new RouteConfiguration(

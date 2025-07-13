@@ -2,7 +2,6 @@
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
 
-use Jmf\CrudEngine\Configuration\KeyStringCollection;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
@@ -63,9 +62,9 @@ readonly class ActionRedirectionConfigurationLoader
      */
     private function getParameters(
         array $redirectionConfig,
-    ): KeyStringCollection {
+    ): ActionRedirectionParameterCollection {
         if (!array_key_exists('parameters', $redirectionConfig)) {
-            return KeyStringCollection::createDefault();
+            return ActionRedirectionParameterCollection::createDefault();
         }
 
         $parametersConfig = $redirectionConfig['parameters'];
@@ -73,7 +72,7 @@ readonly class ActionRedirectionConfigurationLoader
         Assert::isMap($parametersConfig);
         Assert::allString($parametersConfig);
 
-        return new KeyStringCollection($parametersConfig);
+        return new ActionRedirectionParameterCollection($parametersConfig);
     }
 
     /**

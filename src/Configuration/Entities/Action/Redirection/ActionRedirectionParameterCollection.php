@@ -1,10 +1,10 @@
 <?php
 
-namespace Jmf\CrudEngine\Configuration;
+namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
 
 use Webmozart\Assert\Assert;
 
-readonly class KeyStringCollection
+readonly class ActionRedirectionParameterCollection
 {
     public static function createDefault(): self
     {
