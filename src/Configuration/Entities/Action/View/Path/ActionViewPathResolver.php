@@ -57,13 +57,11 @@ readonly class ActionViewPathResolver
         // @todo Validate file existence.
         return $this->schemaValueExpander->expand(
             $viewSchema->getPath(),
-            array_merge(
-                $keys,
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            ),
+            $keys,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
         );
     }
 }

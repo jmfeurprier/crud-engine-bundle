@@ -1,71 +1,69 @@
 jmf_crud_engine:
 
     schema:
-        # @todo
         keys:
-            'ActionKey':   "{{ action|u.camel.title }}"
-            'ActionKeys':  "{{ action|u.camel.title|plural }}"
-            'actionKey':   "{{ action|u.camel }}"
-            'actionKeys':  "{{ action|u.camel|plural }}"
-            'action_key':  "{{ action|u.snake }}"
-            'action_keys': "{{ action|u.snake|plural }}"
-            'action-key':  "{{ action|u.kebab }}"
-            'action-keys': "{{ action|u.kebab|plural }}"
-            'EntityKey':   "{{ entityClass|u.afterLast('\\\\').camel.title }}"
-            'EntityKeys':  "{{ entityClass|u.afterLast('\\\\').camel.title|plural }}"
-            'entityKey':   "{{ entityClass|u.afterLast('\\\\').camel }}"
-            'entityKeys':  "{{ entityClass|u.afterLast('\\\\').camel|plural }}"
-            'entity_key':  "{{ entityClass|u.afterLast('\\\\').snake }}"
-            'entity_keys': "{{ entityClass|u.afterLast('\\\\').snake|plural }}"
-            'entity-key':  "{{ entityClass|u.afterLast('\\\\').kebab }}"
-            'entity-keys': "{{ entityClass|u.afterLast('\\\\').kebab|plural }}"
+            'ActionKey':      "{{ action|u.camel.title }}"
+            'ActionKeys':     "{{ action|u.camel.title|plural }}"
+            'actionKey':      "{{ action|u.camel }}"
+            'actionKeys':     "{{ action|u.camel|plural }}"
+            'action_key':     "{{ action|u.snake }}"
+            'action_keys':    "{{ action|u.snake|plural }}"
+            'actiondashkey':  "{{ action|u.kebab }}"
+            'actiondashkeys': "{{ action|u.kebab|plural }}"
+            'EntityKey':      "{{ entityClass|u.afterLast('\\\\').camel.title }}"
+            'EntityKeys':     "{{ entityClass|u.afterLast('\\\\').camel.title|plural }}"
+            'entityKey':      "{{ entityClass|u.afterLast('\\\\').camel }}"
+            'entityKeys':     "{{ entityClass|u.afterLast('\\\\').camel|plural }}"
+            'entity_key':     "{{ entityClass|u.afterLast('\\\\').snake }}"
+            'entity_keys':    "{{ entityClass|u.afterLast('\\\\').snake|plural }}"
+            'entitydashkey':  "{{ entityClass|u.afterLast('\\\\').kebab }}"
+            'entitydashkeys': "{{ entityClass|u.afterLast('\\\\').kebab|plural }}"
         formType:
             # "App\Form\FooBar\UpdateType"
-            - "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}Type"
+            - "App\\Form\\{{ EntityKey }}\\{{ ActionKey }}Type"
             # "App\Form\FooBarUpdateType"
-            - "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}Type"
+            - "App\\Form\\{{ EntityKey }}{{ ActionKey }}Type"
             # "App\Form\FooBarType"
-            - "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}Type"
+            - "App\\Form\\{{ EntityKey }}Type"
         helper:
             # "App\Controller\FooBar\UpdateActionHelper"
-            - "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}ActionHelper"
+            - "App\\Controller\\{{ EntityKey }}\\{{ ActionKey }}ActionHelper"
             # "App\Controller\FooBarUpdateActionHelper"
-            - "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}ActionHelper"
-        # @todo
+            - "App\\Controller\\{{ EntityKey }}{{ ActionKey }}ActionHelper"
         redirection:
             create:
-                route: "{{ entityClass|u.afterLast('\\\\').snake }}.read"
+                route: "{{ entity_key }}.read"
                 parameters:
                     id: '{{ _entity.id }}'
             delete:
-                route: "{{ entityClass|u.afterLast('\\\\').snake }}.index"
+                route: "{{ entity_key }}.index"
             update:
-                route: "{{ entityClass|u.afterLast('\\\\').snake }}.read"
+                route: "{{ entity_key }}.read"
                 parameters:
                     id: '{{ _entity.id }}'
         route:
             # "foo_bar.create"
-            name: "{{ entityClass|u.afterLast('\\\\').snake }}.{{ action }}"
+            name: "{{ entity_key }}.{{ action }}"
             paths:
                 # "foo-bars/create"
-                create: "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/create"
+                create: "{{ entitydashkeys }}/create"
                 # "foo-bars/{id}/delete"
-                delete: "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}/delete"
+                delete: "{{ entitydashkeys }}/{id}/delete"
                 # "foo-bars"
-                index:  "{{ entityClass|u.afterLast('\\\\').kebab|plural }}"
+                index:  "{{ entitydashkeys }}"
                 # "foo-bars/{id}"
-                read:   "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}"
+                read:   "{{ entitydashkeys }}/{id}"
                 # "foo-bars/{id}/update"
-                update: "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}/update"
+                update: "{{ entitydashkeys }}/{id}/update"
         view:
-            path: "{{ entityClass|u.afterLast('\\\\').snake }}/{{ action }}.html.twig" # "foo_bar/update.html.twig"
+            path: "{{ entity_key }}/{{ action }}.html.twig" # "foo_bar/update.html.twig"
             variables:
                 entities:
                     - 'entities'
-                    - "{{ entityClass|u.afterLast('\\\\').camel|plural }}" # "fooBars"
+                    - "{{ entityKeys }}" # "fooBars"
                 entity:
                     - 'entity'
-                    - "{{ entityClass|u.afterLast('\\\\').camel }}" # "fooBar"
+                    - "{{ entityKey }}" # "fooBar"
 
     entities:
         App\Entity\Article:

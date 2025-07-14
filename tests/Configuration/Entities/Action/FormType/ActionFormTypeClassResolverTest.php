@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\FormType;
 
-use Jmf\CrudEngine\Configuration\Entities\Action\FormType\FormTypeClassResolver;
+use Jmf\CrudEngine\Configuration\Entities\Action\FormType\ActionFormTypeClassResolver;
 use Jmf\CrudEngine\Configuration\Schema\FormType\FormTypeSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
@@ -18,9 +18,9 @@ use Twig\Environment;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
-final class FormTypeClassResolverTest extends TestCase
+final class ActionFormTypeClassResolverTest extends TestCase
 {
-    private FormTypeClassResolver $formTypeClassResolver;
+    private ActionFormTypeClassResolver $actionFormTypeClassResolver;
 
     #[Override]
     protected function setUp(): void
@@ -28,7 +28,7 @@ final class FormTypeClassResolverTest extends TestCase
         $twigEnvironment = new Environment(new ArrayLoader());
         $twigEnvironment->addExtension(new StringExtension());
 
-        $this->formTypeClassResolver = new FormTypeClassResolver(
+        $this->actionFormTypeClassResolver = new ActionFormTypeClassResolver(
             new SchemaValueExpander(new TemplateRenderer($twigEnvironment)),
         );
 
@@ -36,28 +36,41 @@ final class FormTypeClassResolverTest extends TestCase
 
     /**
      * @return array{
-     *     0: non-empty-string,
+     *     0: array<non-empty-string, non-empty-string>,
      *     1: non-empty-string,
-     *     2: array<string, mixed>,
-     *     3: null|non-empty-string,
+     *     2: non-empty-string,
+     *     3: array<string, mixed>,
+     *     4: null|non-empty-string,
      * }[]
      */
     public static function dataProviderClassActionAndFormTypeClass(): iterable
     {
         return [
             [
+                [
+                    'ActionKey' => 'Create',
+                    'EntityKey' => 'Article',
+                ],
                 'App\\Entity\\Article',
                 'create',
                 [],
                 'App\\Form\\ArticleCreateType',
             ],
             [
+                [
+                    'ActionKey' => 'Update',
+                    'EntityKey' => 'Article',
+                ],
                 'App\\Entity\\Article',
                 'update',
                 [],
                 'App\\Form\\Article\\UpdateType',
             ],
             [
+                [
+                    'ActionKey' => 'Update',
+                    'EntityKey' => 'Article',
+                ],
                 'App\\Entity\\Article',
                 'update',
                 [
@@ -66,6 +79,10 @@ final class FormTypeClassResolverTest extends TestCase
                 null,
             ],
             [
+                [
+                    'ActionKey' => 'Create',
+                    'EntityKey' => 'Article',
+                ],
                 'App\\Entity\\Foo',
                 'create',
                 [
@@ -77,16 +94,18 @@ final class FormTypeClassResolverTest extends TestCase
     }
 
     /**
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $actionConfig
-     * @param class-string         $formTypeClass
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
+     * @param class-string                              $formTypeClass
      *
      * @throws Exception
      * @throws CrudEngineInvalidConfigurationException
      */
     #[DataProvider('dataProviderClassActionAndFormTypeClass')]
     public function testLoad(
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -99,9 +118,9 @@ final class FormTypeClassResolverTest extends TestCase
             class_alias($newClass::class, $formTypeClass);
         }
 
-        $result = $this->formTypeClassResolver->resolve(
+        $result = $this->actionFormTypeClassResolver->resolve(
             $formTypeSchema,
-            [],
+            $keys,
             $entityClass,
             $action,
             $actionConfig,

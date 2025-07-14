@@ -6,7 +6,7 @@ namespace Jmf\CrudEngine\Configuration\Entities\Action\Route;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
 
-readonly class RouteConfiguration
+readonly class ActionRouteConfiguration
 {
     public function __construct(
         private string $name,

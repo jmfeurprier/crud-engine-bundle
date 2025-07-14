@@ -9,7 +9,7 @@ use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 
-readonly class HelperClassResolver
+readonly class ActionHelperClassResolver
 {
     public function __construct(
         private SchemaValueExpander $schemaValueExpander,
@@ -71,13 +71,11 @@ readonly class HelperClassResolver
     ): ?string {
         $helperClasses = $helperSchema->expand(
             $this->schemaValueExpander,
-            array_merge(
-                $keys,
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            ),
+            $keys,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
         );
 
         foreach ($helperClasses as $helperClass) {

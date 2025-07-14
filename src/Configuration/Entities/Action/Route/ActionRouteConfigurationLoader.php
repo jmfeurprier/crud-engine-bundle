@@ -11,7 +11,7 @@ use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
-readonly class RouteConfigurationLoader
+readonly class ActionRouteConfigurationLoader
 {
     public function __construct(
         private SchemaValueExpander $schemaValueExpander,
@@ -33,10 +33,10 @@ readonly class RouteConfigurationLoader
         string $entityClass,
         string $action,
         array $actionConfig,
-    ): RouteConfiguration {
+    ): ActionRouteConfiguration {
         $routeConfig = $this->getRouteConfig($actionConfig);
 
-        return new RouteConfiguration(
+        return new ActionRouteConfiguration(
             $this->getName($routeSchema, $keys, $entityClass, $action, $routeConfig),
             $this->getPath($routeSchema, $keys, $entityClass, $action, $routeConfig),
             $this->getRequirements($routeConfig),
@@ -109,13 +109,11 @@ readonly class RouteConfigurationLoader
     ): string {
         $name = $this->schemaValueExpander->expand(
             $routeSchema->getName(),
-            array_merge(
-                $keys,
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            ),
+            $keys,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
         );
 
         Assert::stringNotEmpty($name);
@@ -182,13 +180,11 @@ readonly class RouteConfigurationLoader
 
         return $this->schemaValueExpander->expand(
             $path,
-            array_merge(
-                $keys,
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            ),
+            $keys,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
         );
     }
 

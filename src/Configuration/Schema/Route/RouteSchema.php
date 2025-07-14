@@ -12,7 +12,7 @@ readonly class RouteSchema
     /**
      * @const non-empty-string
      */
-    public const string DEFAULT_NAME = "{{ entityClass|u.afterLast('\\\\').snake }}.{{ action }}";
+    public const string DEFAULT_NAME = "{{ entity_key }}.{{ action_key }}";
 
     public function __construct(
         private string $name,

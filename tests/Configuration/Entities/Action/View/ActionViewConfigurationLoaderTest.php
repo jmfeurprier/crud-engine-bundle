@@ -18,7 +18,7 @@ use Twig\Environment;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
-final class ViewConfigurationLoaderTest extends TestCase
+final class ActionViewConfigurationLoaderTest extends TestCase
 {
     private ActionViewConfigurationLoader $actionViewConfigurationLoader;
 
@@ -39,17 +39,22 @@ final class ViewConfigurationLoaderTest extends TestCase
 
     /**
      * @return array{
-     *     0: non-empty-string,
+     *     0: array<non-empty-string, non-empty-string>,
      *     1: non-empty-string,
-     *     2: array<string, mixed>,
-     *     3: non-empty-string,
-     *     4: array<string, string>,
+     *     2: non-empty-string,
+     *     3: array<string, mixed>,
+     *     4: non-empty-string,
+     *     5: array<string, string>,
      * }[]
      */
     public static function dataProviderClassActionAndViewPath(): iterable
     {
         return [
             [
+                [
+                    'action_key' => 'create',
+                    'entity_key' => 'article',
+                ],
                 'App\\Entity\\Article',
                 'create',
                 [],
@@ -57,6 +62,10 @@ final class ViewConfigurationLoaderTest extends TestCase
                 [],
             ],
             [
+                [
+                    'action_key' => 'create',
+                    'entity_key' => 'article',
+                ],
                 'App\\Entity\\Article',
                 'create',
                 [
@@ -66,6 +75,10 @@ final class ViewConfigurationLoaderTest extends TestCase
                 [],
             ],
             [
+                [
+                    'action_key' => 'create',
+                    'entity_key' => 'article',
+                ],
                 'App\\Entity\\Article',
                 'create',
                 [
@@ -80,16 +93,18 @@ final class ViewConfigurationLoaderTest extends TestCase
     }
 
     /**
-     * @param class-string          $entityClass
-     * @param non-empty-string      $action
-     * @param array<string, mixed>  $actionConfig
-     * @param class-string          $viewPath
-     * @param array<string, string> $viewVariables
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
+     * @param class-string                              $viewPath
+     * @param array<string, string>                     $viewVariables
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     #[DataProvider('dataProviderClassActionAndViewPath')]
     public function testLoad(
+        array $keys,
         string $entityClass,
         string $action,
         array $actionConfig,
@@ -103,7 +118,7 @@ final class ViewConfigurationLoaderTest extends TestCase
 
         $actionViewConfiguration = $this->actionViewConfigurationLoader->load(
             $viewSchema,
-            [],
+            $keys,
             $entityClass,
             $action,
             $actionConfig,

@@ -12,11 +12,11 @@ readonly class RoutePathSchema
      * @const array<non-empty-string, non-empty-string>
      */
     private const array DEFAULT_PATHS = [
-        'create' => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/create",
-        'delete' => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}/delete",
-        'index'  => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}",
-        'read'   => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}",
-        'update' => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}/{id}/update",
+        'create' => "{{ entitydashkeys }}/create",
+        'delete' => "{{ entitydashkeys }}/{id}/delete",
+        'index'  => "{{ entitydashkeys }}",
+        'read'   => "{{ entitydashkeys }}/{id}",
+        'update' => "{{ entitydashkeys }}/{id}/update",
     ];
 
     /**

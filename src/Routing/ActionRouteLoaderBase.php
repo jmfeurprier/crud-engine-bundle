@@ -44,7 +44,7 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
     }
 
     /**
-     * @return string[]
+     * @return non-empty-string[]
      */
     abstract protected function getMethods(): iterable;
 
@@ -56,7 +56,7 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
     }
 
     /**
-     * @return array<string, string>
+     * @return array<non-empty-string, non-empty-string>
      */
     private function getRequirements(ActionConfiguration $actionConfiguration): array
     {

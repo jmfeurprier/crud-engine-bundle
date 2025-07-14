@@ -68,13 +68,11 @@ readonly class ActionRedirectionConfigurationLoader
 
         $route = $this->schemaValueExpander->expand(
             $redirectionRouteSchema->getRoute(),
-            array_merge(
-                $keys,
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            ),
+            $keys,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
         );
 
         $parameters = $redirectionRouteSchema->getParameters();

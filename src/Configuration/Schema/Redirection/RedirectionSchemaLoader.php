@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Schema\Redirection;
 
+use Jmf\CrudEngine\Configuration\Schema\Redirection\Route\RedirectionRouteSchema;
 use Webmozart\Assert\Assert;
 
 readonly class RedirectionSchemaLoader

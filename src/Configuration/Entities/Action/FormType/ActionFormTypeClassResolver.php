@@ -10,7 +10,7 @@ use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Symfony\Component\Form\FormTypeInterface;
 use Webmozart\Assert\Assert;
 
-readonly class FormTypeClassResolver
+readonly class ActionFormTypeClassResolver
 {
     public function __construct(
         private SchemaValueExpander $schemaValueExpander,
@@ -73,13 +73,11 @@ readonly class FormTypeClassResolver
     ): ?string {
         $classes = $formTypeSchema->expand(
             $this->schemaValueExpander,
-            array_merge(
-                $keys,
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            ),
+            $keys,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
         );
 
         foreach ($classes as $class) {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Schema\Redirection;
+namespace Jmf\CrudEngine\Configuration\Schema\Redirection\Route;
 
 use Webmozart\Assert\Assert;
 

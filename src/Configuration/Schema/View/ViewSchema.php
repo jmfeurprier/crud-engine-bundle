@@ -11,7 +11,7 @@ readonly class ViewSchema
     /**
      * @const non-empty-string
      */
-    public const string DEFAULT_PATH = "{{ entityClass|u.afterLast('\\\\').snake }}/{{ action }}.html.twig";
+    public const string DEFAULT_PATH = "{{ entity_key }}/{{ action_key }}.html.twig";
 
     public function __construct(
         private string $path,

@@ -33,13 +33,11 @@ readonly class ActionViewVariablesResolver
     ): ActionViewVariablesCollection {
         $variables = $viewSchema->getVariables()->expand(
             $this->schemaValueExpander,
-            array_merge(
-                $keys,
-                [
-                    'entityClass' => $entityClass,
-                    'action'      => $action,
-                ],
-            ),
+            $keys,
+            [
+                'entityClass' => $entityClass,
+                'action'      => $action,
+            ],
         );
 
         if (array_key_exists('variables', $viewConfig)) {

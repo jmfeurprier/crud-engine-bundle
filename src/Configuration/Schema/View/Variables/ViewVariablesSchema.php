@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Schema\View\Variables;
 
-use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
@@ -31,7 +30,8 @@ readonly class ViewVariablesSchema
     }
 
     /**
-     * @param array<non-empty-string, mixed> $arguments
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param array<non-empty-string, mixed>            $arguments
      *
      * @return array<non-empty-string, iterable<non-empty-string>>
      *
@@ -39,6 +39,7 @@ readonly class ViewVariablesSchema
      */
     public function expand(
         SchemaValueExpander $schemaValueExpander,
+        array $keys,
         array $arguments,
     ): array {
         $variables = [];
@@ -49,6 +50,7 @@ readonly class ViewVariablesSchema
             foreach ($values as $value) {
                 $value = $schemaValueExpander->expand(
                     $value,
+                    $keys,
                     $arguments,
                 );
 

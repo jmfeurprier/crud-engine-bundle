@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action;
 
-use Jmf\CrudEngine\Configuration\Entities\Action\FormType\FormTypeClassResolver;
-use Jmf\CrudEngine\Configuration\Entities\Action\Helper\HelperClassResolver;
+use Jmf\CrudEngine\Configuration\Entities\Action\FormType\ActionFormTypeClassResolver;
+use Jmf\CrudEngine\Configuration\Entities\Action\Helper\ActionHelperClassResolver;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfigurationLoader;
-use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfigurationLoader;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoader;
 use Jmf\CrudEngine\Configuration\Schema\Schema;
@@ -22,10 +22,10 @@ readonly class ActionConfigurationLoader
 {
     public function __construct(
         private ActionRedirectionConfigurationLoader $redirectionConfigurationLoader,
-        private RouteConfigurationLoader $routeConfigurationLoader,
+        private ActionRouteConfigurationLoader $routeConfigurationLoader,
         private ActionViewConfigurationLoader $viewConfigurationLoader,
-        private FormTypeClassResolver $formTypeClassResolver,
-        private HelperClassResolver $helperClassResolver,
+        private ActionFormTypeClassResolver $formTypeClassResolver,
+        private ActionHelperClassResolver $helperClassResolver,
         private SchemaValueExpander $schemaValueExpander,
     ) {
     }
@@ -152,7 +152,7 @@ readonly class ActionConfigurationLoader
         string $entityClass,
         string $action,
         array $actionConfig,
-    ): RouteConfiguration {
+    ): ActionRouteConfiguration {
         return $this->routeConfigurationLoader->load(
             $schema->getRouteSchema(),
             $keys,

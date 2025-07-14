@@ -16,18 +16,23 @@ readonly class SchemaValueExpander
     }
 
     /**
-     * @param array<string, mixed> $arguments
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param array<string, mixed>                      $arguments
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     public function expand(
         string $value,
+        array $keys,
         array $arguments,
     ): string {
         try {
             return $this->templateRenderer->renderFromString(
                 $value,
-                $arguments,
+                array_merge(
+                    $keys,
+                    $arguments,
+                ),
             );
         } catch (Throwable $e) {
             throw new CrudEngineInvalidConfigurationException(

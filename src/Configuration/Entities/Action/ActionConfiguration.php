@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Configuration\Entities\Action;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\Form\FormTypeInterface;
@@ -23,7 +23,7 @@ readonly class ActionConfiguration
         private ?string $formTypeClass,
         private ?string $helperClass,
         private ?ActionRedirectionConfiguration $redirectionConfiguration,
-        private RouteConfiguration $routeConfiguration,
+        private ActionRouteConfiguration $routeConfiguration,
         private ActionViewConfiguration $viewConfiguration,
     ) {
     }
@@ -67,7 +67,7 @@ readonly class ActionConfiguration
         return $this->redirectionConfiguration ?? $this->onMissingConfiguration('redirection');
     }
 
-    public function getRouteConfiguration(): RouteConfiguration
+    public function getRouteConfiguration(): ActionRouteConfiguration
     {
         return $this->routeConfiguration;
     }

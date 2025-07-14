@@ -14,22 +14,22 @@ readonly class KeySchema
      * @const array<non-empty-string, non-empty-string>
      */
     private const array DEFAULT_KEYS = [
-        'ActionKey'   => "{{ action|u.camel.title }}",
-        'ActionKeys'  => "{{ action|u.camel.title|plural }}",
-        'actionKey'   => "{{ action|u.camel }}",
-        'actionKeys'  => "{{ action|u.camel|plural }}",
-        'action_key'  => "{{ action|u.snake }}",
-        'action_keys' => "{{ action|u.snake|plural }}",
-        'action-key'  => "{{ action|u.kebab }}",
-        'action-keys' => "{{ action|u.kebab|plural }}",
-        'EntityKey'   => "{{ entityClass|u.afterLast('\\\\').camel.title }}",
-        'EntityKeys'  => "{{ entityClass|u.afterLast('\\\\').camel.title|plural }}",
-        'entityKey'   => "{{ entityClass|u.afterLast('\\\\').camel }}",
-        'entityKeys'  => "{{ entityClass|u.afterLast('\\\\').camel|plural }}",
-        'entity_key'  => "{{ entityClass|u.afterLast('\\\\').snake }}",
-        'entity_keys' => "{{ entityClass|u.afterLast('\\\\').snake|plural }}",
-        'entity-key'  => "{{ entityClass|u.afterLast('\\\\').kebab }}",
-        'entity-keys' => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}",
+        'ActionKey'      => "{{ action|u.camel.title }}",
+        'ActionKeys'     => "{{ action|u.camel.title|plural }}",
+        'actionKey'      => "{{ action|u.camel }}",
+        'actionKeys'     => "{{ action|u.camel|plural }}",
+        'action_key'     => "{{ action|u.snake }}",
+        'action_keys'    => "{{ action|u.snake|plural }}",
+        'actiondashkey'  => "{{ action|u.kebab }}",
+        'actiondashkeys' => "{{ action|u.kebab|plural }}",
+        'EntityKey'      => "{{ entityClass|u.afterLast('\\\\').camel.title }}",
+        'EntityKeys'     => "{{ entityClass|u.afterLast('\\\\').camel.title|plural }}",
+        'entityKey'      => "{{ entityClass|u.afterLast('\\\\').camel }}",
+        'entityKeys'     => "{{ entityClass|u.afterLast('\\\\').camel|plural }}",
+        'entity_key'     => "{{ entityClass|u.afterLast('\\\\').snake }}",
+        'entity_keys'    => "{{ entityClass|u.afterLast('\\\\').snake|plural }}",
+        'entitydashkey'  => "{{ entityClass|u.afterLast('\\\\').kebab }}",
+        'entitydashkeys' => "{{ entityClass|u.afterLast('\\\\').kebab|plural }}",
     ];
 
     /**
@@ -73,7 +73,7 @@ readonly class KeySchema
         $keys = array_map(
             static fn(
                 $value,
-            ): string => $schemaValueExpander->expand($value, $arguments),
+            ): string => $schemaValueExpander->expand($value, [], $arguments),
             $this->keys,
         );
 

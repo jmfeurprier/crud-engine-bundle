@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Schema\Redirection;
 
+use Jmf\CrudEngine\Configuration\Schema\Redirection\Route\RedirectionRouteSchema;
 use Webmozart\Assert\Assert;
 
 readonly class RedirectionSchema
@@ -13,18 +14,18 @@ readonly class RedirectionSchema
      */
     private const array DEFAULT_ROUTES = [
         'create' => [
-            'route'      => "{{ entityClass|u.afterLast('\\\\').snake }}.read",
+            'route'      => "{{ entity_key }}.read",
             'parameters' => [
                 'id' => '{{ _entity.id }}',
             ],
         ],
         'delete' => [
-            'route'      => "{{ entityClass|u.afterLast('\\\\').snake }}.index",
+            'route'      => "{{ entity_key }}.index",
             'parameters' => [
             ],
         ],
         'update' => [
-            'route'      => "{{ entityClass|u.afterLast('\\\\').snake }}.read",
+            'route'      => "{{ entity_key }}.read",
             'parameters' => [
                 'id' => '{{ _entity.id }}',
             ],

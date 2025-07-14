@@ -8,7 +8,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionParameterCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
-use Jmf\CrudEngine\Configuration\Entities\Action\Route\RouteConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -70,7 +70,7 @@ final class IndexActionRouteLoaderTest extends TestCase
             parameters: ActionRedirectionParameterCollection::createDefault(),
         );
 
-        $routeConfiguration = new RouteConfiguration(
+        $actionRouteConfiguration = new ActionRouteConfiguration(
             name:         $routeName,
             path:         $routePath,
             requirements: ActionRouteRequirementCollection::createDefault(),
@@ -87,7 +87,7 @@ final class IndexActionRouteLoaderTest extends TestCase
             formTypeClass:            null,
             helperClass:              null,
             redirectionConfiguration: $actionRedirectionConfiguration,
-            routeConfiguration:       $routeConfiguration,
+            routeConfiguration:       $actionRouteConfiguration,
             viewConfiguration:        $actionViewConfiguration,
         );
     }

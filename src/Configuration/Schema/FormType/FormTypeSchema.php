@@ -14,9 +14,9 @@ readonly class FormTypeSchema
      * @const non-empty-string[]
      */
     private const iterable DEFAULT_FORM_TYPES = [
-        "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}Type",
-        "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}Type",
-        "App\\Form\\{{ entityClass|u.afterLast('\\\\') }}Type",
+        "App\\Form\\{{ EntityKey }}\\{{ ActionKey }}Type",
+        "App\\Form\\{{ EntityKey }}{{ ActionKey }}Type",
+        "App\\Form\\{{ EntityKey }}Type",
     ];
 
     public static function createDefault(): self
@@ -34,7 +34,8 @@ readonly class FormTypeSchema
     }
 
     /**
-     * @param array<non-empty-string, mixed> $arguments
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param array<non-empty-string, mixed>            $arguments
      *
      * @return non-empty-string[]
      *
@@ -42,12 +43,13 @@ readonly class FormTypeSchema
      */
     public function expand(
         SchemaValueExpander $schemaValueExpander,
+        array $keys,
         array $arguments,
     ): iterable {
         $expanded = array_map(
             static fn(
                 $value,
-            ): string => $schemaValueExpander->expand($value, $arguments),
+            ): string => $schemaValueExpander->expand($value, $keys, $arguments),
             (array) $this->formTypes,
         );
 

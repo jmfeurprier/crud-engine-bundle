@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Schema\Helper;
 
-use Jmf\CrudEngine\Configuration\Schema\Schema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
@@ -15,8 +14,8 @@ readonly class HelperSchema
      * @const non-empty-string[]
      */
     private const iterable DEFAULT_CLASSES = [
-        "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}\\{{ action|u.title }}ActionHelper",
-        "App\\Controller\\{{ entityClass|u.afterLast('\\\\') }}{{ action|u.title }}ActionHelper",
+        "App\\Controller\\{{ EntityKey }}\\{{ ActionKey }}ActionHelper",
+        "App\\Controller\\{{ EntityKey }}{{ ActionKey }}ActionHelper",
     ];
 
     public static function createDefault(): self
@@ -42,7 +41,8 @@ readonly class HelperSchema
     }
 
     /**
-     * @param array<non-empty-string, mixed> $arguments
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param array<non-empty-string, mixed>            $arguments
      *
      * @return non-empty-string[]
      *
@@ -50,12 +50,13 @@ readonly class HelperSchema
      */
     public function expand(
         SchemaValueExpander $schemaValueExpander,
+        array $keys,
         array $arguments,
     ): iterable {
         $expanded = array_map(
             static fn(
                 $value,
-            ): string => $schemaValueExpander->expand($value, $arguments),
+            ): string => $schemaValueExpander->expand($value, $keys, $arguments),
             (array) $this->classes,
         );
 
