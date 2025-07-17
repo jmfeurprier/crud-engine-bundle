@@ -1,0 +1,36 @@
+name: Symfony CI
+on:
+    push:
+        branches: [ "master", "6.0", "7.0" ]
+    pull_request:
+        branches: [ "*" ]
+jobs:
+    test:
+        name:    Run tests on PHP ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php: [ '8.2', '8.3', '8.4' ]
+        steps:
+            -
+                name: Checkout code
+                uses: actions/checkout@v4
+            -
+                name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    extensions:  mbstring, xml, ctype, iconv, intl, pdo_sqlite
+                    coverage:    none
+            -
+                name: Install Composer dependencies
+                run:  composer install --prefer-dist --no-progress
+            -
+                name: Run PHPStan
+                run:  bin/phpstan
+            -
+                name: Run Rector
+                run:  bin/rector --dry-run
+            -
+                name: Run PHPUnit tests
+                run:  bin/phpunit
