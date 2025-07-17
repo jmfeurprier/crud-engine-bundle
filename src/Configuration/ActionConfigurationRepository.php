@@ -5,17 +5,20 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Configuration;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Override;
 use Webmozart\Assert\Assert;
 
-readonly class ActionConfigurationRepository implements ActionConfigurationRepositoryInterface
+class ActionConfigurationRepository implements ActionConfigurationRepositoryInterface
 {
+    private ActionConfigurationsCollection $actionConfigurations;
+
     /**
      * @param array<string, mixed> $config
      */
     public function __construct(
-        private ActionConfigurationsLoaderInterface $actionConfigurationsLoader,
-        private array $config,
+        private readonly ActionConfigurationsLoaderInterface $actionConfigurationsLoader,
+        private readonly array $config,
     ) {
         Assert::isMap($config);
     }
@@ -25,7 +28,7 @@ readonly class ActionConfigurationRepository implements ActionConfigurationRepos
         string $entityClass,
         string $action,
     ): ActionConfiguration {
-        return $this->actionConfigurationsLoader->load($this->config)->get($entityClass, $action);
+        return $this->getActionConfigurations()->get($entityClass, $action);
     }
 
     #[Override]
@@ -33,12 +36,24 @@ readonly class ActionConfigurationRepository implements ActionConfigurationRepos
         string $entityClass,
         string $action,
     ): ?ActionConfiguration {
-        return $this->actionConfigurationsLoader->load($this->config)->tryGet($entityClass, $action);
+        return $this->getActionConfigurations()->tryGet($entityClass, $action);
     }
 
     #[Override]
     public function all(): iterable
     {
-        return $this->actionConfigurationsLoader->load($this->config)->all();
+        return $this->getActionConfigurations()->all();
+    }
+
+    /**
+     * @throws CrudEngineConfigurationException
+     */
+    private function getActionConfigurations(): ActionConfigurationsCollection
+    {
+        if (!isset($this->actionConfigurations)) {
+            $this->actionConfigurations = $this->actionConfigurationsLoader->load($this->config);
+        }
+
+        return $this->actionConfigurations;
     }
 }
