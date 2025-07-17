@@ -23,6 +23,9 @@ jobs:
                     extensions:  mbstring, xml, ctype, iconv, intl, pdo_sqlite
                     coverage:    none
             -
+                name: Validate composer.json and composer.lock
+                run:  composer validate --strict
+            -
                 name: Install Composer dependencies
                 run:  composer install --prefer-dist --no-progress
             -
