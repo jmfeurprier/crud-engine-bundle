@@ -60,7 +60,7 @@ readonly class KeySchema
     }
 
     /**
-     * @param array<string, mixed> $arguments
+     * @param array<non-empty-string, mixed> $arguments
      *
      * @return array<non-empty-string, non-empty-string>
      *

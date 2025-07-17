@@ -17,7 +17,7 @@ readonly class SchemaValueExpander
 
     /**
      * @param array<non-empty-string, non-empty-string> $keys
-     * @param array<string, mixed>                      $arguments
+     * @param array<non-empty-string, mixed>            $arguments
      *
      * @throws CrudEngineInvalidConfigurationException
      */

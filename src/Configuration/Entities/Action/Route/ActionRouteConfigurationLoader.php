@@ -201,7 +201,7 @@ readonly class ActionRouteConfigurationLoader
         $requirementsConfig = $routeConfig['requirements'];
 
         Assert::isMap($requirementsConfig);
-        Assert::allString($requirementsConfig);
+        Assert::allStringNotEmpty($requirementsConfig);
 
         return new ActionRouteRequirementCollection($requirementsConfig);
     }

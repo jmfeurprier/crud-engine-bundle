@@ -14,7 +14,7 @@ readonly class ActionRouteRequirementCollection
     }
 
     /**
-     * @param array<string, string> $values
+     * @param array<non-empty-string, non-empty-string> $values
      */
     public function __construct(
         private array $values,
@@ -31,6 +31,9 @@ readonly class ActionRouteRequirementCollection
         return $this->values;
     }
 
+    /**
+     * @param non-empty-string $key
+     */
     public function tryGet(
         string $key,
         string $default,

@@ -27,6 +27,14 @@ class SchemaValueExpanderTest extends TestCase
         );
     }
 
+    /**
+     * @return array{
+     *     0: string,
+     *     1: array<non-empty-string, non-empty-string>,
+     *     2: array<non-empty-string, mixed>,
+     *     3: string,
+     * }[]
+     */
     public static function dataProvider(): iterable
     {
         return [
@@ -73,6 +81,9 @@ class SchemaValueExpanderTest extends TestCase
     }
 
     /**
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param array<non-empty-string, mixed>            $arguments
+     *
      * @throws CrudEngineInvalidConfigurationException
      */
     #[DataProvider('dataProvider')]
