@@ -31,7 +31,6 @@ final class ActionFormTypeClassResolverTest extends TestCase
         $this->actionFormTypeClassResolver = new ActionFormTypeClassResolver(
             new SchemaValueExpander(new TemplateRenderer($twigEnvironment)),
         );
-
     }
 
     /**
