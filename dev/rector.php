@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\Encapsed\EncapsedStringsToSprintfRector;
 use Rector\Config\RectorConfig;
@@ -26,6 +27,7 @@ return RectorConfig::configure()
         [
             CatchExceptionNameMatchingTypeRector::class,
             EncapsedStringsToSprintfRector::class,
+            FlipTypeControlToUseExclusiveTypeRector::class,
             PreferPHPUnitThisCallRector::class,
             RenameParamToMatchTypeRector::class,
             RenamePropertyToMatchTypeRector::class,
