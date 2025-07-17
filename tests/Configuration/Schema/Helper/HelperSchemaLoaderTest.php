@@ -24,7 +24,7 @@ final class HelperSchemaLoaderTest extends TestCase
 
         $helperSchema = $this->helperSchemaLoader->load($schemaConfig);
 
-        $this->assertNotEmpty($helperSchema->all());
+        self::assertNotEmpty($helperSchema->all());
     }
 
     public function testLoadWithEmptyConfig(): void
@@ -35,7 +35,7 @@ final class HelperSchemaLoaderTest extends TestCase
 
         $helperSchema = $this->helperSchemaLoader->load($schemaConfig);
 
-        $this->assertSame([], $helperSchema->all());
+        self::assertSame([], $helperSchema->all());
     }
 
     public function testLoad(): void
@@ -49,7 +49,7 @@ final class HelperSchemaLoaderTest extends TestCase
 
         $helperSchema = $this->helperSchemaLoader->load($schemaConfig);
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'foo',
                 'bar',

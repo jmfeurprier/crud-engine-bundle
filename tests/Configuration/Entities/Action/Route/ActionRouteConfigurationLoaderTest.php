@@ -146,7 +146,7 @@ final class ActionRouteConfigurationLoaderTest extends TestCase
             $actionConfig,
         );
 
-        $this->assertSame($expectedRouteName, $routeConfiguration->getName());
-        $this->assertSame($expectedRoutePath, $routeConfiguration->getPath());
+        self::assertSame($expectedRouteName, $routeConfiguration->getName());
+        self::assertSame($expectedRoutePath, $routeConfiguration->getPath());
     }
 }

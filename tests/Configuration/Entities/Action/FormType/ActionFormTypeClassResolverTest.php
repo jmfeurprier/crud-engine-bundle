@@ -126,6 +126,6 @@ final class ActionFormTypeClassResolverTest extends TestCase
             $actionConfig,
         );
 
-        $this->assertSame($formTypeClass, $result);
+        self::assertSame($formTypeClass, $result);
     }
 }

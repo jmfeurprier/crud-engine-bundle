@@ -14,13 +14,13 @@ readonly class ActionRouteRequirementCollection
     }
 
     /**
-     * @param array<non-empty-string, non-empty-string> $values
+     * @param array<non-empty-string, non-empty-string> $requirements
      */
     public function __construct(
-        private array $values,
+        private array $requirements,
     ) {
-        Assert::isMap($this->values);
-        Assert::allString($this->values);
+        Assert::isMap($this->requirements);
+        Assert::allString($this->requirements);
     }
 
     /**
@@ -28,7 +28,7 @@ readonly class ActionRouteRequirementCollection
      */
     public function all(): array
     {
-        return $this->values;
+        return $this->requirements;
     }
 
     /**
@@ -38,6 +38,6 @@ readonly class ActionRouteRequirementCollection
         string $key,
         string $default,
     ): string {
-        return $this->values[$key] ?? $default;
+        return $this->requirements[$key] ?? $default;
     }
 }

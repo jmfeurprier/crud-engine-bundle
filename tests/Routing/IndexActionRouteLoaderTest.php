@@ -46,12 +46,12 @@ final class IndexActionRouteLoaderTest extends TestCase
 
         $this->indexActionRouteLoader->load($this->routeCollection, $actionConfiguration);
 
-        $this->assertCount(1, $this->routeCollection->all());
+        self::assertCount(1, $this->routeCollection->all());
 
         $route = $this->routeCollection->get('foo.index');
 
-        $this->assertInstanceOf(Route::class, $route);
-        $this->assertSame('/foo/bar', $route->getPath());
+        self::assertInstanceOf(Route::class, $route);
+        self::assertSame('/foo/bar', $route->getPath());
     }
 
     /**

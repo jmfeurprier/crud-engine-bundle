@@ -124,7 +124,7 @@ final class ActionViewConfigurationLoaderTest extends TestCase
             $actionConfig,
         );
 
-        $this->assertSame($viewPath, $actionViewConfiguration->getPath());
-        $this->assertSame($viewVariables, $actionViewConfiguration->getVariables()->all());
+        self::assertSame($viewPath, $actionViewConfiguration->getPath());
+        self::assertSame($viewVariables, $actionViewConfiguration->getVariables()->all());
     }
 }

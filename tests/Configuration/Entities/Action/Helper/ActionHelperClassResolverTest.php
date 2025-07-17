@@ -96,7 +96,7 @@ final class ActionHelperClassResolverTest extends TestCase
             $actionConfig,
         );
 
-        $this->assertNull($result);
+        self::assertNull($result);
 
         if (null !== $helperClass) {
             $newClass = $this->createMock(ActionHelperInterface::class);
@@ -110,7 +110,7 @@ final class ActionHelperClassResolverTest extends TestCase
                 $actionConfig,
             );
 
-            $this->assertSame($helperClass, $result);
+            self::assertSame($helperClass, $result);
         }
     }
 }

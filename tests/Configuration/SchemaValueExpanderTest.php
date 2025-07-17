@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmf\CrudEngine\Tests\Configuration;
 
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
@@ -12,7 +14,7 @@ use Twig\Environment;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
-class SchemaValueExpanderTest extends TestCase
+final class SchemaValueExpanderTest extends TestCase
 {
     private SchemaValueExpander $schemaValueExpander;
 
@@ -99,6 +101,6 @@ class SchemaValueExpanderTest extends TestCase
             $arguments,
         );
 
-        $this->assertSame($expected, $result);
+        self::assertSame($expected, $result);
     }
 }

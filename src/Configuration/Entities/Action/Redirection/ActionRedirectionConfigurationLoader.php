@@ -34,7 +34,7 @@ readonly class ActionRedirectionConfigurationLoader
         array $actionConfig,
     ): ?ActionRedirectionConfiguration {
         if (!array_key_exists('redirection', $actionConfig)) {
-            return $this->getFallBack($redirectionSchema, $keys, $entityClass, $action);
+            return $this->getFallback($redirectionSchema, $keys, $entityClass, $action);
         }
 
         Assert::isMap($actionConfig['redirection']);

@@ -157,6 +157,6 @@ final class ActionViewVariablesResolverTest extends TestCase
             $viewConfig,
         );
 
-        $this->assertSame($expected, $actionViewVariablesCollection->all());
+        self::assertSame($expected, $actionViewVariablesCollection->all());
     }
 }

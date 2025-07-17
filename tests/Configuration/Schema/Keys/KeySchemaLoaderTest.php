@@ -42,7 +42,7 @@ final class KeySchemaLoaderTest extends TestCase
 
         $keySchema = $this->keySchemaLoader->load($schemaConfig);
 
-        $this->assertNotEmpty(
+        self::assertNotEmpty(
             $keySchema->expand(
                 $this->schemaValueExpander,
                 [
@@ -64,7 +64,7 @@ final class KeySchemaLoaderTest extends TestCase
 
         $keySchema = $this->keySchemaLoader->load($schemaConfig);
 
-        $this->assertNotEmpty(
+        self::assertNotEmpty(
             $keySchema->expand(
                 $this->schemaValueExpander,
                 [
@@ -97,10 +97,10 @@ final class KeySchemaLoaderTest extends TestCase
             ],
         );
 
-        $this->assertArrayHasKey('foo', $expanded);
-        $this->assertSame('bar', $expanded['foo']);
-        $this->assertArrayHasKey('baz', $expanded);
-        $this->assertSame('qux', $expanded['baz']);
+        self::assertArrayHasKey('foo', $expanded);
+        self::assertSame('bar', $expanded['foo']);
+        self::assertArrayHasKey('baz', $expanded);
+        self::assertSame('qux', $expanded['baz']);
     }
 
     /**
@@ -112,7 +112,7 @@ final class KeySchemaLoaderTest extends TestCase
 
         $keySchema = $this->keySchemaLoader->load($schemaConfig);
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'ActionKey'      => 'DoSomething',
                 'ActionKeys'     => 'DoSomethings',

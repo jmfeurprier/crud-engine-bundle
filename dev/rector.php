@@ -8,6 +8,7 @@ use Rector\Config\RectorConfig;
 use Rector\Naming\Rector\Assign\RenameVariableToMatchMethodCallReturnTypeRector;
 use Rector\Naming\Rector\Class_\RenamePropertyToMatchTypeRector;
 use Rector\Naming\Rector\ClassMethod\RenameParamToMatchTypeRector;
+use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\YieldDataProviderRector;
 
 $rootPath = realpath(__DIR__ . '/..') . '/';
@@ -25,6 +26,7 @@ return RectorConfig::configure()
         [
             CatchExceptionNameMatchingTypeRector::class,
             EncapsedStringsToSprintfRector::class,
+            PreferPHPUnitThisCallRector::class,
             RenameParamToMatchTypeRector::class,
             RenamePropertyToMatchTypeRector::class,
             RenameVariableToMatchMethodCallReturnTypeRector::class,
