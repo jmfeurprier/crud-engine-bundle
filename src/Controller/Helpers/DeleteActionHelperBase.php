@@ -16,7 +16,7 @@ use Throwable;
  *
  * @implements DeleteActionHelperInterface<E>
  */
-abstract class DeleteActionHelperBase implements DeleteActionHelperInterface
+readonly abstract class DeleteActionHelperBase implements DeleteActionHelperInterface
 {
     #[Override]
     public function hookBeforeRemove(object $entity): void

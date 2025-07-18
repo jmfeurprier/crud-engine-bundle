@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @implements UpdateActionHelperInterface<E>
  */
-abstract class UpdateActionHelperBase implements UpdateActionHelperInterface
+abstract readonly class UpdateActionHelperBase implements UpdateActionHelperInterface
 {
     #[Override]
     public function hookBeforePersist(

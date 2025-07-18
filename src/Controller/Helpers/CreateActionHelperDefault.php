@@ -15,10 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @extends  CreateActionHelperBase<E>
  */
-final class CreateActionHelperDefault extends CreateActionHelperBase
+final readonly class CreateActionHelperDefault extends CreateActionHelperBase
 {
     public function __construct(
-        private readonly InstantiatorInterface $instantiator,
+        private InstantiatorInterface $instantiator,
     ) {
     }
 

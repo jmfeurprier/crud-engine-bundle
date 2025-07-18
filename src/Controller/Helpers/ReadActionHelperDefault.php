@@ -9,6 +9,6 @@ namespace Jmf\CrudEngine\Controller\Helpers;
  *
  * @extends ReadActionHelperBase<E>
  */
-final class ReadActionHelperDefault extends ReadActionHelperBase
+final readonly class ReadActionHelperDefault extends ReadActionHelperBase
 {
 }

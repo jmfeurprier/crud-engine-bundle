@@ -9,6 +9,6 @@ namespace Jmf\CrudEngine\Controller\Helpers;
  *
  * @extends UpdateActionHelperBase<E>
  */
-final class UpdateActionHelperDefault extends UpdateActionHelperBase
+final readonly class UpdateActionHelperDefault extends UpdateActionHelperBase
 {
 }

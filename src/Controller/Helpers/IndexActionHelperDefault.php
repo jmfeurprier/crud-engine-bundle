@@ -9,6 +9,6 @@ namespace Jmf\CrudEngine\Controller\Helpers;
  *
  * @extends IndexActionHelperBase<E>
  */
-final class IndexActionHelperDefault extends IndexActionHelperBase
+final readonly class IndexActionHelperDefault extends IndexActionHelperBase
 {
 }

@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @implements CreateActionHelperInterface<E>
  */
-abstract class CreateActionHelperBase implements CreateActionHelperInterface
+readonly abstract class CreateActionHelperBase implements CreateActionHelperInterface
 {
     #[Override]
     public function createEntity(

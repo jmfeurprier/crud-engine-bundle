@@ -9,6 +9,6 @@ namespace Jmf\CrudEngine\Controller\Helpers;
  *
  * @extends  DeleteActionHelperBase<E>
  */
-final class DeleteActionHelperDefault extends DeleteActionHelperBase
+final readonly class DeleteActionHelperDefault extends DeleteActionHelperBase
 {
 }

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @implements IndexActionHelperInterface<E>
  */
-abstract class IndexActionHelperBase implements IndexActionHelperInterface
+readonly abstract class IndexActionHelperBase implements IndexActionHelperInterface
 {
     #[Override]
     public function hookBeforeRender(

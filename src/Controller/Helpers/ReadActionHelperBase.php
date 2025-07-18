@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @template E of object
  * @implements ReadActionHelperInterface<E>
  */
-abstract class ReadActionHelperBase implements ReadActionHelperInterface
+abstract readonly class ReadActionHelperBase implements ReadActionHelperInterface
 {
     #[Override]
     public function getViewVariables(
