@@ -7,7 +7,7 @@
         "php": ">=8.3",
         "doctrine/instantiator": "^2.0",
         "doctrine/orm": "^3.0",
-        "jmf/template-rendering": "^1.0",
+        "jmf/template-rendering": "^2.0",
         "symfony/form": "^7.0",
         "symfony/framework-bundle": "^7.0",
         "symfony/http-foundation": "^7.0",
