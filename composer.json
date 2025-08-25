@@ -7,7 +7,7 @@
         "php": ">=8.3",
         "doctrine/instantiator": "^2.0",
         "doctrine/orm": "^3.0",
-        "jmf/template-rendering": "^2.0",
+        "jmf/template-rendering": "^1.0|^2.0",
         "symfony/form": "^7.0",
         "symfony/framework-bundle": "^7.0",
         "symfony/http-foundation": "^7.0",
@@ -18,12 +18,12 @@
     },
     "require-dev": {
         "phpmd/phpmd": "^2.15.0",
-        "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan": "^2.1.17",
-        "phpstan/phpstan-strict-rules": "^2.0",
-        "phpunit/phpunit": "^12.1.6",
-        "rector/rector": "^2.0.17",
-        "squizlabs/php_codesniffer": "^3.13.0"
+        "phpstan/extension-installer": "^1.4.3",
+        "phpstan/phpstan": "^2.1.22",
+        "phpstan/phpstan-strict-rules": "^2.0.6",
+        "phpunit/phpunit": "^12.3.6",
+        "rector/rector": "^2.1.4",
+        "squizlabs/php_codesniffer": "^3.13.2"
     },
     "config": {
         "optimize-autoloader": true,
