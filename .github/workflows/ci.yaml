@@ -29,6 +29,9 @@ jobs:
                 name: Install Composer dependencies
                 run:  composer install --prefer-dist --no-progress
             -
+                name: Run PHPLint
+                run:  bin/phplint
+            -
                 name: Run PHPStan
                 run:  bin/phpstan
             -
