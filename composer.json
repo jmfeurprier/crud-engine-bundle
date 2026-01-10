@@ -26,10 +26,7 @@
     },
     "config": {
         "optimize-autoloader": true,
-        "sort-packages": true,
-        "allow-plugins": {
-            "phpstan/extension-installer": true
-        }
+        "sort-packages": true
     },
     "autoload": {
         "psr-4": {
@@ -38,7 +35,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Jmf\\CrudEngine\\Tests\\": "tests"
+            "Jmf\\CrudEngine\\Tests\\": "tests/src"
         }
     }
 }

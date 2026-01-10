@@ -1,2 +1,0 @@
-cd `dirname $0`/../
-vendor/bin/phpmd src text dev/phpmd.xml $@
