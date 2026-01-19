@@ -15,7 +15,13 @@ class CrudEngineInstantiationFailureException extends CrudEngineRuntimeException
         private readonly string $entityClass,
         ?Throwable $previousException = null,
     ) {
-        parent::__construct("Failed instantiating entity of class {$entityClass}", 0, $previousException);
+        parent::__construct(
+            message:  sprintf(
+                          'Failed instantiating entity of class %s',
+                          $entityClass,
+                      ),
+            previous: $previousException,
+        );
     }
 
     /**

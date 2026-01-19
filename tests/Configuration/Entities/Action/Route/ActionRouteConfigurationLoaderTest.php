@@ -138,7 +138,7 @@ final class ActionRouteConfigurationLoaderTest extends TestCase
             RoutePathSchema::createDefault(),
         );
 
-        $routeConfiguration = $this->actionRouteConfigurationLoader->load(
+        $actionRouteConfiguration = $this->actionRouteConfigurationLoader->load(
             $routeSchema,
             $keys,
             $entityClass,
@@ -146,7 +146,7 @@ final class ActionRouteConfigurationLoaderTest extends TestCase
             $actionConfig,
         );
 
-        self::assertSame($expectedRouteName, $routeConfiguration->getName());
-        self::assertSame($expectedRoutePath, $routeConfiguration->getPath());
+        self::assertSame($expectedRouteName, $actionRouteConfiguration->getName());
+        self::assertSame($expectedRoutePath, $actionRouteConfiguration->getPath());
     }
 }

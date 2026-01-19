@@ -72,7 +72,7 @@ readonly class KeySchema
     ): array {
         $keys = array_map(
             static fn(
-                $value,
+                string $value,
             ): string => $schemaValueExpander->expand($value, [], $arguments),
             $this->keys,
         );

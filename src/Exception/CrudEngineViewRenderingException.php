@@ -14,12 +14,10 @@ class CrudEngineViewRenderingException extends CrudEngineRuntimeException
         ?Throwable $previousException = null,
     ) {
         parent::__construct(
-            message:  vsprintf(
+            message:  sprintf(
                           'Failed rendering CRUD view for class %s and action "%s".',
-                          [
-                              $this->actionConfiguration->getEntityClass(),
-                              $this->actionConfiguration->getAction(),
-                          ],
+                          $this->actionConfiguration->getEntityClass(),
+                          $this->actionConfiguration->getAction(),
                       ),
             previous: $previousException,
         );

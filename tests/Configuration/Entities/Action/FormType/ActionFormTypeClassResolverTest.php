@@ -113,7 +113,7 @@ final class ActionFormTypeClassResolverTest extends TestCase
         $formTypeSchema = FormTypeSchema::createDefault();
 
         if (null !== $formTypeClass && !class_exists($formTypeClass)) {
-            $newClass = $this->createMock(FormTypeInterface::class);
+            $newClass = $this->createStub(FormTypeInterface::class);
             class_alias($newClass::class, $formTypeClass);
         }
 

@@ -99,7 +99,7 @@ final class ActionHelperClassResolverTest extends TestCase
         self::assertNull($result);
 
         if (null !== $helperClass) {
-            $newClass = $this->createMock(ActionHelperInterface::class);
+            $newClass = $this->createStub(ActionHelperInterface::class);
             class_alias($newClass::class, $helperClass);
 
             $result = $this->actionHelperClassResolver->resolve(

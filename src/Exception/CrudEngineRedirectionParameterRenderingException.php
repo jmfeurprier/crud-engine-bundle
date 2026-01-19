@@ -16,15 +16,13 @@ class CrudEngineRedirectionParameterRenderingException extends CrudEngineRuntime
         ?Throwable $previousException = null,
     ) {
         parent::__construct(
-            message:  vsprintf(
+            message:  sprintf(
                           'Failed rendering CRUD redirection parameter "%s" (definition: "%s") "
                           . "for entity class %s and action "%s".',
-                          [
-                              $this->key,
-                              $this->definition,
-                              $this->actionConfiguration->getEntityClass(),
-                              $this->actionConfiguration->getAction(),
-                          ],
+                          $this->key,
+                          $this->definition,
+                          $this->actionConfiguration->getEntityClass(),
+                          $this->actionConfiguration->getAction(),
                       ),
             previous: $previousException,
         );

@@ -9,11 +9,9 @@ parameters:
             - 'RuntimeException'
         uncheckedExceptionRegexes:
             - '|^PHPUnit\\|'
-    excludePaths:
-        - ../src/JmfCrudEngineBundle.php
     level: 10
     paths:
-        - ../bin/
+        - ../config/
         - ../src/
         - ../tests/
     tmpDir: ../var/cache/phpstan

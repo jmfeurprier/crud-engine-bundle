@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
 
 use Jmf\CrudEngine\Configuration\Schema\Redirection\RedirectionSchema;
+use Jmf\CrudEngine\Configuration\Schema\Redirection\Route\RedirectionRouteSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
@@ -62,7 +63,7 @@ readonly class ActionRedirectionConfigurationLoader
     ): ?ActionRedirectionConfiguration {
         $redirectionRouteSchema = $redirectionSchema->tryGet($action);
 
-        if (null === $redirectionRouteSchema) {
+        if (!$redirectionRouteSchema instanceof RedirectionRouteSchema) {
             return null;
         }
 

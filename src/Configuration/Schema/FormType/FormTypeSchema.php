@@ -48,7 +48,7 @@ readonly class FormTypeSchema
     ): iterable {
         $expanded = array_map(
             static fn(
-                $value,
+                string $value,
             ): string => $schemaValueExpander->expand($value, $keys, $arguments),
             (array) $this->formTypes,
         );

@@ -12,12 +12,10 @@ class CrudEngineUnsupportedActionException extends CrudEngineRuntimeException
         private readonly ActionConfiguration $actionConfiguration,
     ) {
         parent::__construct(
-            message: vsprintf(
+            message: sprintf(
                          'Unsupported CRUD action "%s" for entity class %s.',
-                         [
-                             $this->actionConfiguration->getAction(),
-                             $this->actionConfiguration->getEntityClass(),
-                         ],
+                         $this->actionConfiguration->getAction(),
+                         $this->actionConfiguration->getEntityClass(),
                      ),
         );
     }

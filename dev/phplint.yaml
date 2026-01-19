@@ -1,6 +1,6 @@
 path:
+    - config
     - src
-    - migrations
     - tests
 jobs:         128
 extensions:
