@@ -12,17 +12,18 @@
         "symfony/framework-bundle": "^7.0|^8.0",
         "symfony/http-foundation": "^7.0|^8.0",
         "symfony/routing": "^7.0|^8.0",
+        "symfony/security-bundle": "^7.0|^8.0",
         "twig/extra-bundle": "^3.0",
         "twig/string-extra": "^3.0",
         "webmozart/assert": "^1.0|^2.0"
     },
     "require-dev": {
-        "overtrue/phplint": "^9.7",
-        "phpstan/phpstan": "^2.1.22",
-        "phpstan/phpstan-strict-rules": "^2.0.6",
-        "phpunit/phpunit": "^12.3.6",
-        "rector/rector": "^2.1.4",
-        "squizlabs/php_codesniffer": "^4.0"
+        "overtrue/phplint": "^9.7.1",
+        "phpstan/phpstan": "^2.1.42",
+        "phpstan/phpstan-strict-rules": "^2.0.10",
+        "phpunit/phpunit": "^12.5.14|^13.0.5",
+        "rector/rector": "^2.3.9",
+        "squizlabs/php_codesniffer": "^4.0.1"
     },
     "config": {
         "optimize-autoloader": true,
@@ -35,7 +36,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Jmf\\CrudEngine\\Tests\\": "tests/src"
+            "Jmf\\CrudEngine\\Tests\\": "tests"
         }
     }
 }

@@ -33,9 +33,6 @@ final class KeySchemaLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @throws CrudEngineInvalidConfigurationException
-     */
     public function testLoadDefault(): void
     {
         $schemaConfig = [];
@@ -53,9 +50,6 @@ final class KeySchemaLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @throws CrudEngineInvalidConfigurationException
-     */
     public function testLoadWithEmptyConfig(): void
     {
         $schemaConfig = [
@@ -75,9 +69,6 @@ final class KeySchemaLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @throws CrudEngineInvalidConfigurationException
-     */
     public function testLoad(): void
     {
         $schemaConfig = [
@@ -103,9 +94,6 @@ final class KeySchemaLoaderTest extends TestCase
         self::assertSame('qux', $expanded['baz']);
     }
 
-    /**
-     * @throws CrudEngineInvalidConfigurationException
-     */
     public function testLoadDefaultExpansion(): void
     {
         $schemaConfig = [];

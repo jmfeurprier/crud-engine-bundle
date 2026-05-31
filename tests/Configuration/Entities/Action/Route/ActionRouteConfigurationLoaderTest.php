@@ -120,9 +120,6 @@ final class ActionRouteConfigurationLoaderTest extends TestCase
      * @param array<string, mixed>                      $actionConfig
      * @param non-empty-string                          $expectedRouteName
      * @param non-empty-string                          $expectedRoutePath
-     *
-     * @throws CrudEngineInvalidConfigurationException
-     * @throws CrudEngineMissingConfigurationException
      */
     #[DataProvider('dataProviderClassActionAndRoutePath')]
     public function testLoad(

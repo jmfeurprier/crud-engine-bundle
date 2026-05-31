@@ -99,8 +99,6 @@ final class ActionViewConfigurationLoaderTest extends TestCase
      * @param array<string, mixed>                      $actionConfig
      * @param class-string                              $viewPath
      * @param array<string, string>                     $viewVariables
-     *
-     * @throws CrudEngineInvalidConfigurationException
      */
     #[DataProvider('dataProviderClassActionAndViewPath')]
     public function testLoad(

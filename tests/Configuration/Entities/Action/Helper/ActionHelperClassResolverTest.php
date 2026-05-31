@@ -75,9 +75,6 @@ final class ActionHelperClassResolverTest extends TestCase
      * @param non-empty-string                          $action
      * @param array<string, mixed>                      $actionConfig
      * @param class-string                              $helperClass
-     *
-     * @throws CrudEngineInvalidConfigurationException
-     * @throws Exception
      */
     #[DataProvider('dataProviderClassActionAndHelperClass')]
     public function testLoad(

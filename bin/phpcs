@@ -1,2 +1,3 @@
+#!/bin/sh
 cd `dirname $0`/../
 vendor/bin/phpcs --standard=dev/phpcs.xml $@

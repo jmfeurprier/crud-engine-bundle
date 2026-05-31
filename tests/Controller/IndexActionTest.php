@@ -1,0 +1,127 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Jmf\CrudEngine\Tests\Controller;
+
+use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionParameterCollection;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
+use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
+use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
+use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
+use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
+use Jmf\CrudEngine\Controller\IndexAction;
+use Override;
+use PHPUnit\Framework\MockObject\Stub;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+final class IndexActionTest extends TestCase
+{
+    private ActionConfigurationRepositoryInterface&Stub $actionConfigurationRepository;
+
+    private ActionHelperResolver&Stub $actionHelperResolver;
+
+    /**
+     * @var IndexActionHelperInterface<stdClass>&Stub
+     */
+    private IndexActionHelperInterface&Stub $defaultActionHelper;
+
+    private EntityManagerResolver&Stub $entityManagerResolver;
+
+    private ViewRenderer&Stub $viewRenderer;
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->actionConfigurationRepository = $this->createStub(ActionConfigurationRepositoryInterface::class);
+        $this->actionHelperResolver          = $this->createStub(ActionHelperResolver::class);
+        $this->defaultActionHelper           = $this->createStub(IndexActionHelperInterface::class);
+        $this->entityManagerResolver         = $this->createStub(EntityManagerResolver::class);
+        $this->viewRenderer                  = $this->createStub(ViewRenderer::class);
+    }
+
+    public function testInvokeRendersView(): void
+    {
+        $actionConfiguration = $this->givenActionConfiguration(stdClass::class, 'index');
+
+        $this->actionConfigurationRepository
+            ->method('get')
+            ->willReturn($actionConfiguration)
+        ;
+
+        $this->actionHelperResolver
+            ->method('resolve')
+            ->willReturn($this->defaultActionHelper)
+        ;
+
+        $this->defaultActionHelper
+            ->method('getEntities')
+            ->willReturn([new stdClass()])
+        ;
+
+        $expectedResponse = new Response('rendered');
+
+        $this->viewRenderer
+            ->method('render')
+            ->willReturn($expectedResponse)
+        ;
+
+        $result = $this->createAction()->__invoke(
+            new Request(),
+            stdClass::class,
+        );
+
+        self::assertSame($expectedResponse, $result);
+    }
+
+    /**
+     * @param class-string $entityClass
+     */
+    private function givenActionConfiguration(
+        string $entityClass,
+        string $action,
+    ): ActionConfiguration {
+        return new ActionConfiguration(
+            entityClass:              $entityClass,
+            action:                   $action,
+            formTypeClass:            null,
+            helperClass:              null,
+            redirectionConfiguration: new ActionRedirectionConfiguration(
+                                          route:      '',
+                                          parameters: ActionRedirectionParameterCollection::createDefault(),
+                                      ),
+            routeConfiguration:       new ActionRouteConfiguration(
+                                          name:         '',
+                                          path:         '',
+                                          requirements: ActionRouteRequirementCollection::createDefault(),
+                                      ),
+            viewConfiguration:        new ActionViewConfiguration(
+                                          path:      '',
+                                          variables: new ActionViewVariablesCollection([]),
+                                      ),
+        );
+    }
+
+    /**
+     * @return IndexAction<stdClass>
+     */
+    private function createAction(): IndexAction
+    {
+        return new IndexAction(
+            $this->actionConfigurationRepository,
+            $this->actionHelperResolver,
+            $this->defaultActionHelper,
+            $this->entityManagerResolver,
+            $this->viewRenderer,
+        );
+    }
+}

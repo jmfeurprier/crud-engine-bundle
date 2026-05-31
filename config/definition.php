@@ -95,7 +95,6 @@ return static function (DefinitionConfigurator $definition): void {
                 ->arrayPrototype()
                     ->ignoreExtraKeys()
                     ->children()
-                        ->scalarNode('name')->end()
                         ->arrayNode('actions')
                             ->isRequired()
                             ->useAttributeAsKey('action')

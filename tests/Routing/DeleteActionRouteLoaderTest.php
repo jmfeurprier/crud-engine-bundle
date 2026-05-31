@@ -11,24 +11,24 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
+use Jmf\CrudEngine\Controller\DeleteAction;
+use Jmf\CrudEngine\Routing\DeleteActionRouteLoader;
 use Override;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-final class IndexActionRouteLoaderTest extends TestCase
+final class DeleteActionRouteLoaderTest extends TestCase
 {
-    private IndexActionRouteLoader $indexActionRouteLoader;
+    private DeleteActionRouteLoader $deleteActionRouteLoader;
 
     private RouteCollection $routeCollection;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->indexActionRouteLoader = new IndexActionRouteLoader();
+        $this->deleteActionRouteLoader = new DeleteActionRouteLoader();
 
         $this->routeCollection = new RouteCollection();
     }
@@ -37,19 +37,27 @@ final class IndexActionRouteLoaderTest extends TestCase
     {
         $actionConfiguration = $this->givenActionConfiguration(
             entityClass: stdClass::class,
-            action:      'index',
-            routeName:   'foo.index',
-            routePath:   'foo/bar',
+            action:      'delete',
+            routeName:   'foo.delete',
+            routePath:   'foo/bar/{id}/delete',
         );
 
-        $this->indexActionRouteLoader->load($this->routeCollection, $actionConfiguration);
+        $this->deleteActionRouteLoader->load($this->routeCollection, $actionConfiguration);
 
         self::assertCount(1, $this->routeCollection->all());
 
-        $route = $this->routeCollection->get('foo.index');
+        $route = $this->routeCollection->get('foo.delete');
 
         self::assertInstanceOf(Route::class, $route);
-        self::assertSame('/foo/bar', $route->getPath());
+        self::assertSame('/foo/bar/{id}/delete', $route->getPath());
+        self::assertSame(
+            [
+                'GET',
+                'POST',
+            ],
+            $route->getMethods(),
+        );
+        self::assertSame(DeleteAction::class, $route->getDefault('_controller'));
     }
 
     /**

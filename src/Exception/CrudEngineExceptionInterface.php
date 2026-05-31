@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
-use Exception;
+use Throwable;
 
-abstract class CrudEngineException extends Exception
+interface CrudEngineExceptionInterface extends Throwable
 {
 }

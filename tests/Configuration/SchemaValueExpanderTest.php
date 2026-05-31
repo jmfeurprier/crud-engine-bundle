@@ -85,8 +85,6 @@ final class SchemaValueExpanderTest extends TestCase
     /**
      * @param array<non-empty-string, non-empty-string> $keys
      * @param array<non-empty-string, mixed>            $arguments
-     *
-     * @throws CrudEngineInvalidConfigurationException
      */
     #[DataProvider('dataProvider')]
     public function testExpand(

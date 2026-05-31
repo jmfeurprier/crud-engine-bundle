@@ -98,9 +98,6 @@ final class ActionFormTypeClassResolverTest extends TestCase
      * @param non-empty-string                          $action
      * @param array<string, mixed>                      $actionConfig
      * @param class-string                              $formTypeClass
-     *
-     * @throws Exception
-     * @throws CrudEngineInvalidConfigurationException
      */
     #[DataProvider('dataProviderClassActionAndFormTypeClass')]
     public function testLoad(

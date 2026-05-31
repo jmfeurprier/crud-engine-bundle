@@ -132,9 +132,6 @@ final class ActionViewVariablesResolverTest extends TestCase
      * @param non-empty-string                                    $action
      * @param array<string, mixed>                                $viewConfig
      * @param array<string, mixed>                                $expected
-     *
-     * @throws CrudEngineInvalidConfigurationException
-     * @throws Exception
      */
     #[DataProvider('dataProvider')]
     public function testLoad(

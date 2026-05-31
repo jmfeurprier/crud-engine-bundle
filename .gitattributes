@@ -3,6 +3,9 @@
 /.github        export-ignore
 /.gitignore     export-ignore
 /bin            export-ignore
+/compose.yaml   export-ignore
 /dev            export-ignore
+/docker         export-ignore
+/Dockerfile     export-ignore
 /samples        export-ignore
 /tests          export-ignore

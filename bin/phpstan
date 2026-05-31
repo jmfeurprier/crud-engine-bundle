@@ -1,2 +1,3 @@
+#!/bin/sh
 cd `dirname $0`/../
 vendor/bin/phpstan --configuration=dev/phpstan.neon $@

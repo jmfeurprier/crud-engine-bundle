@@ -37,6 +37,7 @@ readonly class SchemaValueExpander
         } catch (Throwable $e) {
             throw new CrudEngineInvalidConfigurationException(
                 message:  'Failed expanding configuration value.',
+                code:     $e->getCode(),
                 previous: $e,
             );
         }

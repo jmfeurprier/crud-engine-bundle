@@ -4,11 +4,14 @@ parameters:
             missingCheckedExceptionInThrows: true
             tooWideThrowType: true
         uncheckedExceptionClasses:
-            - 'Error'
             - 'LogicException'
             - 'RuntimeException'
-        uncheckedExceptionRegexes:
-            - '|^PHPUnit\\|'
+    ignoreErrors:
+        -
+            identifier: 'missingType.checkedException'
+            paths:
+                - '../tests/*'
+            reportUnmatched: false
     level: 10
     paths:
         - ../config/
