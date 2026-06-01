@@ -13,9 +13,12 @@ readonly class ViewSchema
      */
     public const string DEFAULT_PATH = "{{ entity_key }}/{{ action_key }}.html.twig";
 
+    public const ViewFallbackMode DEFAULT_FALLBACK = ViewFallbackMode::RENDER_BUILT_IN;
+
     public function __construct(
         private string $path,
         private ViewVariablesSchema $variables,
+        private ViewFallbackMode $viewFallbackMode,
     ) {
     }
 
@@ -27,5 +30,10 @@ readonly class ViewSchema
     public function getVariables(): ViewVariablesSchema
     {
         return $this->variables;
+    }
+
+    public function getViewFallbackMode(): ViewFallbackMode
+    {
+        return $this->viewFallbackMode;
     }
 }

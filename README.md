@@ -57,9 +57,11 @@ jmf_crud_engine:
     type: service
 ```
 
-### 3. Create templates
+### 3. Create templates (optional)
 
-Create Twig templates for each action (e.g., `templates/article/index.html.twig`, `templates/article/create.html.twig`, etc.).
+Out of the box, any action whose template is missing renders a built-in **bare** template, so the bundle works immediately. To customize a view, create a Twig template at the configured path (e.g., `templates/article/index.html.twig`, `templates/article/create.html.twig`, etc.) and it takes precedence automatically.
+
+Prefer to fail loudly instead of falling back? Set `schema.view.fallback: error` (see [Missing templates](#missing-templates)).
 
 That's it — the bundle automatically registers routes and wires up controllers for all configured actions.
 
@@ -96,6 +98,11 @@ jmf_crud_engine:
         # Default view path pattern
         view:
             path: "{{ entity_key }}/{{ action_key }}.html.twig"
+
+            # What to do when a view template is not found:
+            #   built_in (default) -> render the bundle's built-in bare template
+            #   error              -> throw an exception
+            fallback: built_in
 
     entities:
         App\Entity\Aricle:
@@ -290,6 +297,17 @@ Forms are passed as `form` (a `FormView` instance).
 <button type="submit">Create</button>
 {{ form_end(form) }}
 ```
+
+### Missing templates
+
+When the resolved template for an action does not exist, the behavior is controlled by `schema.view.fallback`:
+
+| Value                | Behavior                                                                 |
+|----------------------|--------------------------------------------------------------------------|
+| `built_in` (default) | Renders the bundle's built-in bare template (`@JmfCrudEngine/{action}.html.twig`). |
+| `error`              | Throws `CrudEngineMissingViewException`.                                  |
+
+The built-in templates are intentionally minimal — they exist to get pages rendering immediately and to be overridden. The `create` and `update` fallbacks render the form, so they still require a form type to be configured or discovered. Providing your own template at the configured path always takes precedence over the built-in one.
 
 ## Security
 

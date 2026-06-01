@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Tests\Configuration\Entities\Action\View\Variables;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\ViewVariablesSchema;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewFallbackMode;
 use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
@@ -144,6 +145,7 @@ final class ActionViewVariablesResolverTest extends TestCase
         $viewSchema = new ViewSchema(
             'foo',
             new ViewVariablesSchema($schemaVariables),
+            ViewFallbackMode::RENDER_BUILT_IN,
         );
 
         $actionViewVariablesCollection = $this->actionViewVariablesResolver->resolve(

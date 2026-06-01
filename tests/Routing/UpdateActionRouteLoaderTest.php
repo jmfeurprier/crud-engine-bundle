@@ -11,6 +11,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewFallbackMode;
 use Jmf\CrudEngine\Controller\UpdateAction;
 use Jmf\CrudEngine\Routing\UpdateActionRouteLoader;
 use Override;
@@ -83,8 +84,9 @@ final class UpdateActionRouteLoaderTest extends TestCase
         );
 
         $actionViewConfiguration = new ActionViewConfiguration(
-            path:      $viewPath,
-            variables: new ActionViewVariablesCollection([]),
+            path:             $viewPath,
+            variables:        new ActionViewVariablesCollection([]),
+            viewFallbackMode: ViewFallbackMode::RENDER_BUILT_IN,
         );
 
         return new ActionConfiguration(

@@ -26,6 +26,7 @@ readonly class ViewSchemaLoader
         return new ViewSchema(
             $this->getPath($viewConfig),
             $this->getVariables($viewConfig),
+            $this->getViewFallbackMode($viewConfig),
         );
     }
 
@@ -42,6 +43,24 @@ readonly class ViewSchemaLoader
         Assert::string($viewConfig['path']);
 
         return $viewConfig['path'];
+    }
+
+    /**
+     * @param array<string, mixed> $viewConfig
+     */
+    private function getViewFallbackMode(
+        array $viewConfig,
+    ): ViewFallbackMode {
+        if (!array_key_exists('fallback', $viewConfig)) {
+            return ViewFallbackMode::RENDER_BUILT_IN;
+        }
+
+        Assert::stringNotEmpty($viewConfig['fallback']);
+
+        return match ($viewConfig['fallback']) {
+            'built_in' => ViewFallbackMode::RENDER_BUILT_IN,
+            'fail'     => ViewFallbackMode::FAIL,
+        };
     }
 
     /**

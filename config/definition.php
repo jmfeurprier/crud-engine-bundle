@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Jmf\CrudEngine\Configuration\Schema\View\ViewFallbackMode;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 
 return static function (DefinitionConfigurator $definition): void {
@@ -67,6 +68,16 @@ return static function (DefinitionConfigurator $definition): void {
                     ->arrayNode('view')
                         ->children()
                             ->scalarNode('path')->end()
+                            ->enumNode('fallback')
+                                ->info('Behavior when a view template is missing.')
+                                ->values(
+                                    [
+                                        ViewFallbackMode::BuiltIn->value,
+                                        ViewFallbackMode::Error->value,
+                                    ]
+                                )
+                                ->defaultValue(ViewFallbackMode::BuiltIn->value)
+                            ->end()
                             ->arrayNode('variables')
                                 ->variablePrototype()->end()
                             ->end()

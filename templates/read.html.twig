@@ -1,0 +1,15 @@
+{#
+Built-in CRUD engine fallback template for the "read" action.
+It is intentionally bare: copy it to your application's configured view path
+(e.g. templates/{entity}/read.html.twig) and render the entity as you wish.
+The entity is available as the `entity` variable.
+#}
+<p>Entity loaded. Override this template to display it.</p>
+<table>
+    {% for property, value in entity %}
+        <tr>
+            <th>{{ property }}</th>
+            <td>{{ value }}</td>
+        </tr>
+    {% endfor %}
+</table>

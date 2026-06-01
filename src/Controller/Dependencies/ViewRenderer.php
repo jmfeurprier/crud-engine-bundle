@@ -5,16 +5,25 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewFallbackMode;
+use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
+use Twig\Environment as TwigEnvironment;
 use Webmozart\Assert\Assert;
 
 readonly class ViewRenderer
 {
+    /**
+     * @const non-empty-string
+     */
+    private const string BUILT_IN_TEMPLATE = '@JmfCrudEngine/%s.html.twig';
+
     public function __construct(
         private TemplateRendererInterface $templateRenderer,
+        private TwigEnvironment $twigEnvironment,
     ) {
     }
 
@@ -22,6 +31,7 @@ readonly class ViewRenderer
      * @param array<string, mixed> $viewVariables
      * @param array<string, mixed> $defaults
      *
+     * @throws CrudEngineMissingViewException
      * @throws CrudEngineViewRenderingException
      */
     public function render(
@@ -35,10 +45,12 @@ readonly class ViewRenderer
             $actionConfiguration,
         );
 
+        $viewPath = $this->getViewPath($actionConfiguration);
+
         try {
             return new Response(
                 $this->templateRenderer->renderFromFile(
-                    $this->getViewPath($actionConfiguration),
+                    $viewPath,
                     $parameters,
                 ),
             );
@@ -50,9 +62,22 @@ readonly class ViewRenderer
         }
     }
 
+    /**
+     * @throws CrudEngineMissingViewException
+     */
     private function getViewPath(ActionConfiguration $actionConfiguration): string
     {
-        return $actionConfiguration->getViewConfiguration()->getPath();
+        $path = $actionConfiguration->getViewConfiguration()->getPath();
+
+        if ($this->twigEnvironment->getLoader()->exists($path)) {
+            return $path;
+        }
+
+        if (ViewFallbackMode::FAIL === $actionConfiguration->getViewConfiguration()->getViewFallbackMode()) {
+            throw new CrudEngineMissingViewException($actionConfiguration, $path);
+        }
+
+        return sprintf(self::BUILT_IN_TEMPLATE, $actionConfiguration->getAction());
     }
 
     /**

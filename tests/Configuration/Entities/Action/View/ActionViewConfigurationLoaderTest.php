@@ -8,12 +8,14 @@ use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfigurationLoa
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Path\ActionViewPathResolver;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesResolver;
 use Jmf\CrudEngine\Configuration\Schema\View\Variables\ViewVariablesSchema;
+use Jmf\CrudEngine\Configuration\Schema\View\ViewFallbackMode;
 use Jmf\CrudEngine\Configuration\Schema\View\ViewSchema;
 use Jmf\CrudEngine\Configuration\SchemaValueExpander;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\TemplateRendering\TemplateRenderer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Twig\Environment;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
@@ -112,6 +114,7 @@ final class ActionViewConfigurationLoaderTest extends TestCase
         $viewSchema = new ViewSchema(
             ViewSchema::DEFAULT_PATH,
             ViewVariablesSchema::createDefault(),
+            ViewFallbackMode::RENDER_BUILT_IN,
         );
 
         $actionViewConfiguration = $this->actionViewConfigurationLoader->load(
@@ -124,5 +127,28 @@ final class ActionViewConfigurationLoaderTest extends TestCase
 
         self::assertSame($viewPath, $actionViewConfiguration->getPath());
         self::assertSame($viewVariables, $actionViewConfiguration->getVariables()->all());
+        self::assertSame(ViewFallbackMode::RENDER_BUILT_IN, $actionViewConfiguration->getViewFallbackMode());
+    }
+
+    public function testLoadCarriesSchemaFallback(): void
+    {
+        $viewSchema = new ViewSchema(
+            ViewSchema::DEFAULT_PATH,
+            ViewVariablesSchema::createDefault(),
+            ViewFallbackMode::FAIL,
+        );
+
+        $actionViewConfiguration = $this->actionViewConfigurationLoader->load(
+            $viewSchema,
+            [
+                'action_key' => 'create',
+                'entity_key' => 'article',
+            ],
+            stdClass::class,
+            'create',
+            [],
+        );
+
+        self::assertSame(ViewFallbackMode::FAIL, $actionViewConfiguration->getViewFallbackMode());
     }
 }

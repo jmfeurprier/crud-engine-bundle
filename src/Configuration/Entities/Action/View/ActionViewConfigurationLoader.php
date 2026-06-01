@@ -45,6 +45,7 @@ readonly class ActionViewConfigurationLoader
         return new ActionViewConfiguration(
             $this->getPath($viewSchema, $keys, $entityClass, $action, $viewConfig),
             $this->getVariables($viewSchema, $keys, $entityClass, $action, $viewConfig),
+            $viewSchema->getViewFallbackMode(),
         );
     }
 

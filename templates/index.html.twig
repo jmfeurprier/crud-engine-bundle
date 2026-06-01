@@ -1,0 +1,15 @@
+{#
+Built-in CRUD engine fallback template for the "index" action.
+It is intentionally bare: copy it to your application's configured view path
+(e.g. templates/{entity}/index.html.twig) and render the entities as you wish.
+#}
+<p>{{ entities|count }} item(s).</p>
+{% if (entities is not empty) %}
+    <table>
+        {% for entity in entities %}
+            <tr>
+                <td>Entity...</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}

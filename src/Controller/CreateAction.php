@@ -15,6 +15,7 @@ use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
+use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,6 +49,7 @@ readonly class CreateAction
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineInstantiationFailureException
      * @throws CrudEngineInvalidActionHelperException
+     * @throws CrudEngineMissingViewException
      * @throws CrudEngineRedirectionParameterRenderingException
      * @throws CrudEngineViewRenderingException
      */
