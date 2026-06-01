@@ -72,11 +72,11 @@ return static function (DefinitionConfigurator $definition): void {
                                 ->info('Behavior when a view template is missing.')
                                 ->values(
                                     [
-                                        ViewFallbackMode::BuiltIn->value,
-                                        ViewFallbackMode::Error->value,
+                                        'built_in',
+                                        'fail',
                                     ]
                                 )
-                                ->defaultValue(ViewFallbackMode::BuiltIn->value)
+                                ->defaultValue('built_in')
                             ->end()
                             ->arrayNode('variables')
                                 ->variablePrototype()->end()
