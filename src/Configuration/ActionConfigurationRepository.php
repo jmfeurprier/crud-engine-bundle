@@ -5,22 +5,31 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Configuration;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
-use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
+use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
+use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Override;
 use Webmozart\Assert\Assert;
 
+/**
+ * @phpstan-import-type ResolvedConfigurations from ActionConfigurationResolver
+ * @phpstan-import-type ResolvedAction from ActionConfigurationResolver
+ */
 class ActionConfigurationRepository implements ActionConfigurationRepositoryInterface
 {
-    private ActionConfigurationsCollection $actionConfigurations;
+    /**
+     * @var array<class-string, array<non-empty-string, ActionConfiguration>>|null
+     */
+    private ?array $hydrated = null;
 
     /**
-     * @param array<string, mixed> $config
+     * @param ResolvedConfigurations $resolvedConfigurations
      */
     public function __construct(
-        private readonly ActionConfigurationsLoaderInterface $actionConfigurationsLoader,
-        private readonly array $config,
+        private readonly array $resolvedConfigurations,
     ) {
-        Assert::isMap($config);
     }
 
     #[Override]
@@ -28,7 +37,12 @@ class ActionConfigurationRepository implements ActionConfigurationRepositoryInte
         string $entityClass,
         string $action,
     ): ActionConfiguration {
-        return $this->getActionConfigurations()->get($entityClass, $action);
+        return $this->tryGet($entityClass, $action)
+            ??
+            throw new CrudEngineMissingConfigurationException(
+                $entityClass,
+                $action,
+            );
     }
 
     #[Override]
@@ -36,24 +50,84 @@ class ActionConfigurationRepository implements ActionConfigurationRepositoryInte
         string $entityClass,
         string $action,
     ): ?ActionConfiguration {
-        return $this->getActionConfigurations()->tryGet($entityClass, $action);
+        return $this->hydrate()[$entityClass][$action] ?? null;
     }
 
     #[Override]
     public function all(): iterable
     {
-        return $this->getActionConfigurations()->all();
+        foreach ($this->hydrate() as $configurationsByAction) {
+            yield from $configurationsByAction;
+        }
     }
 
     /**
-     * @throws CrudEngineConfigurationException
+     * @return array<class-string, array<non-empty-string, ActionConfiguration>>
      */
-    private function getActionConfigurations(): ActionConfigurationsCollection
+    private function hydrate(): array
     {
-        if (!isset($this->actionConfigurations)) {
-            $this->actionConfigurations = $this->actionConfigurationsLoader->load($this->config);
+        if (null !== $this->hydrated) {
+            return $this->hydrated;
         }
 
-        return $this->actionConfigurations;
+        $hydrated = [];
+
+        foreach ($this->resolvedConfigurations as $entityClass => $actions) {
+            foreach ($actions as $action => $resolvedAction) {
+                $hydrated[$entityClass][$action] = $this->hydrateAction(
+                    $entityClass,
+                    $action,
+                    $resolvedAction,
+                );
+            }
+        }
+
+        return $this->hydrated = $hydrated;
+    }
+
+    /**
+     * @param class-string     $entityClass
+     * @param non-empty-string $action
+     * @param ResolvedAction   $resolvedAction
+     */
+    private function hydrateAction(
+        string $entityClass,
+        string $action,
+        array $resolvedAction,
+    ): ActionConfiguration {
+        $route       = $resolvedAction['route'];
+        $redirection = $resolvedAction['redirection'];
+        $view        = $resolvedAction['view'];
+
+        $viewFallbackMode = ViewFallbackMode::tryFrom($view['fallback']);
+
+        Assert::notNull(
+            $viewFallbackMode,
+            sprintf('Unknown view fallback mode "%s".', $view['fallback']),
+        );
+
+        return new ActionConfiguration(
+            entityClass:               $entityClass,
+            action:                    $action,
+            formTypeClass:             $resolvedAction['formTypeClass'],
+            helperClass:               $resolvedAction['helperClass'],
+            redirectionConfiguration:  null === $redirection
+                ? null
+                : new ActionRedirectionConfiguration(
+                    route:      $redirection['route'],
+                    parameters: $redirection['parameters'],
+                    fragment:   $redirection['fragment'],
+                ),
+            routeConfiguration:        new ActionRouteConfiguration(
+                name:         $route['name'],
+                path:         $route['path'],
+                requirements: $route['requirements'],
+            ),
+            viewConfiguration:         new ActionViewConfiguration(
+                path:             $view['path'],
+                variables:        $view['variables'],
+                viewFallbackMode: $viewFallbackMode,
+            ),
+        );
     }
 }

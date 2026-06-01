@@ -60,6 +60,6 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
      */
     private function getRequirements(ActionConfiguration $actionConfiguration): array
     {
-        return $actionConfiguration->getRouteConfiguration()->getRequirements()->all();
+        return $actionConfiguration->getRouteConfiguration()->getRequirements();
     }
 }

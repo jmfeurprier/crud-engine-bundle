@@ -61,7 +61,7 @@ jmf_crud_engine:
 
 Out of the box, any action whose template is missing renders a built-in **bare** template, so the bundle works immediately. To customize a view, create a Twig template at the configured path (e.g., `templates/article/index.html.twig`, `templates/article/create.html.twig`, etc.) and it takes precedence automatically.
 
-Prefer to fail loudly instead of falling back? Set `schema.view.fallback: error` (see [Missing templates](#missing-templates)).
+Prefer to fail loudly instead of falling back? Set `schema.view.fallback: fail` (see [Missing templates](#missing-templates)).
 
 That's it — the bundle automatically registers routes and wires up controllers for all configured actions.
 
@@ -101,7 +101,7 @@ jmf_crud_engine:
 
             # What to do when a view template is not found:
             #   built_in (default) -> render the bundle's built-in bare template
-            #   error              -> throw an exception
+            #   fail               -> throw an exception
             fallback: built_in
 
     entities:
@@ -175,6 +175,8 @@ Configuration values and default patterns support the following placeholders:
 Action helpers allow you to customize behavior at specific lifecycle hooks without replacing the entire controller. Create a class implementing the appropriate interface and register it as a Symfony service.
 
 If the class name matches a configured default pattern (e.g., `App\Controller\Article\CreateActionHelper`), it is picked up automatically. Otherwise, set `helper` explicitly in the action configuration.
+
+> The configuration (route names/paths, form type and helper auto-discovery, view paths, etc.) is resolved once, at container build time, and cached in the compiled container. As with routes, adding a helper/form-type class that matches a discovery pattern requires a container rebuild (`cache:clear`) to be picked up.
 
 ### Create / Update Helper
 
@@ -305,7 +307,7 @@ When the resolved template for an action does not exist, the behavior is control
 | Value                | Behavior                                                                 |
 |----------------------|--------------------------------------------------------------------------|
 | `built_in` (default) | Renders the bundle's built-in bare template (`@JmfCrudEngine/{action}.html.twig`). |
-| `error`              | Throws `CrudEngineMissingViewException`.                                  |
+| `fail`               | Throws `CrudEngineMissingViewException`.                                  |
 
 The built-in templates are intentionally minimal — they exist to get pages rendering immediately and to be overridden. The `create` and `update` fallbacks render the form, so they still require a form type to be configured or discovered. Providing your own template at the configured path always takes precedence over the built-in one.
 

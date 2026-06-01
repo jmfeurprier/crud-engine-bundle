@@ -6,12 +6,9 @@ namespace Jmf\CrudEngine\Tests\Routing;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionParameterCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
-use Jmf\CrudEngine\Configuration\Schema\View\ViewFallbackMode;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Controller\DeleteAction;
 use Jmf\CrudEngine\Routing\DeleteActionRouteLoader;
 use Override;
@@ -74,18 +71,18 @@ final class DeleteActionRouteLoaderTest extends TestCase
     ): ActionConfiguration {
         $actionRedirectionConfiguration = new ActionRedirectionConfiguration(
             route:      $redirectionRoute,
-            parameters: ActionRedirectionParameterCollection::createDefault(),
+            parameters: [],
         );
 
         $actionRouteConfiguration = new ActionRouteConfiguration(
             name:         $routeName,
             path:         $routePath,
-            requirements: ActionRouteRequirementCollection::createDefault(),
+            requirements: [],
         );
 
         $actionViewConfiguration = new ActionViewConfiguration(
             path:             $viewPath,
-            variables:        new ActionViewVariablesCollection([]),
+            variables:        [],
             viewFallbackMode: ViewFallbackMode::RENDER_BUILT_IN,
         );
 

@@ -6,6 +6,10 @@ services:
 
     Jmf\CrudEngine\:
         resource: '../src/'
+        exclude:
+            - '../src/Configuration/Entities/'
+            - '../src/Exception/'
+            - '../src/JmfCrudEngineBundle.php'
 
     Jmf\CrudEngine\Controller\CreateAction:
         arguments:
@@ -41,6 +45,3 @@ services:
 
     Jmf\TemplateRendering\TemplateRendererInterface:
         class: Jmf\TemplateRendering\TemplateRenderer
-
-    Symfony\Component\String\Inflector\InflectorInterface:
-        class: Symfony\Component\String\Inflector\EnglishInflector

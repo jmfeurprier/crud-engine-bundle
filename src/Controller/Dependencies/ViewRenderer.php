@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
-use Jmf\CrudEngine\Configuration\Schema\View\ViewFallbackMode;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
@@ -97,7 +97,7 @@ readonly class ViewRenderer
         foreach ($parameters as $key => $value) {
             Assert::stringNotEmpty($key);
 
-            $variables = $configVars->tryGet($key);
+            $variables = $configVars[$key] ?? [];
 
             if ([] === $variables) {
                 continue;

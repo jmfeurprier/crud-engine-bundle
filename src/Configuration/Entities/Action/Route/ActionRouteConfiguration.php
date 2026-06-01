@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\Route;
 
-use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
-
 readonly class ActionRouteConfiguration
 {
+    /**
+     * @param array<non-empty-string, non-empty-string> $requirements
+     */
     public function __construct(
         private string $name,
         private string $path,
-        private ActionRouteRequirementCollection $requirements,
+        private array $requirements,
     ) {
     }
 
@@ -25,7 +26,10 @@ readonly class ActionRouteConfiguration
         return $this->path;
     }
 
-    public function getRequirements(): ActionRouteRequirementCollection
+    /**
+     * @return array<non-empty-string, non-empty-string>
+     */
+    public function getRequirements(): array
     {
         return $this->requirements;
     }

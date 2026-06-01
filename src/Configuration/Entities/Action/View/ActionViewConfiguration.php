@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Entities\Action\View;
 
-use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
-use Jmf\CrudEngine\Configuration\Schema\View\ViewFallbackMode;
-
 readonly class ActionViewConfiguration
 {
+    /**
+     * @param array<non-empty-string, list<non-empty-string>> $variables
+     */
     public function __construct(
         private string $path,
-        private ActionViewVariablesCollection $variables,
+        private array $variables,
         private ViewFallbackMode $viewFallbackMode,
     ) {
     }
@@ -21,7 +21,10 @@ readonly class ActionViewConfiguration
         return $this->path;
     }
 
-    public function getVariables(): ActionViewVariablesCollection
+    /**
+     * @return array<non-empty-string, list<non-empty-string>>
+     */
+    public function getVariables(): array
     {
         return $this->variables;
     }

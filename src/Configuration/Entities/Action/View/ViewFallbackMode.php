@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Schema\View;
+namespace Jmf\CrudEngine\Configuration\Entities\Action\View;
 
 enum ViewFallbackMode: string
 {
@@ -14,5 +14,5 @@ enum ViewFallbackMode: string
     /**
      * Throw an exception when the configured view is missing.
      */
-    case FAIL = 'error';
+    case FAIL = 'fail';
 }

@@ -6,9 +6,12 @@ namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
 
 readonly class ActionRedirectionConfiguration
 {
+    /**
+     * @param array<string, string> $parameters
+     */
     public function __construct(
         private string $route,
-        private ActionRedirectionParameterCollection $parameters,
+        private array $parameters,
         private ?string $fragment = null,
     ) {
     }
@@ -18,7 +21,10 @@ readonly class ActionRedirectionConfiguration
         return $this->route;
     }
 
-    public function getParameters(): ActionRedirectionParameterCollection
+    /**
+     * @return array<string, string>
+     */
+    public function getParameters(): array
     {
         return $this->parameters;
     }

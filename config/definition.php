@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Jmf\CrudEngine\Configuration\Schema\View\ViewFallbackMode;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 
 return static function (DefinitionConfigurator $definition): void {
@@ -10,73 +10,40 @@ return static function (DefinitionConfigurator $definition): void {
         ->fixXmlConfig('entity', 'entities')
         ->children()
 
+            // Defaults for the patterns below live in ActionConfigurationResolver; the
+            // values here only override them. Maps (keys/route.paths/redirection) are
+            // merged with the defaults, scalars/lists (route.name/view.path/formType/
+            // helper) replace them.
             ->arrayNode('schema')
                 ->fixXmlConfig('key', 'keys')
                 ->children()
 
                     ->arrayNode('helper')
-                        ->stringPrototype()
-                            ->cannotBeEmpty()
-                            ->defaultValue(
-                                [
-                                    "App\\Controller\\{{ EntityKey }}\\{{ ActionKey }}ActionHelper",
-                                    "App\\Controller\\{{ EntityKey }}{{ ActionKey }}ActionHelper",
-                                ]
-                            )
-                        ->end()
+                        ->stringPrototype()->cannotBeEmpty()->end()
                     ->end()
 
                     ->arrayNode('keys')
-                        ->cannotBeEmpty()
-                        ->defaultValue(
-                            [
-                                'ActionKey'=>      "{{ action|u.camel.title }}",
-                                'ActionKeys'=>     "{{ action|u.camel.title|plural }}",
-                                'actionKey'=>      "{{ action|u.camel }}",
-                                'actionKeys'=>     "{{ action|u.camel|plural }}",
-                                'action_key'=>     "{{ action|u.snake }}",
-                                'action_keys'=>    "{{ action|u.snake|plural }}",
-                                'actiondashkey'=>  "{{ action|u.kebab }}",
-                                'actiondashkeys'=> "{{ action|u.kebab|plural }}",
-                                'EntityKey'=>      "{{ entityClass|u.afterLast('\\\\').camel.title }}",
-                                'EntityKeys'=>     "{{ entityClass|u.afterLast('\\\\').camel.title|plural }}",
-                                'entityKey'=>      "{{ entityClass|u.afterLast('\\\\').camel }}",
-                                'entityKeys'=>     "{{ entityClass|u.afterLast('\\\\').camel|plural }}",
-                                'entity_key'=>     "{{ entityClass|u.afterLast('\\\\').snake }}",
-                                'entity_keys'=>    "{{ entityClass|u.afterLast('\\\\').snake|plural }}",
-                                'entitydashkey'=>  "{{ entityClass|u.afterLast('\\\\').kebab }}",
-                                'entitydashkeys'=> "{{ entityClass|u.afterLast('\\\\').kebab|plural }}",
-                            ]
-                        )
                         ->useAttributeAsKey('key')
-                        ->stringPrototype()->end()
+                        ->stringPrototype()->cannotBeEmpty()->end()
                     ->end()
 
                     ->arrayNode('formType')
-                        ->stringPrototype()
-                            ->cannotBeEmpty()
-                            ->defaultValue(
-                                [
-                                    "App\\Form\\{{ EntityKey }}\\{{ ActionKey }}Type",
-                                    "App\\Form\\{{ EntityKey }}{{ ActionKey }}Type",
-                                    "App\\Form\\{{ EntityKey }}Type",
-                                ]
-                            )
-                        ->end()
+                        ->stringPrototype()->cannotBeEmpty()->end()
                     ->end()
 
                     ->arrayNode('view')
+                        ->addDefaultsIfNotSet()
                         ->children()
-                            ->scalarNode('path')->end()
+                            ->scalarNode('path')->cannotBeEmpty()->end()
                             ->enumNode('fallback')
                                 ->info('Behavior when a view template is missing.')
                                 ->values(
                                     [
-                                        'built_in',
-                                        'fail',
+                                        ViewFallbackMode::RENDER_BUILT_IN->value,
+                                        ViewFallbackMode::FAIL->value,
                                     ]
                                 )
-                                ->defaultValue('built_in')
+                                ->defaultValue(ViewFallbackMode::RENDER_BUILT_IN->value)
                             ->end()
                             ->arrayNode('variables')
                                 ->variablePrototype()->end()
@@ -90,7 +57,7 @@ return static function (DefinitionConfigurator $definition): void {
 
                     ->arrayNode('route')
                         ->children()
-                            ->scalarNode('name')->end()
+                            ->scalarNode('name')->cannotBeEmpty()->end()
                             ->arrayNode('paths')
                                 ->variablePrototype()->end()
                             ->end()

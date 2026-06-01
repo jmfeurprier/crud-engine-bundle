@@ -7,12 +7,9 @@ namespace Jmf\CrudEngine\Tests\Controller;
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionParameterCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\Route\Requirements\ActionRouteRequirementCollection;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\View\Variables\ActionViewVariablesCollection;
-use Jmf\CrudEngine\Configuration\Schema\View\ViewFallbackMode;
+use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
 use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
@@ -98,16 +95,16 @@ final class IndexActionTest extends TestCase
             helperClass:              null,
             redirectionConfiguration: new ActionRedirectionConfiguration(
                                           route:      '',
-                                          parameters: ActionRedirectionParameterCollection::createDefault(),
+                                          parameters: [],
                                       ),
             routeConfiguration:       new ActionRouteConfiguration(
                                           name:         '',
                                           path:         '',
-                                          requirements: ActionRouteRequirementCollection::createDefault(),
+                                          requirements: [],
                                       ),
             viewConfiguration:        new ActionViewConfiguration(
                                           path:             '',
-                                          variables:        new ActionViewVariablesCollection([]),
+                                          variables:        [],
                                           viewFallbackMode: ViewFallbackMode::RENDER_BUILT_IN,
                                       ),
         );

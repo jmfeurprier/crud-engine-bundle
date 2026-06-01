@@ -60,7 +60,7 @@ readonly class RedirectionGenerator
         ActionConfiguration $actionConfiguration,
         object $entity,
     ): array {
-        $definitions = $actionConfiguration->getRedirectionConfiguration()->getParameters()->all();
+        $definitions = $actionConfiguration->getRedirectionConfiguration()->getParameters();
         $parameters  = [];
 
         foreach ($definitions as $key => $definition) {
