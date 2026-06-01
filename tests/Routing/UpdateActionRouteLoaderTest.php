@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Tests\Routing;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Form\ActionFormConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
@@ -89,8 +91,11 @@ final class UpdateActionRouteLoaderTest extends TestCase
         return new ActionConfiguration(
             entityClass:              $entityClass,
             action:                   $action,
-            formTypeClass:            null,
             helperClass:              null,
+            formConfiguration:        new ActionFormConfiguration(
+                                          formTypeClass:    null,
+                                          formFallbackMode: FormFallbackMode::GENERIC,
+                                      ),
             redirectionConfiguration: $actionRedirectionConfiguration,
             routeConfiguration:       $actionRouteConfiguration,
             viewConfiguration:        $actionViewConfiguration,

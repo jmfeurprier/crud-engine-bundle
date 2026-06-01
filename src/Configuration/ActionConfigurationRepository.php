@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Configuration;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Form\ActionFormConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
@@ -106,28 +108,38 @@ class ActionConfigurationRepository implements ActionConfigurationRepositoryInte
             sprintf('Unknown view fallback mode "%s".', $view['fallback']),
         );
 
+        $formFallbackMode = FormFallbackMode::tryFrom($resolvedAction['formFallback']);
+
+        Assert::notNull(
+            $formFallbackMode,
+            sprintf('Unknown form fallback mode "%s".', $resolvedAction['formFallback']),
+        );
+
         return new ActionConfiguration(
-            entityClass:               $entityClass,
-            action:                    $action,
-            formTypeClass:             $resolvedAction['formTypeClass'],
-            helperClass:               $resolvedAction['helperClass'],
-            redirectionConfiguration:  null === $redirection
-                ? null
-                : new ActionRedirectionConfiguration(
-                    route:      $redirection['route'],
-                    parameters: $redirection['parameters'],
-                    fragment:   $redirection['fragment'],
-                ),
-            routeConfiguration:        new ActionRouteConfiguration(
-                name:         $route['name'],
-                path:         $route['path'],
-                requirements: $route['requirements'],
-            ),
-            viewConfiguration:         new ActionViewConfiguration(
-                path:             $view['path'],
-                variables:        $view['variables'],
-                viewFallbackMode: $viewFallbackMode,
-            ),
+            entityClass:              $entityClass,
+            action:                   $action,
+            helperClass:              $resolvedAction['helperClass'],
+            formConfiguration:        new ActionFormConfiguration(
+                                          formTypeClass:    $resolvedAction['formTypeClass'],
+                                          formFallbackMode: $formFallbackMode,
+                                      ),
+            redirectionConfiguration: null === $redirection
+                                          ? null
+                                          : new ActionRedirectionConfiguration(
+                                              route:      $redirection['route'],
+                                              parameters: $redirection['parameters'],
+                                              fragment:   $redirection['fragment'],
+                                          ),
+            routeConfiguration:       new ActionRouteConfiguration(
+                                          name:         $route['name'],
+                                          path:         $route['path'],
+                                          requirements: $route['requirements'],
+                                      ),
+            viewConfiguration:        new ActionViewConfiguration(
+                                          path:             $view['path'],
+                                          variables:        $view['variables'],
+                                          viewFallbackMode: $viewFallbackMode,
+                                      ),
         );
     }
 }

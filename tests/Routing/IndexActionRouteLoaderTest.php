@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Tests\Routing;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Form\ActionFormConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
 use Override;
 use PHPUnit\Framework\TestCase;
@@ -81,8 +82,11 @@ final class IndexActionRouteLoaderTest extends TestCase
         return new ActionConfiguration(
             entityClass:              $entityClass,
             action:                   $action,
-            formTypeClass:            null,
             helperClass:              null,
+            formConfiguration:        new ActionFormConfiguration(
+                                          formTypeClass:    null,
+                                          formFallbackMode: FormFallbackMode::GENERIC,
+                                      ),
             redirectionConfiguration: $actionRedirectionConfiguration,
             routeConfiguration:       $actionRouteConfiguration,
             viewConfiguration:        $actionViewConfiguration,

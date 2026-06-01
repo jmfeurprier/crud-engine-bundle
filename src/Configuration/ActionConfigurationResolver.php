@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration;
 
+use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
@@ -19,7 +20,7 @@ use Webmozart\Assert\Assert;
  * @phpstan-type ResolvedRoute array{name: non-empty-string, path: non-empty-string, requirements: array<non-empty-string, non-empty-string>}
  * @phpstan-type ResolvedRedirection array{route: non-empty-string, parameters: array<string, string>, fragment: string|null}
  * @phpstan-type ResolvedView array{path: non-empty-string, variables: array<non-empty-string, list<non-empty-string>>, fallback: non-empty-string}
- * @phpstan-type ResolvedAction array{formTypeClass: class-string<FormTypeInterface>|null, helperClass: class-string|null, route: ResolvedRoute, redirection: ResolvedRedirection|null, view: ResolvedView}
+ * @phpstan-type ResolvedAction array{formTypeClass: class-string<FormTypeInterface>|null, formFallback: non-empty-string, helperClass: class-string|null, route: ResolvedRoute, redirection: ResolvedRedirection|null, view: ResolvedView}
  * @phpstan-type ResolvedConfigurations array<class-string, array<non-empty-string, ResolvedAction>>
  */
 readonly class ActionConfigurationResolver
@@ -176,6 +177,7 @@ readonly class ActionConfigurationResolver
 
         return [
             'formTypeClass' => $this->resolveFormTypeClass($schema, $keys, $entityClass, $action, $actionConfig),
+            'formFallback'  => $this->resolveFormFallback($schema),
             'helperClass'   => $this->resolveHelperClass($schema, $keys, $entityClass, $action, $actionConfig),
             'route'         => $this->resolveRoute($schema, $keys, $entityClass, $action, $actionConfig),
             'redirection'   => $this->resolveRedirection($schema, $keys, $entityClass, $action, $actionConfig),
@@ -532,6 +534,31 @@ readonly class ActionConfigurationResolver
         Assert::notNull(
             $fallback,
             sprintf('Unknown view fallback mode "%s".', $schemaView['fallback']),
+        );
+
+        return $fallback->value;
+    }
+
+    /**
+     * @param array<string, mixed> $schema
+     *
+     * @return non-empty-string
+     */
+    private function resolveFormFallback(array $schema): string
+    {
+        $schemaForm = $this->getMap($schema, 'form');
+
+        if (!array_key_exists('fallback', $schemaForm)) {
+            return FormFallbackMode::GENERIC->value;
+        }
+
+        Assert::stringNotEmpty($schemaForm['fallback']);
+
+        $fallback = FormFallbackMode::tryFrom($schemaForm['fallback']);
+
+        Assert::notNull(
+            $fallback,
+            sprintf('Unknown form fallback mode "%s".', $schemaForm['fallback']),
         );
 
         return $fallback->value;

@@ -95,6 +95,12 @@ jmf_crud_engine:
             - "App\\Form\\{{ EntityKey }}{{ ActionKey }}Type"
             - "App\\Form\\{{ EntityKey }}Type"
 
+        form:
+            # What to do when no form type is configured or discovered:
+            #   generic (default) -> build a generic form from the entity's Doctrine metadata
+            #   fail              -> throw an exception
+            fallback: generic
+
         # Default view path pattern
         view:
             path: "{{ entity_key }}/{{ action_key }}.html.twig"
@@ -309,7 +315,18 @@ When the resolved template for an action does not exist, the behavior is control
 | `built_in` (default) | Renders the bundle's built-in bare template (`@JmfCrudEngine/{action}.html.twig`). |
 | `fail`               | Throws `CrudEngineMissingViewException`.                                  |
 
-The built-in templates are intentionally minimal — they exist to get pages rendering immediately and to be overridden. The `create` and `update` fallbacks render the form, so they still require a form type to be configured or discovered. Providing your own template at the configured path always takes precedence over the built-in one.
+The built-in templates are intentionally minimal — they exist to get pages rendering immediately and to be overridden. Providing your own template at the configured path always takes precedence over the built-in one.
+
+### Missing form types
+
+For `create`/`update`, when no form type is configured (`formType`) or discovered (via the `schema.formType` patterns), the behavior is controlled by `schema.form.fallback`:
+
+| Value               | Behavior                                                                                          |
+|---------------------|---------------------------------------------------------------------------------------------------|
+| `generic` (default) | Builds a generic form from the entity's Doctrine metadata (`CrudEngineEntityType`).               |
+| `fail`              | Throws `CrudEngineMissingConfigurationException`.                                                  |
+
+The generic form is a scaffold to be overridden: it maps scalar columns and `enumType` fields, and renders to-one associations as a choice of related entities; it skips identifiers, embeddables, to-many associations, and unmappable column types. Configuring or discovering a real form type always takes precedence.
 
 ## Security
 

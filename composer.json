@@ -8,6 +8,7 @@
         "doctrine/instantiator": "^2.0",
         "doctrine/orm": "^3.0",
         "jmf/template-rendering": "^1.0|^2.0",
+        "symfony/doctrine-bridge": "^7.0|^8.0",
         "symfony/form": "^7.0|^8.0",
         "symfony/framework-bundle": "^7.0|^8.0",
         "symfony/http-foundation": "^7.0|^8.0",

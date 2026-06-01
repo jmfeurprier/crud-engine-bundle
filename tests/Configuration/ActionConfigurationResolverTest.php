@@ -62,6 +62,7 @@ final class ActionConfigurationResolverTest extends TestCase
         self::assertSame([], $article['index']['view']['variables']);
 
         self::assertNull($article['index']['formTypeClass']);
+        self::assertSame('generic', $article['index']['formFallback']);
         self::assertNull($article['index']['helperClass']);
 
         self::assertNull($article['index']['redirection']);
@@ -163,5 +164,27 @@ final class ActionConfigurationResolverTest extends TestCase
         self::assertSame('article_index', $article['index']['route']['name']);
         // Global fallback override.
         self::assertSame('fail', $article['index']['view']['fallback']);
+    }
+
+    public function testResolvesFormFallbackOverride(): void
+    {
+        $resolved = $this->resolver->resolve(
+            [
+                'schema'   => [
+                    'form' => [
+                        'fallback' => 'fail',
+                    ],
+                ],
+                'entities' => [
+                    Article::class => [
+                        'actions' => [
+                            'create' => [],
+                        ],
+                    ],
+                ],
+            ],
+        );
+
+        self::assertSame('fail', $resolved[Article::class]['create']['formFallback']);
     }
 }

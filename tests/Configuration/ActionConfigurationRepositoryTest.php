@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Tests\Configuration;
 
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
@@ -21,6 +22,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
                 Article::class => [
                     'create' => [
                         'formTypeClass' => ArticleType::class,
+                        'formFallback'  => 'generic',
                         'helperClass'   => null,
                         'route'         => [
                             'name'         => 'article.create',
@@ -38,8 +40,9 @@ final class ActionConfigurationRepositoryTest extends TestCase
                             'fallback'  => 'built_in',
                         ],
                     ],
-                    'index' => [
+                    'index'  => [
                         'formTypeClass' => null,
+                        'formFallback'  => 'fail',
                         'helperClass'   => null,
                         'route'         => [
                             'name'         => 'article.index',
@@ -60,39 +63,42 @@ final class ActionConfigurationRepositoryTest extends TestCase
 
     public function testGetHydratesDtoGraph(): void
     {
-        $configuration = $this->createRepository()->get(Article::class, 'create');
+        $actionConfiguration = $this->createRepository()->get(Article::class, 'create');
 
-        self::assertInstanceOf(ActionConfiguration::class, $configuration);
-        self::assertSame(Article::class, $configuration->getEntityClass());
-        self::assertSame('create', $configuration->getAction());
-        self::assertSame(ArticleType::class, $configuration->getFormTypeClass());
-        self::assertNull($configuration->getHelperClass());
+        self::assertSame(Article::class, $actionConfiguration->getEntityClass());
+        self::assertSame('create', $actionConfiguration->getAction());
+        self::assertNull($actionConfiguration->getHelperClass());
 
-        $route = $configuration->getRouteConfiguration();
-        self::assertSame('article.create', $route->getName());
-        self::assertSame('articles/create', $route->getPath());
-        self::assertSame(['id' => '\d+'], $route->getRequirements());
+        $formConfiguration = $actionConfiguration->getFormConfiguration();
+        self::assertSame(ArticleType::class, $formConfiguration->getFormTypeClass());
+        self::assertSame(FormFallbackMode::GENERIC, $formConfiguration->getFormFallbackMode());
 
-        $redirection = $configuration->getRedirectionConfiguration();
-        self::assertSame('article.read', $redirection->getRoute());
-        self::assertSame(['id' => '{{ _entity.id }}'], $redirection->getParameters());
-        self::assertNull($redirection->getFragment());
+        $redirectionConfiguration = $actionConfiguration->getRedirectionConfiguration();
+        self::assertSame('article.read', $redirectionConfiguration->getRoute());
+        self::assertSame(['id' => '{{ _entity.id }}'], $redirectionConfiguration->getParameters());
+        self::assertNull($redirectionConfiguration->getFragment());
 
-        $view = $configuration->getViewConfiguration();
-        self::assertSame('article/create.html.twig', $view->getPath());
-        self::assertSame(['form' => ['articleForm']], $view->getVariables());
-        self::assertSame(ViewFallbackMode::RENDER_BUILT_IN, $view->getViewFallbackMode());
+        $routeConfiguration = $actionConfiguration->getRouteConfiguration();
+        self::assertSame('article.create', $routeConfiguration->getName());
+        self::assertSame('articles/create', $routeConfiguration->getPath());
+        self::assertSame(['id' => '\d+'], $routeConfiguration->getRequirements());
+
+        $viewConfiguration = $actionConfiguration->getViewConfiguration();
+        self::assertSame('article/create.html.twig', $viewConfiguration->getPath());
+        self::assertSame(['form' => ['articleForm']], $viewConfiguration->getVariables());
+        self::assertSame(ViewFallbackMode::RENDER_BUILT_IN, $viewConfiguration->getViewFallbackMode());
     }
 
     public function testIndexHasNoRedirectionAndFailFallback(): void
     {
-        $configuration = $this->createRepository()->get(Article::class, 'index');
+        $actionConfiguration = $this->createRepository()->get(Article::class, 'index');
 
-        self::assertSame(ViewFallbackMode::FAIL, $configuration->getViewConfiguration()->getViewFallbackMode());
+        self::assertSame(ViewFallbackMode::FAIL, $actionConfiguration->getViewConfiguration()->getViewFallbackMode());
+        self::assertSame(FormFallbackMode::FAIL, $actionConfiguration->getFormConfiguration()->getFormFallbackMode());
 
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
-        $configuration->getRedirectionConfiguration();
+        $actionConfiguration->getRedirectionConfiguration();
     }
 
     public function testTryGetReturnsNullForUnknown(): void

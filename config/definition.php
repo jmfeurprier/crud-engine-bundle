@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 
@@ -29,6 +30,22 @@ return static function (DefinitionConfigurator $definition): void {
 
                     ->arrayNode('formType')
                         ->stringPrototype()->cannotBeEmpty()->end()
+                    ->end()
+
+                    ->arrayNode('form')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->enumNode('fallback')
+                                ->info('Behavior when no form type is configured or discovered.')
+                                ->values(
+                                    [
+                                        FormFallbackMode::GENERIC->value,
+                                        FormFallbackMode::FAIL->value,
+                                    ]
+                                )
+                                ->defaultValue(FormFallbackMode::GENERIC->value)
+                            ->end()
+                        ->end()
                     ->end()
 
                     ->arrayNode('view')
