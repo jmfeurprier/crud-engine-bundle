@@ -88,6 +88,7 @@ final class ReadActionRouteLoaderTest extends TestCase
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
                                           formTypeClass:    null,
+                                          suggestedFormTypeClass: 'StubFormType',
                                           formFallbackMode: FormFallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: $actionRedirectionConfiguration,

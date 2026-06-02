@@ -1,9 +1,2 @@
-{#
-Built-in CRUD engine fallback template for the "read" action.
-It is intentionally bare: copy it to your application's configured view path
-(e.g. templates/{entity}/read.html.twig) and render the entity as you wish.
-The entity is available as the `entity` variable.
-#}
 <p>Entity found.</p>
-<p>This is the default (bare) template rendering.</p>
-<p>Override this template in your application.</p>
+{{ include('@JmfCrudEngine/_provided_notice.html.twig') }}

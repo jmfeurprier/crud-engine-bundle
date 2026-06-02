@@ -62,6 +62,7 @@ final class ActionConfigurationResolverTest extends TestCase
         self::assertSame([], $article['index']['view']['variables']);
 
         self::assertNull($article['index']['formTypeClass']);
+        self::assertSame('App\\Form\\Article\\CreateType', $article['create']['formSuggestedClass']);
         self::assertSame('provide', $article['index']['formFallback']);
         self::assertNull($article['index']['helperClass']);
 

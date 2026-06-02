@@ -21,8 +21,9 @@ final class ActionConfigurationRepositoryTest extends TestCase
             [
                 Article::class => [
                     'create' => [
-                        'formTypeClass' => ArticleType::class,
-                        'formFallback'  => 'provide',
+                        'formTypeClass'      => ArticleType::class,
+                        'formSuggestedClass' => 'App\\Form\\Article\\CreateType',
+                        'formFallback'       => 'provide',
                         'helperClass'   => null,
                         'route'         => [
                             'name'         => 'article.create',
@@ -41,8 +42,9 @@ final class ActionConfigurationRepositoryTest extends TestCase
                         ],
                     ],
                     'index'  => [
-                        'formTypeClass' => null,
-                        'formFallback'  => 'fail',
+                        'formTypeClass'      => null,
+                        'formSuggestedClass' => 'App\\Form\\Article\\IndexType',
+                        'formFallback'       => 'fail',
                         'helperClass'   => null,
                         'route'         => [
                             'name'         => 'article.index',
@@ -71,6 +73,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
 
         $formConfiguration = $actionConfiguration->getFormConfiguration();
         self::assertSame(ArticleType::class, $formConfiguration->getFormTypeClass());
+        self::assertSame('App\\Form\\Article\\CreateType', $formConfiguration->getSuggestedFormTypeClass());
         self::assertSame(FormFallbackMode::PROVIDE, $formConfiguration->getFormFallbackMode());
 
         $redirectionConfiguration = $actionConfiguration->getRedirectionConfiguration();

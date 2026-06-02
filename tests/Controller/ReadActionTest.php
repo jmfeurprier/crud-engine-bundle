@@ -99,6 +99,7 @@ final class ReadActionTest extends TestCase
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
                                           formTypeClass:    null,
+                                          suggestedFormTypeClass: 'StubFormType',
                                           formFallbackMode: FormFallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: new ActionRedirectionConfiguration(

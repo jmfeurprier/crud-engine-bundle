@@ -1,11 +1,5 @@
-{#
-    Built-in CRUD engine fallback template for the "create" action.
-    It is intentionally bare: copy it to your application's configured view path
-    (e.g. templates/{entity}/create.html.twig) to customize it.
-#}
 {{ form_start(form) }}
 {{ form_widget(form) }}
 <button type="submit">Create</button>
 {{ form_end(form) }}
-<p>This is the default (bare) template rendering.</p>
-<p>Override this template in your application.</p>
+{{ include('@JmfCrudEngine/_provided_notice.html.twig') }}

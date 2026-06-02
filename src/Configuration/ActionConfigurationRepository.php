@@ -120,8 +120,9 @@ class ActionConfigurationRepository implements ActionConfigurationRepositoryInte
             action:                   $action,
             helperClass:              $resolvedAction['helperClass'],
             formConfiguration:        new ActionFormConfiguration(
-                                          formTypeClass:    $resolvedAction['formTypeClass'],
-                                          formFallbackMode: $formFallbackMode,
+                                          formTypeClass:           $resolvedAction['formTypeClass'],
+                                          suggestedFormTypeClass:  $resolvedAction['formSuggestedClass'],
+                                          formFallbackMode:        $formFallbackMode,
                                       ),
             redirectionConfiguration: null === $redirection
                                           ? null

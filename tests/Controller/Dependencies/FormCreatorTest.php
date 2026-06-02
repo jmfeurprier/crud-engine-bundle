@@ -89,6 +89,7 @@ final class FormCreatorTest extends TestCase
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
                                           formTypeClass:    $formTypeClass,
+                                          suggestedFormTypeClass: 'StubFormType',
                                           formFallbackMode: $formFallbackMode,
 
                                       ),

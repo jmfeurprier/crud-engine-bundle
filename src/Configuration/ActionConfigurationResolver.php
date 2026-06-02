@@ -20,7 +20,7 @@ use Webmozart\Assert\Assert;
  * @phpstan-type ResolvedRoute array{name: non-empty-string, path: non-empty-string, requirements: array<non-empty-string, non-empty-string>}
  * @phpstan-type ResolvedRedirection array{route: non-empty-string, parameters: array<string, string>, fragment: string|null}
  * @phpstan-type ResolvedView array{path: non-empty-string, variables: array<non-empty-string, list<non-empty-string>>, fallback: non-empty-string}
- * @phpstan-type ResolvedAction array{formTypeClass: class-string<FormTypeInterface>|null, formFallback: non-empty-string, helperClass: class-string|null, route: ResolvedRoute, redirection: ResolvedRedirection|null, view: ResolvedView}
+ * @phpstan-type ResolvedAction array{formTypeClass: class-string<FormTypeInterface>|null, formSuggestedClass: non-empty-string, formFallback: non-empty-string, helperClass: class-string|null, route: ResolvedRoute, redirection: ResolvedRedirection|null, view: ResolvedView}
  * @phpstan-type ResolvedConfigurations array<class-string, array<non-empty-string, ResolvedAction>>
  */
 readonly class ActionConfigurationResolver
@@ -176,8 +176,9 @@ readonly class ActionConfigurationResolver
         $keys = $this->resolveKeys($schema, $entityClass, $action);
 
         return [
-            'formTypeClass' => $this->resolveFormTypeClass($schema, $keys, $entityClass, $action, $actionConfig),
-            'formFallback'  => $this->resolveFormFallback($schema),
+            'formTypeClass'      => $this->resolveFormTypeClass($schema, $keys, $entityClass, $action, $actionConfig),
+            'formSuggestedClass' => $this->resolveSuggestedFormTypeClass($schema, $keys, $entityClass, $action),
+            'formFallback'       => $this->resolveFormFallback($schema),
             'helperClass'   => $this->resolveHelperClass($schema, $keys, $entityClass, $action, $actionConfig),
             'route'         => $this->resolveRoute($schema, $keys, $entityClass, $action, $actionConfig),
             'redirection'   => $this->resolveRedirection($schema, $keys, $entityClass, $action, $actionConfig),
@@ -252,6 +253,38 @@ readonly class ActionConfigurationResolver
         }
 
         return null;
+    }
+
+    /**
+     * The conventional class a developer should create to customize the form — the first
+     * discovery pattern expanded for this entity/action (whether or not it exists yet).
+     *
+     * @param array<string, mixed>                      $schema
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     *
+     * @return non-empty-string
+     *
+     * @throws CrudEngineInvalidConfigurationException
+     */
+    private function resolveSuggestedFormTypeClass(
+        array $schema,
+        array $keys,
+        string $entityClass,
+        string $action,
+    ): string {
+        $patterns = $this->getPatterns($schema, 'formType', self::DEFAULT_FORM_TYPES);
+
+        $pattern = reset($patterns);
+
+        Assert::stringNotEmpty($pattern);
+
+        $suggested = $this->expand($pattern, $keys, $entityClass, $action);
+
+        Assert::stringNotEmpty($suggested);
+
+        return $suggested;
     }
 
     /**
