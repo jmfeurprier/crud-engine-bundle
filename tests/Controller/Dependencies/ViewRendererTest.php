@@ -45,7 +45,7 @@ final class ViewRendererTest extends TestCase
     public function testRendersConfiguredTemplateWhenItExists(): void
     {
         $response = $this->viewRenderer->render(
-            $this->givenActionConfiguration('article/read.html.twig', ViewFallbackMode::BUILT_IN),
+            $this->givenActionConfiguration('article/read.html.twig', ViewFallbackMode::PROVIDE),
             [],
             ['entity' => new stdClass()],
         );
@@ -56,7 +56,7 @@ final class ViewRendererTest extends TestCase
     public function testRendersBuiltInTemplateWhenConfiguredTemplateMissing(): void
     {
         $response = $this->viewRenderer->render(
-            $this->givenActionConfiguration('article/missing.html.twig', ViewFallbackMode::BUILT_IN),
+            $this->givenActionConfiguration('article/missing.html.twig', ViewFallbackMode::PROVIDE),
             [],
             ['entity' => new stdClass()],
         );
@@ -85,7 +85,7 @@ final class ViewRendererTest extends TestCase
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
                                           formTypeClass:    null,
-                                          formFallbackMode: FormFallbackMode::BUILT_IN,
+                                          formFallbackMode: FormFallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: new ActionRedirectionConfiguration(
                                           route:      '',

@@ -524,7 +524,7 @@ readonly class ActionConfigurationResolver
     private function resolveViewFallback(array $schemaView): string
     {
         if (!array_key_exists('fallback', $schemaView)) {
-            return ViewFallbackMode::BUILT_IN->value;
+            return ViewFallbackMode::PROVIDE->value;
         }
 
         Assert::stringNotEmpty($schemaView['fallback']);
@@ -549,7 +549,7 @@ readonly class ActionConfigurationResolver
         $schemaForm = $this->getMap($schema, 'form');
 
         if (!array_key_exists('fallback', $schemaForm)) {
-            return FormFallbackMode::BUILT_IN->value;
+            return FormFallbackMode::PROVIDE->value;
         }
 
         Assert::stringNotEmpty($schemaForm['fallback']);

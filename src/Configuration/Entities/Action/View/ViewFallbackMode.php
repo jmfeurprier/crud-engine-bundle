@@ -9,7 +9,7 @@ enum ViewFallbackMode: string
     /**
      * Render a built-in bare template when the configured view is missing.
      */
-    case BUILT_IN = 'built_in';
+    case PROVIDE = 'provide';
 
     /**
      * Throw an exception when the configured view is missing.

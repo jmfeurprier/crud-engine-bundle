@@ -58,11 +58,11 @@ final class ActionConfigurationResolverTest extends TestCase
         self::assertSame('articles/{id}/delete', $article['delete']['route']['path']);
 
         self::assertSame('article/index.html.twig', $article['index']['view']['path']);
-        self::assertSame('built_in', $article['index']['view']['fallback']);
+        self::assertSame('provide', $article['index']['view']['fallback']);
         self::assertSame([], $article['index']['view']['variables']);
 
         self::assertNull($article['index']['formTypeClass']);
-        self::assertSame('built_in', $article['index']['formFallback']);
+        self::assertSame('provide', $article['index']['formFallback']);
         self::assertNull($article['index']['helperClass']);
 
         self::assertNull($article['index']['redirection']);

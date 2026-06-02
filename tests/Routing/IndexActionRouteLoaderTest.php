@@ -76,7 +76,7 @@ final class IndexActionRouteLoaderTest extends TestCase
         $actionViewConfiguration = new ActionViewConfiguration(
             path:             $viewPath,
             variables:        [],
-            viewFallbackMode: ViewFallbackMode::BUILT_IN,
+            viewFallbackMode: ViewFallbackMode::PROVIDE,
         );
 
         return new ActionConfiguration(
@@ -85,7 +85,7 @@ final class IndexActionRouteLoaderTest extends TestCase
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
                                           formTypeClass:    null,
-                                          formFallbackMode: FormFallbackMode::BUILT_IN,
+                                          formFallbackMode: FormFallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: $actionRedirectionConfiguration,
             routeConfiguration:       $actionRouteConfiguration,

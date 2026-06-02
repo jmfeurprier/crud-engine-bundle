@@ -22,7 +22,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
                 Article::class => [
                     'create' => [
                         'formTypeClass' => ArticleType::class,
-                        'formFallback'  => 'built_in',
+                        'formFallback'  => 'provide',
                         'helperClass'   => null,
                         'route'         => [
                             'name'         => 'article.create',
@@ -37,7 +37,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
                         'view'          => [
                             'path'      => 'article/create.html.twig',
                             'variables' => ['form' => ['articleForm']],
-                            'fallback'  => 'built_in',
+                            'fallback'  => 'provide',
                         ],
                     ],
                     'index'  => [
@@ -71,7 +71,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
 
         $formConfiguration = $actionConfiguration->getFormConfiguration();
         self::assertSame(ArticleType::class, $formConfiguration->getFormTypeClass());
-        self::assertSame(FormFallbackMode::BUILT_IN, $formConfiguration->getFormFallbackMode());
+        self::assertSame(FormFallbackMode::PROVIDE, $formConfiguration->getFormFallbackMode());
 
         $redirectionConfiguration = $actionConfiguration->getRedirectionConfiguration();
         self::assertSame('article.read', $redirectionConfiguration->getRoute());
@@ -86,7 +86,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
         $viewConfiguration = $actionConfiguration->getViewConfiguration();
         self::assertSame('article/create.html.twig', $viewConfiguration->getPath());
         self::assertSame(['form' => ['articleForm']], $viewConfiguration->getVariables());
-        self::assertSame(ViewFallbackMode::BUILT_IN, $viewConfiguration->getViewFallbackMode());
+        self::assertSame(ViewFallbackMode::PROVIDE, $viewConfiguration->getViewFallbackMode());
     }
 
     public function testIndexHasNoRedirectionAndFailFallback(): void

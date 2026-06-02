@@ -39,11 +39,11 @@ return static function (DefinitionConfigurator $definition): void {
                                 ->info('Behavior when no form type is configured or discovered.')
                                 ->values(
                                     [
-                                        FormFallbackMode::BUILT_IN->value,
+                                        FormFallbackMode::PROVIDE->value,
                                         FormFallbackMode::FAIL->value,
                                     ]
                                 )
-                                ->defaultValue(FormFallbackMode::BUILT_IN->value)
+                                ->defaultValue(FormFallbackMode::PROVIDE->value)
                             ->end()
                         ->end()
                     ->end()
@@ -56,11 +56,11 @@ return static function (DefinitionConfigurator $definition): void {
                                 ->info('Behavior when a view template is missing.')
                                 ->values(
                                     [
-                                        ViewFallbackMode::BUILT_IN->value,
+                                        ViewFallbackMode::PROVIDE->value,
                                         ViewFallbackMode::FAIL->value,
                                     ]
                                 )
-                                ->defaultValue(ViewFallbackMode::BUILT_IN->value)
+                                ->defaultValue(ViewFallbackMode::PROVIDE->value)
                             ->end()
                             ->arrayNode('variables')
                                 ->variablePrototype()->end()

@@ -7,9 +7,9 @@ namespace Jmf\CrudEngine\Configuration\Entities\Action\Form;
 enum FormFallbackMode: string
 {
     /**
-     * Build a generic form from the entity's Doctrine metadata when no form type is found.
+     * Provide a generic form from the entity's Doctrine metadata when no form type is found.
      */
-    case BUILT_IN = 'built_in';
+    case PROVIDE = 'provide';
 
     /**
      * Throw an exception when no form type is found.
