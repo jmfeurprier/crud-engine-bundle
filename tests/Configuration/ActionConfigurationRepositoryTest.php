@@ -22,7 +22,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
                 Article::class => [
                     'create' => [
                         'formTypeClass' => ArticleType::class,
-                        'formFallback'  => 'generic',
+                        'formFallback'  => 'built_in',
                         'helperClass'   => null,
                         'route'         => [
                             'name'         => 'article.create',
@@ -71,7 +71,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
 
         $formConfiguration = $actionConfiguration->getFormConfiguration();
         self::assertSame(ArticleType::class, $formConfiguration->getFormTypeClass());
-        self::assertSame(FormFallbackMode::GENERIC, $formConfiguration->getFormFallbackMode());
+        self::assertSame(FormFallbackMode::BUILT_IN, $formConfiguration->getFormFallbackMode());
 
         $redirectionConfiguration = $actionConfiguration->getRedirectionConfiguration();
         self::assertSame('article.read', $redirectionConfiguration->getRoute());
@@ -86,7 +86,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
         $viewConfiguration = $actionConfiguration->getViewConfiguration();
         self::assertSame('article/create.html.twig', $viewConfiguration->getPath());
         self::assertSame(['form' => ['articleForm']], $viewConfiguration->getVariables());
-        self::assertSame(ViewFallbackMode::RENDER_BUILT_IN, $viewConfiguration->getViewFallbackMode());
+        self::assertSame(ViewFallbackMode::BUILT_IN, $viewConfiguration->getViewFallbackMode());
     }
 
     public function testIndexHasNoRedirectionAndFailFallback(): void

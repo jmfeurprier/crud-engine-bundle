@@ -79,7 +79,7 @@ final class ReadActionRouteLoaderTest extends TestCase
         $actionViewConfiguration = new ActionViewConfiguration(
             path:             $viewPath,
             variables:        [],
-            viewFallbackMode: ViewFallbackMode::RENDER_BUILT_IN,
+            viewFallbackMode: ViewFallbackMode::BUILT_IN,
         );
 
         return new ActionConfiguration(
@@ -88,7 +88,7 @@ final class ReadActionRouteLoaderTest extends TestCase
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
                                           formTypeClass:    null,
-                                          formFallbackMode: FormFallbackMode::GENERIC,
+                                          formFallbackMode: FormFallbackMode::BUILT_IN,
                                       ),
             redirectionConfiguration: $actionRedirectionConfiguration,
             routeConfiguration:       $actionRouteConfiguration,

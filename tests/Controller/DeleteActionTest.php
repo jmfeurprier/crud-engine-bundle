@@ -200,7 +200,7 @@ final class DeleteActionTest extends TestCase
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
                                           formTypeClass:    null,
-                                          formFallbackMode: FormFallbackMode::GENERIC,
+                                          formFallbackMode: FormFallbackMode::BUILT_IN,
                                       ),
             redirectionConfiguration: new ActionRedirectionConfiguration(
                                           route:      '',
@@ -214,7 +214,7 @@ final class DeleteActionTest extends TestCase
             viewConfiguration:        new ActionViewConfiguration(
                                           path:             '',
                                           variables:        [],
-                                          viewFallbackMode: ViewFallbackMode::RENDER_BUILT_IN,
+                                          viewFallbackMode: ViewFallbackMode::BUILT_IN,
                                       ),
         );
     }

@@ -9,7 +9,7 @@ enum FormFallbackMode: string
     /**
      * Build a generic form from the entity's Doctrine metadata when no form type is found.
      */
-    case GENERIC = 'generic';
+    case BUILT_IN = 'built_in';
 
     /**
      * Throw an exception when no form type is found.

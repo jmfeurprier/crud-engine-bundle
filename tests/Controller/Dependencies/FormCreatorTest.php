@@ -35,7 +35,7 @@ final class FormCreatorTest extends TestCase
         ;
 
         $result = (new FormCreator($formFactory))->create(
-            $this->givenActionConfiguration(ArticleType::class, FormFallbackMode::GENERIC),
+            $this->givenActionConfiguration(ArticleType::class, FormFallbackMode::BUILT_IN),
             $article,
         );
 
@@ -56,7 +56,7 @@ final class FormCreatorTest extends TestCase
         ;
 
         $result = (new FormCreator($formFactory))->create(
-            $this->givenActionConfiguration(null, FormFallbackMode::GENERIC),
+            $this->givenActionConfiguration(null, FormFallbackMode::BUILT_IN),
             $article,
         );
 
@@ -94,7 +94,7 @@ final class FormCreatorTest extends TestCase
                                       ),
             redirectionConfiguration: null,
             routeConfiguration:       new ActionRouteConfiguration('', '', []),
-            viewConfiguration:        new ActionViewConfiguration('', [], ViewFallbackMode::RENDER_BUILT_IN),
+            viewConfiguration:        new ActionViewConfiguration('', [], ViewFallbackMode::BUILT_IN),
         );
     }
 }
