@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Form;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\MappingException;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -60,6 +61,9 @@ readonly class FieldGenerator
         );
     }
 
+    /**
+     * @param ClassMetadata<object> $metadata
+     */
     private function isMappable(
         ClassMetadata $metadata,
         string $fieldName,
@@ -78,6 +82,8 @@ readonly class FieldGenerator
     }
 
     /**
+     * @param ClassMetadata<object> $metadata
+     *
      * @return class-string<FormTypeInterface>
      */
     private function getTypeClass(
@@ -94,7 +100,11 @@ readonly class FieldGenerator
     }
 
     /**
+     * @param ClassMetadata<object> $metadata
+     *
      * @return array<string, mixed>
+     *
+     * @throws MappingException
      */
     private function getOptions(
         ClassMetadata $metadata,
@@ -130,6 +140,9 @@ readonly class FieldGenerator
         };
     }
 
+    /**
+     * @param ClassMetadata<object> $metadata
+     */
     private function isEnum(
         ClassMetadata $metadata,
         string $fieldName,
