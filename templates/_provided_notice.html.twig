@@ -7,10 +7,4 @@
         Provided “{{ _crud_engine.action }}” template for <code>{{ _crud_engine.entityClass }}</code>.
         Create <code>{{ _crud_engine.viewPath }}</code> to customize rendering.
     </p>
-    {% if _crud_engine.formProvided and _crud_engine.action in ['create', 'update'] %}
-        <p>
-            Provided (generic) form type for <code>{{ _crud_engine.entityClass }}</code>.
-            Create <code>{{ _crud_engine.suggestedFormTypeClass }}</code> to customize the form.
-        </p>
-    {% endif %}
 </div>

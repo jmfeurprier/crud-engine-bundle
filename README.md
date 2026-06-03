@@ -328,6 +328,8 @@ For `create`/`update`, when no form type is configured (`formType`) or discovere
 
 The generic form is a scaffold to be overridden: it maps scalar columns and `enumType` fields, and renders to-one associations as a choice of related entities; it skips identifiers, embeddables, to-many associations, and unmappable column types. Configuring or discovering a real form type always takes precedence.
 
+To make the fallback visible wherever it renders (including under a custom template), the generated form prepends a disabled, read-only "Generated fallback form" field naming the form type class to implement to replace it.
+
 ## Security
 
 Access can be restricted at entity level or per-action using `roles`:

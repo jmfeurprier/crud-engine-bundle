@@ -39,11 +39,14 @@ readonly class FormCreator
             );
         }
 
+        $formConfiguration = $actionConfiguration->getFormConfiguration();
+
         return $this->formFactory->create(
             CrudEngineEntityType::class,
             $entity,
             [
-                'entity_class' => $actionConfiguration->getEntityClass(),
+                'entity_class'              => $actionConfiguration->getEntityClass(),
+                'suggested_form_type_class' => $formConfiguration->getSuggestedFormTypeClass(),
             ],
         );
     }

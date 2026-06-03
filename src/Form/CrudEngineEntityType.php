@@ -4,24 +4,15 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Form;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\Persistence\ManagerRegistry;
 use Override;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Webmozart\Assert\Assert;
@@ -34,8 +25,11 @@ use Webmozart\Assert\Assert;
  */
 class CrudEngineEntityType extends AbstractType
 {
+    private const string FALLBACK_NOTICE_FIELD = '_crudEngineFallbackNotice';
+
     public function __construct(
         private readonly ManagerRegistry $managerRegistry,
+        private readonly FieldGenerator $fieldGenerator,
     ) {
     }
 
@@ -54,6 +48,12 @@ class CrudEngineEntityType extends AbstractType
         Assert::string($entityClass);
         Assert::classExists($entityClass);
 
+        $suggestedFormTypeClass = $options['suggested_form_type_class'];
+
+        Assert::string($suggestedFormTypeClass);
+
+        $this->addFallbackNotice($builder, $suggestedFormTypeClass);
+
         $metadata             = $this->getClassMetadata($entityClass);
         $identifierFieldNames = $metadata->getIdentifierFieldNames();
 
@@ -71,11 +71,38 @@ class CrudEngineEntityType extends AbstractType
         }
     }
 
+    /**
+     * Adds a non-editable field flagging that this form was generated as a fallback,
+     * pointing at the form type class to implement in order to replace it.
+     */
+    private function addFallbackNotice(
+        FormBuilderInterface $builder,
+        string $suggestedFormTypeClass,
+    ): void {
+        $builder->add(
+            self::FALLBACK_NOTICE_FIELD,
+            TextType::class,
+            [
+                'mapped'   => false,
+                'disabled' => true,
+                'required' => false,
+                'label'    => 'Generated fallback form',
+                'help'     => 'Generated from the entity metadata; implement the form type below to replace it.',
+                'data'     => $suggestedFormTypeClass,
+                'attr'     => [
+                    'readonly' => true,
+                ],
+            ],
+        );
+    }
+
     #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired('entity_class');
         $resolver->setAllowedTypes('entity_class', 'string');
+        $resolver->setRequired('suggested_form_type_class');
+        $resolver->setAllowedTypes('suggested_form_type_class', 'string');
         $resolver->setDefault(
             'data_class',
             static function (
@@ -113,7 +140,6 @@ class CrudEngineEntityType extends AbstractType
         string $fieldName,
     ): void {
         $required = !$metadata->isNullable($fieldName);
-
         $enumType = $metadata->getFieldMapping($fieldName)->enumType;
 
         if (null !== $enumType) {
@@ -129,84 +155,16 @@ class CrudEngineEntityType extends AbstractType
             return;
         }
 
-        $mapping = $this->mapType($metadata->getTypeOfField($fieldName));
+        $generatedField = $this->fieldGenerator->generate($metadata, $fieldName);
 
-        if (null === $mapping) {
+        if (null === $generatedField) {
             return;
         }
 
-        [
-            $formType,
-            $options,
-        ] = $mapping;
-
-        if (CheckboxType::class === $formType) {
-            $required = false;
-        }
-
-        $builder->add($fieldName, $formType, ['required' => $required] + $options);
-    }
-
-    /**
-     * @return array{0: class-string<FormTypeInterface>, 1: array<string, mixed>}|null
-     */
-    private function mapType(?string $doctrineType): ?array
-    {
-        return match ($doctrineType) {
-            Types::STRING, Types::ASCII_STRING, Types::GUID        => [
-                TextType::class,
-                [],
-            ],
-            Types::TEXT                                            => [
-                TextareaType::class,
-                [],
-            ],
-            Types::INTEGER, Types::SMALLINT, Types::BIGINT         => [
-                IntegerType::class,
-                [],
-            ],
-            Types::BOOLEAN                                         => [
-                CheckboxType::class,
-                [],
-            ],
-            Types::FLOAT, Types::DECIMAL                           => [
-                NumberType::class,
-                [],
-            ],
-            Types::DATE_MUTABLE                                    => [
-                DateType::class,
-                ['widget' => 'single_text'],
-            ],
-            Types::DATE_IMMUTABLE                                  => [
-                DateType::class,
-                [
-                    'widget' => 'single_text',
-                    'input'  => 'datetime_immutable',
-                ],
-            ],
-            Types::DATETIME_MUTABLE, Types::DATETIMETZ_MUTABLE     => [
-                DateTimeType::class,
-                ['widget' => 'single_text'],
-            ],
-            Types::DATETIME_IMMUTABLE, Types::DATETIMETZ_IMMUTABLE => [
-                DateTimeType::class,
-                [
-                    'widget' => 'single_text',
-                    'input'  => 'datetime_immutable',
-                ],
-            ],
-            Types::TIME_MUTABLE                                    => [
-                TimeType::class,
-                ['widget' => 'single_text'],
-            ],
-            Types::TIME_IMMUTABLE                                  => [
-                TimeType::class,
-                [
-                    'widget' => 'single_text',
-                    'input'  => 'datetime_immutable',
-                ],
-            ],
-            default                                                => null,
-        };
+        $builder->add(
+            $fieldName,
+            $generatedField->getTypeClass(),
+            $generatedField->getOptions() + ['required' => $required],
+        );
     }
 }

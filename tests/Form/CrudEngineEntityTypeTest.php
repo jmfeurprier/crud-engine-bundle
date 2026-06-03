@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\FieldMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
+use Jmf\CrudEngine\Form\FieldGenerator;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\Status;
 use PHPUnit\Framework\TestCase;
@@ -112,17 +113,29 @@ final class CrudEngineEntityTypeTest extends TestCase
             )
         ;
 
-        (new CrudEngineEntityType($managerRegistry))->buildForm($builder, ['entity_class' => Article::class]);
+        (new CrudEngineEntityType($managerRegistry, new FieldGenerator()))->buildForm(
+            $builder,
+            [
+                'entity_class'              => Article::class,
+                'suggested_form_type_class' => 'StubFormType',
+            ],
+        );
 
-        // Identifier, embeddable sub-field and entity association are skipped.
+        // The fallback notice is added first; identifier, embeddable sub-field and entity association are skipped.
         self::assertSame(
             [
+                '_crudEngineFallbackNotice',
                 'title',
                 'body',
                 'status',
             ],
             array_keys($added),
         );
+
+        self::assertSame(TextType::class, $added['_crudEngineFallbackNotice']['type']);
+        self::assertFalse($added['_crudEngineFallbackNotice']['options']['mapped']);
+        self::assertTrue($added['_crudEngineFallbackNotice']['options']['disabled']);
+        self::assertSame('StubFormType', $added['_crudEngineFallbackNotice']['options']['data']);
 
         self::assertSame(TextType::class, $added['title']['type']);
         self::assertTrue($added['title']['options']['required']);

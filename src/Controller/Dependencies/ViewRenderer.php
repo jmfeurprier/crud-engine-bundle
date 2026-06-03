@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
@@ -83,15 +82,10 @@ readonly class ViewRenderer
         ActionConfiguration $actionConfiguration,
         string $viewPath,
     ): array {
-        $formConfiguration = $actionConfiguration->getFormConfiguration();
-
         return [
-            'entityClass'            => $actionConfiguration->getEntityClass(),
-            'action'                 => $actionConfiguration->getAction(),
-            'viewPath'               => $viewPath,
-            'formProvided'           => null === $formConfiguration->getFormTypeClass()
-                && FormFallbackMode::PROVIDE === $formConfiguration->getFormFallbackMode(),
-            'suggestedFormTypeClass' => $formConfiguration->getSuggestedFormTypeClass(),
+            'entityClass' => $actionConfiguration->getEntityClass(),
+            'action'      => $actionConfiguration->getAction(),
+            'viewPath'    => $viewPath,
         ];
     }
 

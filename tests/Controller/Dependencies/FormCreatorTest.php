@@ -51,7 +51,14 @@ final class FormCreatorTest extends TestCase
         $formFactory
             ->expects(self::once())
             ->method('create')
-            ->with(CrudEngineEntityType::class, $article, ['entity_class' => Article::class])
+            ->with(
+                CrudEngineEntityType::class,
+                $article,
+                [
+                    'entity_class'              => Article::class,
+                    'suggested_form_type_class' => 'StubFormType',
+                ],
+            )
             ->willReturn($form)
         ;
 
