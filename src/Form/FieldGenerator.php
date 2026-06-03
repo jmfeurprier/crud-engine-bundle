@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Form;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\FieldMapping;
 use Doctrine\ORM\Mapping\MappingException;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -51,13 +52,15 @@ readonly class FieldGenerator
         ClassMetadata $metadata,
         string $fieldName,
     ): ?GeneratedField {
-        if (!$this->isMappable($metadata, $fieldName)) {
+        $fieldMapping = $metadata->getFieldMapping($fieldName);
+
+        if (!$this->isMappable($metadata, $fieldName, $fieldMapping)) {
             return null;
         }
 
         return new GeneratedField(
-            $this->getTypeClass($metadata, $fieldName),
-            $this->getOptions($metadata, $fieldName),
+            $this->getTypeClass($metadata, $fieldName, $fieldMapping),
+            $this->getOptions($metadata, $fieldName, $fieldMapping),
         );
     }
 
@@ -67,8 +70,9 @@ readonly class FieldGenerator
     private function isMappable(
         ClassMetadata $metadata,
         string $fieldName,
+        FieldMapping $fieldMapping,
     ): bool {
-        if ($this->isEnum($metadata, $fieldName)) {
+        if ($this->isEnum($fieldMapping)) {
             return true;
         }
 
@@ -89,8 +93,9 @@ readonly class FieldGenerator
     private function getTypeClass(
         ClassMetadata $metadata,
         string $fieldName,
+        FieldMapping $fieldMapping,
     ): string {
-        if ($this->isEnum($metadata, $fieldName)) {
+        if ($this->isEnum($fieldMapping)) {
             return EnumType::class;
         }
 
@@ -109,8 +114,9 @@ readonly class FieldGenerator
     private function getOptions(
         ClassMetadata $metadata,
         string $fieldName,
+        FieldMapping $fieldMapping,
     ): array {
-        if ($this->isEnum($metadata, $fieldName)) {
+        if ($this->isEnum($fieldMapping)) {
             return [
                 'class' => $metadata->getFieldMapping($fieldName)->enumType,
                 //'required' => $required,
@@ -140,15 +146,9 @@ readonly class FieldGenerator
         };
     }
 
-    /**
-     * @param ClassMetadata<object> $metadata
-     */
     private function isEnum(
-        ClassMetadata $metadata,
-        string $fieldName,
+        FieldMapping $fieldMapping,
     ): bool {
-        $enumType = $metadata->getFieldMapping($fieldName)->enumType;
-
-        return (null !== $enumType);
+        return (null !== $fieldMapping->enumType);
     }
 }
