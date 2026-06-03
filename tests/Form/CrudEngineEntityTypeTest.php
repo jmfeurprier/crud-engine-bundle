@@ -25,6 +25,9 @@ final class CrudEngineEntityTypeTest extends TestCase
         $fieldMapping           = new FieldMapping('string', 'status', 'status');
         $fieldMapping->enumType = Status::class;
 
+        $bodyMapping           = new FieldMapping('text', 'body', 'body');
+        $bodyMapping->nullable = true;
+
         $metadata = $this->createStub(ClassMetadata::class);
         $metadata->method('getIdentifierFieldNames')->willReturn(['id']);
         $metadata->method('getFieldNames')->willReturn(
@@ -36,22 +39,6 @@ final class CrudEngineEntityTypeTest extends TestCase
                 'birthDate.year',
             ],
         );
-        $metadata->method('isNullable')->willReturnMap(
-            [
-                [
-                    'title',
-                    false,
-                ],
-                [
-                    'body',
-                    true,
-                ],
-                [
-                    'status',
-                    false,
-                ],
-            ],
-        );
         $metadata->method('getFieldMapping')->willReturnMap(
             [
                 [
@@ -60,23 +47,11 @@ final class CrudEngineEntityTypeTest extends TestCase
                 ],
                 [
                     'body',
-                    new FieldMapping('text', 'body', 'body'),
+                    $bodyMapping,
                 ],
                 [
                     'status',
                     $fieldMapping,
-                ],
-            ],
-        );
-        $metadata->method('getTypeOfField')->willReturnMap(
-            [
-                [
-                    'title',
-                    'string',
-                ],
-                [
-                    'body',
-                    'text',
                 ],
             ],
         );

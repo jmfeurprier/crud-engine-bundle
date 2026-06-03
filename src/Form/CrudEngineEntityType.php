@@ -138,18 +138,16 @@ class CrudEngineEntityType extends AbstractType
         ClassMetadata $metadata,
         string $fieldName,
     ): void {
-        $fieldMapping   = $metadata->getFieldMapping($fieldName);
-        $required       = !isset($fieldMapping->nullable) || !$fieldMapping->nullable;
-        $generatedField = $this->fieldGenerator->generate($fieldMapping);
+        $generatedField = $this->fieldGenerator->generate($metadata->getFieldMapping($fieldName));
 
-        if (null === $generatedField) {
+        if (!$generatedField instanceof GeneratedField) {
             return;
         }
 
         $builder->add(
             $fieldName,
             $generatedField->getTypeClass(),
-            $generatedField->getOptions() + ['required' => $required],
+            $generatedField->getOptions(),
         );
     }
 }

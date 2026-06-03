@@ -88,10 +88,12 @@ readonly class FieldGenerator
     private function getOptions(
         FieldMapping $fieldMapping,
     ): array {
+        $required = !($fieldMapping->nullable ?? false);
+
         if ($this->isEnum($fieldMapping)) {
             return [
-                'class' => $fieldMapping->enumType,
-                //'required' => $required,
+                'class'    => $fieldMapping->enumType,
+                'required' => $required,
             ];
         }
 
@@ -103,16 +105,20 @@ readonly class FieldGenerator
             Types::DATETIME_MUTABLE,
             Types::DATETIMETZ_MUTABLE,
             Types::TIME_MUTABLE   => [
-                'widget' => 'single_text',
+                'widget'   => 'single_text',
+                'required' => $required,
             ],
             Types::DATE_IMMUTABLE,
             Types::DATETIME_IMMUTABLE,
             Types::DATETIMETZ_IMMUTABLE,
             Types::TIME_IMMUTABLE => [
-                'widget' => 'single_text',
-                'input'  => 'datetime_immutable',
+                'widget'   => 'single_text',
+                'input'    => 'datetime_immutable',
+                'required' => $required,
             ],
-            default               => [],
+            default               => [
+                'required' => $required,
+            ],
         };
     }
 
