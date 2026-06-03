@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Form;
 
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\FieldMapping;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -44,9 +43,6 @@ readonly class FieldGenerator
         Types::TIME_MUTABLE         => TimeType::class,
     ];
 
-    /**
-     * @param ClassMetadata<object> $metadata
-     */
     public function generate(
         FieldMapping $fieldMapping,
     ): ?GeneratedField {
