@@ -7,7 +7,6 @@ namespace Jmf\CrudEngine\Form;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\FieldMapping;
-use Doctrine\ORM\Mapping\MappingException;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -49,83 +48,58 @@ readonly class FieldGenerator
      * @param ClassMetadata<object> $metadata
      */
     public function generate(
-        ClassMetadata $metadata,
-        string $fieldName,
+        FieldMapping $fieldMapping,
     ): ?GeneratedField {
-        $fieldMapping = $metadata->getFieldMapping($fieldName);
-
-        if (!$this->isMappable($metadata, $fieldName, $fieldMapping)) {
+        if (!$this->isMappable($fieldMapping)) {
             return null;
         }
 
         return new GeneratedField(
-            $this->getTypeClass($metadata, $fieldName, $fieldMapping),
-            $this->getOptions($metadata, $fieldName, $fieldMapping),
+            $this->getTypeClass($fieldMapping),
+            $this->getOptions($fieldMapping),
         );
     }
 
-    /**
-     * @param ClassMetadata<object> $metadata
-     */
     private function isMappable(
-        ClassMetadata $metadata,
-        string $fieldName,
         FieldMapping $fieldMapping,
     ): bool {
         if ($this->isEnum($fieldMapping)) {
             return true;
         }
 
-        $doctrineType = $metadata->getTypeOfField($fieldName);
-
-        if (null === $doctrineType) {
-            return false;
-        }
-
-        return array_key_exists($doctrineType, self::TYPE_MAPPING);
+        return array_key_exists(
+            $fieldMapping->type,
+            self::TYPE_MAPPING,
+        );
     }
 
     /**
-     * @param ClassMetadata<object> $metadata
-     *
      * @return class-string<FormTypeInterface>
      */
     private function getTypeClass(
-        ClassMetadata $metadata,
-        string $fieldName,
         FieldMapping $fieldMapping,
     ): string {
         if ($this->isEnum($fieldMapping)) {
             return EnumType::class;
         }
 
-        $doctrineType = $metadata->getTypeOfField($fieldName);
-
-        return self::TYPE_MAPPING[$doctrineType];
+        return self::TYPE_MAPPING[$fieldMapping->type];
     }
 
     /**
-     * @param ClassMetadata<object> $metadata
-     *
      * @return array<string, mixed>
-     *
-     * @throws MappingException
      */
     private function getOptions(
-        ClassMetadata $metadata,
-        string $fieldName,
         FieldMapping $fieldMapping,
     ): array {
         if ($this->isEnum($fieldMapping)) {
             return [
-                'class' => $metadata->getFieldMapping($fieldName)->enumType,
+                'class' => $fieldMapping->enumType,
                 //'required' => $required,
             ];
         }
 
-        $doctrineType = $metadata->getTypeOfField($fieldName);
-
-        return match ($doctrineType) {
+        return match ($fieldMapping->type) {
             Types::BOOLEAN        => [
                 'required' => false,
             ],
