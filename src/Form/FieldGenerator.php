@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -63,6 +64,10 @@ readonly class FieldGenerator
         ClassMetadata $metadata,
         string $fieldName,
     ): bool {
+        if ($this->isEnum($metadata, $fieldName)) {
+            return true;
+        }
+
         $doctrineType = $metadata->getTypeOfField($fieldName);
 
         if (null === $doctrineType) {
@@ -79,6 +84,10 @@ readonly class FieldGenerator
         ClassMetadata $metadata,
         string $fieldName,
     ): string {
+        if ($this->isEnum($metadata, $fieldName)) {
+            return EnumType::class;
+        }
+
         $doctrineType = $metadata->getTypeOfField($fieldName);
 
         return self::TYPE_MAPPING[$doctrineType];
@@ -89,8 +98,15 @@ readonly class FieldGenerator
      */
     private function getOptions(
         ClassMetadata $metadata,
-        string $fieldName,): array
-    {
+        string $fieldName,
+    ): array {
+        if ($this->isEnum($metadata, $fieldName)) {
+            return [
+                'class' => $metadata->getFieldMapping($fieldName)->enumType,
+                //'required' => $required,
+            ];
+        }
+
         $doctrineType = $metadata->getTypeOfField($fieldName);
 
         return match ($doctrineType) {
@@ -112,5 +128,14 @@ readonly class FieldGenerator
             ],
             default               => [],
         };
+    }
+
+    private function isEnum(
+        ClassMetadata $metadata,
+        string $fieldName,
+    ): bool {
+        $enumType = $metadata->getFieldMapping($fieldName)->enumType;
+
+        return (null !== $enumType);
     }
 }

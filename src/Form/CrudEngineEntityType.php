@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\Persistence\ManagerRegistry;
 use Override;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -140,20 +139,6 @@ class CrudEngineEntityType extends AbstractType
         string $fieldName,
     ): void {
         $required = !$metadata->isNullable($fieldName);
-        $enumType = $metadata->getFieldMapping($fieldName)->enumType;
-
-        if (null !== $enumType) {
-            $builder->add(
-                $fieldName,
-                EnumType::class,
-                [
-                    'class'    => $enumType,
-                    'required' => $required,
-                ],
-            );
-
-            return;
-        }
 
         $generatedField = $this->fieldGenerator->generate($metadata, $fieldName);
 
