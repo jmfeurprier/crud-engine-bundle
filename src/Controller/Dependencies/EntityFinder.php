@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 readonly class EntityFinder
 {
@@ -22,13 +24,20 @@ readonly class EntityFinder
      * @psalm-return E
      *
      * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEnginePersistenceException
      * @throws NotFoundHttpException
      */
     public function find(
         string $entityClass,
         string $id,
     ): object {
-        $entity = $this->entityManagerResolver->resolve($entityClass)->find($entityClass, $id);
+        $objectManager = $this->entityManagerResolver->resolve($entityClass);
+
+        try {
+            $entity = $objectManager->find($entityClass, $id);
+        } catch (Throwable $e) {
+            throw new CrudEnginePersistenceException($entityClass, $e);
+        }
 
         return $entity ?? throw new NotFoundHttpException();
     }

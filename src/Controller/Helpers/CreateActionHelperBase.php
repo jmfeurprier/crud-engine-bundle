@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
+use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Override;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Throwable;
 
 /**
  * @template E of object
@@ -33,6 +35,9 @@ readonly abstract class CreateActionHelperBase implements CreateActionHelperInte
     ): void {
     }
 
+    /**
+     * @throws CrudEnginePersistenceException
+     */
     #[Override]
     public function persist(
         Request $request,
@@ -40,8 +45,12 @@ readonly abstract class CreateActionHelperBase implements CreateActionHelperInte
         FormInterface $form,
         ObjectManager $objectManager,
     ): void {
-        $objectManager->persist($entity);
-        $objectManager->flush();
+        try {
+            $objectManager->persist($entity);
+            $objectManager->flush();
+        } catch (Throwable $e) {
+            throw new CrudEnginePersistenceException($entity::class, $e);
+        }
     }
 
     #[Override]

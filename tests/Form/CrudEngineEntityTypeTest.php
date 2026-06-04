@@ -8,11 +8,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\FieldMapping;
 use Doctrine\Persistence\ManagerRegistry;
+use Jmf\CrudEngine\Exception\CrudEngineFormException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FieldGenerator;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\Status;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -120,5 +122,24 @@ final class CrudEngineEntityTypeTest extends TestCase
 
         self::assertSame(EnumType::class, $added['status']['type']);
         self::assertSame(Status::class, $added['status']['options']['class']);
+    }
+
+    public function testWrapsMetadataFailure(): void
+    {
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('getClassMetadata')->willThrowException(new RuntimeException('boom'));
+
+        $managerRegistry = $this->createStub(ManagerRegistry::class);
+        $managerRegistry->method('getManagerForClass')->willReturn($entityManager);
+
+        $this->expectException(CrudEngineFormException::class);
+
+        (new CrudEngineEntityType($managerRegistry, new FieldGenerator()))->buildForm(
+            $this->createStub(FormBuilderInterface::class),
+            [
+                'entity_class'              => Article::class,
+                'suggested_form_type_class' => 'StubFormType',
+            ],
+        );
     }
 }

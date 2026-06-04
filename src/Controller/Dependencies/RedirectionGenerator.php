@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -22,16 +23,21 @@ readonly class RedirectionGenerator
 
     /**
      * @throws CrudEngineMissingConfigurationException
+     * @throws CrudEngineRedirectionException
      * @throws CrudEngineRedirectionParameterRenderingException
      */
     public function generate(
         ActionConfiguration $actionConfiguration,
         object $entity,
     ): RedirectResponse {
-        $url = $this->urlGenerator->generate(
-            $this->getRedirectRoute($actionConfiguration),
-            $this->getRedirectRouteParameters($actionConfiguration, $entity),
-        );
+        $route      = $this->getRedirectRoute($actionConfiguration);
+        $parameters = $this->getRedirectRouteParameters($actionConfiguration, $entity);
+
+        try {
+            $url = $this->urlGenerator->generate($route, $parameters);
+        } catch (Throwable $e) {
+            throw new CrudEngineRedirectionException($actionConfiguration, $e);
+        }
 
         $fragment = $this->getRedirectFragment($actionConfiguration);
 

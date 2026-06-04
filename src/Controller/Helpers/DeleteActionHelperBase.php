@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
-use Jmf\CrudEngine\Exception\CrudEngineRuntimeException;
+use Jmf\CrudEngine\Exception\CrudEngineExceptionInterface;
+use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,13 +24,20 @@ readonly abstract class DeleteActionHelperBase implements DeleteActionHelperInte
     {
     }
 
+    /**
+     * @throws CrudEnginePersistenceException
+     */
     #[Override]
     public function remove(
         ObjectManager $objectManager,
         object $entity,
     ): void {
-        $objectManager->remove($entity);
-        $objectManager->flush();
+        try {
+            $objectManager->remove($entity);
+            $objectManager->flush();
+        } catch (Throwable $e) {
+            throw new CrudEnginePersistenceException($entity::class, $e);
+        }
     }
 
     #[Override]
@@ -45,15 +53,18 @@ readonly abstract class DeleteActionHelperBase implements DeleteActionHelperInte
         return [];
     }
 
+    /**
+     * @throws CrudEngineExceptionInterface
+     */
     #[Override]
     public function onFailure(
         object $entity,
         Throwable $e,
     ): Response {
-        // @todo Create specialized exception?
-        throw new CrudEngineRuntimeException(
-            message:  'Failed deleting entity.',
-            previous: $e,
-        );
+        if ($e instanceof CrudEngineExceptionInterface) {
+            throw $e;
+        }
+
+        throw new CrudEnginePersistenceException($entity::class, $e);
     }
 }

@@ -6,10 +6,12 @@ namespace Jmf\CrudEngine\Controller\Dependencies;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
+use Jmf\CrudEngine\Exception\CrudEngineFormException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Throwable;
 
 readonly class FormCreator
 {
@@ -19,19 +21,21 @@ readonly class FormCreator
     }
 
     /**
+     * @throws CrudEngineFormException
      * @throws CrudEngineMissingConfigurationException
      */
     public function create(
         ActionConfiguration $actionConfiguration,
         object $entity,
     ): FormInterface {
-        $formTypeClass = $actionConfiguration->getFormConfiguration()->getFormTypeClass();
+        $formConfiguration = $actionConfiguration->getFormConfiguration();
+        $formTypeClass     = $formConfiguration->getFormTypeClass();
 
         if (null !== $formTypeClass) {
-            return $this->formFactory->create($formTypeClass, $entity);
+            return $this->createForm($actionConfiguration, $formTypeClass, $entity);
         }
 
-        if (FormFallbackMode::FAIL === $actionConfiguration->getFormConfiguration()->getFormFallbackMode()) {
+        if (FormFallbackMode::FAIL === $formConfiguration->getFormFallbackMode()) {
             throw new CrudEngineMissingConfigurationException(
                 $actionConfiguration->getEntityClass(),
                 $actionConfiguration->getAction(),
@@ -39,9 +43,8 @@ readonly class FormCreator
             );
         }
 
-        $formConfiguration = $actionConfiguration->getFormConfiguration();
-
-        return $this->formFactory->create(
+        return $this->createForm(
+            $actionConfiguration,
             CrudEngineEntityType::class,
             $entity,
             [
@@ -49,5 +52,24 @@ readonly class FormCreator
                 'suggested_form_type_class' => $formConfiguration->getSuggestedFormTypeClass(),
             ],
         );
+    }
+
+    /**
+     * @param class-string<\Symfony\Component\Form\FormTypeInterface> $formTypeClass
+     * @param array<string, mixed>                                    $options
+     *
+     * @throws CrudEngineFormException
+     */
+    private function createForm(
+        ActionConfiguration $actionConfiguration,
+        string $formTypeClass,
+        object $entity,
+        array $options = [],
+    ): FormInterface {
+        try {
+            return $this->formFactory->create($formTypeClass, $entity, $options);
+        } catch (Throwable $e) {
+            throw new CrudEngineFormException($actionConfiguration->getEntityClass(), $e);
+        }
     }
 }

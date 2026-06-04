@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
+use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -21,6 +22,8 @@ interface DeleteActionHelperInterface extends ActionHelperInterface
 
     /**
      * @psalm-param E $entity
+     *
+     * @throws CrudEnginePersistenceException
      */
     public function remove(
         ObjectManager $objectManager,

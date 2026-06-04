@@ -11,11 +11,13 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Controller\Dependencies\FormCreator;
+use Jmf\CrudEngine\Exception\CrudEngineFormException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
@@ -79,6 +81,19 @@ final class FormCreatorTest extends TestCase
 
         (new FormCreator($formFactory))->create(
             $this->givenActionConfiguration(null, FormFallbackMode::FAIL),
+            new Article(),
+        );
+    }
+
+    public function testWrapsFormFactoryFailure(): void
+    {
+        $formFactory = $this->createStub(FormFactoryInterface::class);
+        $formFactory->method('create')->willThrowException(new RuntimeException('boom'));
+
+        $this->expectException(CrudEngineFormException::class);
+
+        (new FormCreator($formFactory))->create(
+            $this->givenActionConfiguration(ArticleType::class, FormFallbackMode::PROVIDE),
             new Article(),
         );
     }

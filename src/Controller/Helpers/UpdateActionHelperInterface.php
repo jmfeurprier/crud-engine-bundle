@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Doctrine\Persistence\ObjectManager;
+use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,6 +27,8 @@ interface UpdateActionHelperInterface extends ActionHelperInterface
     /**
      * @psalm-param E                $entity
      * @psalm-param FormInterface<E> $form
+     *
+     * @throws CrudEnginePersistenceException
      */
     public function persist(
         Request $request,

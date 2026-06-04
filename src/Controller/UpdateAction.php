@@ -14,13 +14,17 @@ use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEngineFormException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
+use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
+use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Throwable;
 
 /**
  * @template E of object
@@ -48,8 +52,11 @@ readonly class UpdateAction
      *
      * @throws CrudEngineConfigurationException
      * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineFormException
      * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingViewException
+     * @throws CrudEnginePersistenceException
+     * @throws CrudEngineRedirectionException
      * @throws CrudEngineRedirectionParameterRenderingException
      * @throws CrudEngineViewRenderingException
      */
@@ -68,7 +75,12 @@ readonly class UpdateAction
         $entity = $this->entityFinder->find($entityClass, $id);
 
         $form = $this->formCreator->create($actionConfiguration, $entity);
-        $form->handleRequest($request);
+
+        try {
+            $form->handleRequest($request);
+        } catch (Throwable $e) {
+            throw new CrudEngineFormException($entityClass, $e);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $actionHelper->hookBeforePersist(
@@ -93,12 +105,18 @@ readonly class UpdateAction
             return $this->redirectionGenerator->generate($actionConfiguration, $entity);
         }
 
+        try {
+            $formView = $form->createView();
+        } catch (Throwable $e) {
+            throw new CrudEngineFormException($entityClass, $e);
+        }
+
         return $this->viewRenderer->render(
             $actionConfiguration,
             $actionHelper->getViewVariables($request, $entity),
             [
                 'entity' => $entity,
-                'form'   => $form->createView(),
+                'form'   => $formView,
             ],
         );
     }

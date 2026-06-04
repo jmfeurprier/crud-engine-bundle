@@ -6,9 +6,10 @@ namespace Jmf\CrudEngine\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\Persistence\ManagerRegistry;
+use Jmf\CrudEngine\Exception\CrudEngineFormException;
 use Override;
+use Throwable;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +36,7 @@ class CrudEngineEntityType extends AbstractType
     /**
      * @param array<string, mixed> $options
      *
-     * @throws MappingException
+     * @throws CrudEngineFormException
      */
     #[Override]
     public function buildForm(
@@ -118,6 +119,8 @@ class CrudEngineEntityType extends AbstractType
      * @param class-string $entityClass
      *
      * @return ClassMetadata<object>
+     *
+     * @throws CrudEngineFormException
      */
     private function getClassMetadata(string $entityClass): ClassMetadata
     {
@@ -125,20 +128,30 @@ class CrudEngineEntityType extends AbstractType
 
         Assert::isInstanceOf($manager, EntityManagerInterface::class);
 
-        return $manager->getClassMetadata($entityClass);
+        try {
+            return $manager->getClassMetadata($entityClass);
+        } catch (Throwable $e) {
+            throw new CrudEngineFormException($entityClass, $e);
+        }
     }
 
     /**
      * @param ClassMetadata<object> $metadata
      *
-     * @throws MappingException
+     * @throws CrudEngineFormException
      */
     private function addField(
         FormBuilderInterface $builder,
         ClassMetadata $metadata,
         string $fieldName,
     ): void {
-        $generatedField = $this->fieldGenerator->generate($metadata->getFieldMapping($fieldName));
+        try {
+            $fieldMapping = $metadata->getFieldMapping($fieldName);
+        } catch (Throwable $e) {
+            throw new CrudEngineFormException($metadata->getName(), $e);
+        }
+
+        $generatedField = $this->fieldGenerator->generate($fieldMapping);
 
         if (!$generatedField instanceof GeneratedField) {
             return;

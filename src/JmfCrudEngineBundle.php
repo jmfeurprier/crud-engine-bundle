@@ -39,12 +39,12 @@ class JmfCrudEngineBundle extends AbstractBundle
     #[Override]
     public function loadExtension(
         array $config,
-        ContainerConfigurator $container,
-        ContainerBuilder $builder,
+        ContainerConfigurator $configurator,
+        ContainerBuilder $container,
     ): void {
-        $container->import('../config/services.yaml');
+        $configurator->import('../config/services.yaml');
 
-        $container->services()
+        $configurator->services()
             ->set(ActionHelperResolver::class)
             ->autowire()
             ->arg('$container', new Reference('service_container'))
@@ -53,13 +53,13 @@ class JmfCrudEngineBundle extends AbstractBundle
         // The configuration is resolved once, here at container build time, and the
         // normalized result is dumped into the compiled container — so the compiled
         // container is the cache (rebuilt only on config change / cache:clear).
-        $container->services()
+        $configurator->services()
             ->set(ActionConfigurationRepository::class)
             ->autowire()
             ->arg('$resolvedConfigurations', $this->resolveConfigurations($config))
         ;
 
-        $container->services()
+        $configurator->services()
             ->get(RouteLoader::class)
             ->tag('routing.route_loader')
         ;
