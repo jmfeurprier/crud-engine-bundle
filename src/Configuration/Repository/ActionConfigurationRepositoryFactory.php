@@ -16,14 +16,14 @@ readonly class ActionConfigurationRepositoryFactory
      */
     public function __construct(
         private array $resolvedConfigurations,
-        private ActionConfigurationHydrator $hydrator,
+        private ActionConfigurationHydrator $actionConfigurationHydrator,
     ) {
     }
 
     public function create(): ActionConfigurationRepositoryInterface
     {
         return new ActionConfigurationRepository(
-            $this->hydrator->hydrate($this->resolvedConfigurations),
+            $this->actionConfigurationHydrator->hydrate($this->resolvedConfigurations),
         );
     }
 }
