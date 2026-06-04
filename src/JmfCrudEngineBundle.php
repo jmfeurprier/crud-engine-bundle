@@ -69,6 +69,8 @@ class JmfCrudEngineBundle extends AbstractBundle
     /**
      * @param array<string, mixed> $config
      *
+     * @return array<class-string, array<non-empty-string, array<string, mixed>>>
+     *
      * @throws CrudEngineConfigurationException
      */
     private function getResolvedConfigurations(
