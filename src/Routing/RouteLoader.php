@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Routing;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;

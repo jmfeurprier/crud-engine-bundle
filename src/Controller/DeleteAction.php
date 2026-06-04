@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Controller;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Controller\Dependencies\EntityFinder;
 use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
 use Jmf\CrudEngine\Controller\Dependencies\RedirectionGenerator;

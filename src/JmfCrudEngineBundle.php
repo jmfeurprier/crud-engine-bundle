@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
 use Jmf\CrudEngine\Configuration\ActionConfigurationResolverFactory;
+use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepository;
+use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryFactory;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Routing\RouteLoader;
@@ -15,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 class JmfCrudEngineBundle extends AbstractBundle
 {
@@ -52,12 +54,18 @@ class JmfCrudEngineBundle extends AbstractBundle
         ;
 
         // The configuration is resolved once, here at container build time, and the
-        // normalized result is dumped into the compiled container — so the compiled
-        // container is the cache (rebuilt only on config change / cache:clear).
+        // normalized result is dumped into the compiled container, so the compiled
+        // container is the cache (rebuilt only on config change / cache:clear). The
+        // factory hydrates that array into the repository when the service is created.
         $configurator->services()
-            ->set(ActionConfigurationRepository::class)
+            ->set(ActionConfigurationRepositoryFactory::class)
             ->autowire()
             ->arg('$resolvedConfigurations', $this->getResolvedConfigurations($config))
+        ;
+
+        $configurator->services()
+            ->set(ActionConfigurationRepository::class)
+            ->factory([service(ActionConfigurationRepositoryFactory::class), 'create'])
         ;
 
         $configurator->services()

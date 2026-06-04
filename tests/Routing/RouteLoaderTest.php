@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Routing;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Form\ActionFormConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
@@ -12,6 +11,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionCo
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
+use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
 use Jmf\CrudEngine\Routing\RouteLoader;

@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Tests\Configuration;
 
 use Jmf\CrudEngine\Configuration\ActionConfigurationResolver;
-use Jmf\CrudEngine\Configuration\SchemaValueExpander;
+use Jmf\CrudEngine\Configuration\ActionConfigurationResolverFactory;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
-use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
 use PHPUnit\Framework\TestCase;
-use Twig\Environment;
-use Twig\Extra\String\StringExtension;
-use Twig\Loader\ArrayLoader;
 
 final class ActionConfigurationResolverTest extends TestCase
 {
@@ -22,12 +18,7 @@ final class ActionConfigurationResolverTest extends TestCase
     #[Override]
     protected function setUp(): void
     {
-        $twigEnvironment = new Environment(new ArrayLoader());
-        $twigEnvironment->addExtension(new StringExtension());
-
-        $this->resolver = new ActionConfigurationResolver(
-            new SchemaValueExpander(new TemplateRenderer($twigEnvironment)),
-        );
+        $this->resolver = (new ActionConfigurationResolverFactory())->create();
     }
 
     public function testResolvesDefaults(): void
@@ -61,9 +52,9 @@ final class ActionConfigurationResolverTest extends TestCase
         self::assertSame('provide', $article['index']['view']['fallback']);
         self::assertSame([], $article['index']['view']['variables']);
 
-        self::assertNull($article['index']['formTypeClass']);
-        self::assertSame('App\\Form\\Article\\CreateType', $article['create']['formSuggestedClass']);
-        self::assertSame('provide', $article['index']['formFallback']);
+        self::assertNull($article['index']['form']['typeClass']);
+        self::assertSame('App\\Form\\Article\\CreateType', $article['create']['form']['suggestedClass']);
+        self::assertSame('provide', $article['index']['form']['fallback']);
         self::assertNull($article['index']['helperClass']);
 
         self::assertNull($article['index']['redirection']);
@@ -117,7 +108,7 @@ final class ActionConfigurationResolverTest extends TestCase
 
         $create = $resolved[Article::class]['create'];
 
-        self::assertSame(ArticleType::class, $create['formTypeClass']);
+        self::assertSame(ArticleType::class, $create['form']['typeClass']);
         self::assertSame('/blog/new', $create['route']['path']);
         self::assertSame(['id' => '\d+'], $create['route']['requirements']);
         self::assertSame('blog/new.html.twig', $create['view']['path']);
@@ -186,6 +177,6 @@ final class ActionConfigurationResolverTest extends TestCase
             ],
         );
 
-        self::assertSame('fail', $resolved[Article::class]['create']['formFallback']);
+        self::assertSame('fail', $resolved[Article::class]['create']['form']['fallback']);
     }
 }
