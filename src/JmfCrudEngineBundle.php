@@ -5,25 +5,26 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine;
 
 use Jmf\CrudEngine\Configuration\ActionConfigurationRepository;
-use Jmf\CrudEngine\Configuration\ActionConfigurationResolver;
-use Jmf\CrudEngine\Configuration\SchemaValueExpander;
+use Jmf\CrudEngine\Configuration\ActionConfigurationResolverFactory;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Routing\RouteLoader;
-use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
-use Twig\Environment;
-use Twig\Extra\String\StringExtension;
-use Twig\Loader\ArrayLoader;
 
 class JmfCrudEngineBundle extends AbstractBundle
 {
     protected string $extensionAlias = 'jmf_crud_engine';
+
+    public function __construct(
+        private readonly ActionConfigurationResolverFactory $actionConfigurationResolverFactory = new ActionConfigurationResolverFactory(
+        ),
+    ) {
+    }
 
     #[Override]
     public function configure(DefinitionConfigurator $definition): void
@@ -56,7 +57,7 @@ class JmfCrudEngineBundle extends AbstractBundle
         $configurator->services()
             ->set(ActionConfigurationRepository::class)
             ->autowire()
-            ->arg('$resolvedConfigurations', $this->resolveConfigurations($config))
+            ->arg('$resolvedConfigurations', $this->getResolvedConfigurations($config))
         ;
 
         $configurator->services()
@@ -68,21 +69,11 @@ class JmfCrudEngineBundle extends AbstractBundle
     /**
      * @param array<string, mixed> $config
      *
-     * @return array<class-string, array<non-empty-string, array<string, mixed>>>
-     *
      * @throws CrudEngineConfigurationException
      */
-    private function resolveConfigurations(array $config): array
-    {
-        $twigEnvironment = new Environment(new ArrayLoader());
-        $twigEnvironment->addExtension(new StringExtension());
-
-        $actionConfigurationResolver = new ActionConfigurationResolver(
-            new SchemaValueExpander(
-                new TemplateRenderer($twigEnvironment),
-            ),
-        );
-
-        return $actionConfigurationResolver->resolve($config);
+    private function getResolvedConfigurations(
+        array $config,
+    ): array {
+        return $this->actionConfigurationResolverFactory->create()->resolve($config);
     }
 }

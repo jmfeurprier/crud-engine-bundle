@@ -179,10 +179,10 @@ readonly class ActionConfigurationResolver
             'formTypeClass'      => $this->resolveFormTypeClass($schema, $keys, $entityClass, $action, $actionConfig),
             'formSuggestedClass' => $this->resolveSuggestedFormTypeClass($schema, $keys, $entityClass, $action),
             'formFallback'       => $this->resolveFormFallback($schema),
-            'helperClass'   => $this->resolveHelperClass($schema, $keys, $entityClass, $action, $actionConfig),
-            'route'         => $this->resolveRoute($schema, $keys, $entityClass, $action, $actionConfig),
-            'redirection'   => $this->resolveRedirection($schema, $keys, $entityClass, $action, $actionConfig),
-            'view'          => $this->resolveView($schema, $keys, $entityClass, $action, $actionConfig),
+            'helperClass'        => $this->resolveHelperClass($schema, $keys, $entityClass, $action, $actionConfig),
+            'route'              => $this->resolveRoute($schema, $keys, $entityClass, $action, $actionConfig),
+            'redirection'        => $this->resolveRedirection($schema, $keys, $entityClass, $action, $actionConfig),
+            'view'               => $this->resolveView($schema, $keys, $entityClass, $action, $actionConfig),
         ];
     }
 
@@ -217,11 +217,11 @@ readonly class ActionConfigurationResolver
     }
 
     /**
-     * @param array<string, mixed>                       $schema
-     * @param array<non-empty-string, non-empty-string>  $keys
-     * @param class-string                               $entityClass
-     * @param non-empty-string                           $action
-     * @param array<string, mixed>                       $actionConfig
+     * @param array<string, mixed>                      $schema
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @return class-string<FormTypeInterface>|null
      *
@@ -288,11 +288,11 @@ readonly class ActionConfigurationResolver
     }
 
     /**
-     * @param array<string, mixed>                       $schema
-     * @param array<non-empty-string, non-empty-string>  $keys
-     * @param class-string                               $entityClass
-     * @param non-empty-string                           $action
-     * @param array<string, mixed>                       $actionConfig
+     * @param array<string, mixed>                      $schema
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @return class-string|null
      *
@@ -330,11 +330,11 @@ readonly class ActionConfigurationResolver
     }
 
     /**
-     * @param array<string, mixed>                       $schema
-     * @param array<non-empty-string, non-empty-string>  $keys
-     * @param class-string                               $entityClass
-     * @param non-empty-string                           $action
-     * @param array<string, mixed>                       $actionConfig
+     * @param array<string, mixed>                      $schema
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @return ResolvedRoute
      *
@@ -348,10 +348,20 @@ readonly class ActionConfigurationResolver
         string $action,
         array $actionConfig,
     ): array {
-        $routeConfig  = $this->getMap($actionConfig, 'route');
-        $schemaRoute  = $this->getMap($schema, 'route');
+        $routeConfig = $this->getMap($actionConfig, 'route');
+        $schemaRoute = $this->getMap($schema, 'route');
 
-        $name = $this->expandOverridable($routeConfig, 'name', $schemaRoute, 'name', self::DEFAULT_ROUTE_NAME, $keys, $entityClass, $action);
+        $name =
+            $this->expandOverridable(
+                $routeConfig,
+                'name',
+                $schemaRoute,
+                'name',
+                self::DEFAULT_ROUTE_NAME,
+                $keys,
+                $entityClass,
+                $action,
+            );
 
         return [
             'name'         => $name,
@@ -361,11 +371,11 @@ readonly class ActionConfigurationResolver
     }
 
     /**
-     * @param array<string, mixed>                       $routeConfig
-     * @param array<string, mixed>                       $schemaRoute
-     * @param array<non-empty-string, non-empty-string>  $keys
-     * @param class-string                               $entityClass
-     * @param non-empty-string                           $action
+     * @param array<string, mixed>                      $routeConfig
+     * @param array<string, mixed>                      $schemaRoute
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
      *
      * @return non-empty-string
      *
@@ -419,11 +429,11 @@ readonly class ActionConfigurationResolver
     }
 
     /**
-     * @param array<string, mixed>                       $schema
-     * @param array<non-empty-string, non-empty-string>  $keys
-     * @param class-string                               $entityClass
-     * @param non-empty-string                           $action
-     * @param array<string, mixed>                       $actionConfig
+     * @param array<string, mixed>                      $schema
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @return ResolvedRedirection|null
      *
@@ -477,11 +487,11 @@ readonly class ActionConfigurationResolver
     }
 
     /**
-     * @param array<string, mixed>                       $schema
-     * @param array<non-empty-string, non-empty-string>  $keys
-     * @param class-string                               $entityClass
-     * @param non-empty-string                           $action
-     * @param array<string, mixed>                       $actionConfig
+     * @param array<string, mixed>                      $schema
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
+     * @param array<string, mixed>                      $actionConfig
      *
      * @return ResolvedView
      *
@@ -494,22 +504,31 @@ readonly class ActionConfigurationResolver
         string $action,
         array $actionConfig,
     ): array {
-        $viewConfig   = $this->getMap($actionConfig, 'view');
-        $schemaView   = $this->getMap($schema, 'view');
+        $viewConfig = $this->getMap($actionConfig, 'view');
+        $schemaView = $this->getMap($schema, 'view');
 
         return [
-            'path'      => $this->expandOverridable($viewConfig, 'path', $schemaView, 'path', self::DEFAULT_VIEW_PATH, $keys, $entityClass, $action),
+            'path'      => $this->expandOverridable(
+                $viewConfig,
+                'path',
+                $schemaView,
+                'path',
+                self::DEFAULT_VIEW_PATH,
+                $keys,
+                $entityClass,
+                $action,
+            ),
             'variables' => $this->resolveViewVariables($schemaView, $viewConfig, $keys, $entityClass, $action),
             'fallback'  => $this->resolveViewFallback($schemaView),
         ];
     }
 
     /**
-     * @param array<string, mixed>                       $schemaView
-     * @param array<string, mixed>                       $viewConfig
-     * @param array<non-empty-string, non-empty-string>  $keys
-     * @param class-string                               $entityClass
-     * @param non-empty-string                           $action
+     * @param array<string, mixed>                      $schemaView
+     * @param array<string, mixed>                      $viewConfig
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
      *
      * @return array<non-empty-string, list<non-empty-string>>
      *
@@ -601,14 +620,14 @@ readonly class ActionConfigurationResolver
      * Resolves a value that may be set on the action, then the schema, then a default
      * pattern — expanding placeholders unless it comes from the action override.
      *
-     * @param array<string, mixed>                       $config
-     * @param non-empty-string                           $configKey
-     * @param array<string, mixed>                       $schema
-     * @param non-empty-string                           $schemaKey
-     * @param non-empty-string                           $default
-     * @param array<non-empty-string, non-empty-string>  $keys
-     * @param class-string                               $entityClass
-     * @param non-empty-string                           $action
+     * @param array<string, mixed>                      $config
+     * @param non-empty-string                          $configKey
+     * @param array<string, mixed>                      $schema
+     * @param non-empty-string                          $schemaKey
+     * @param non-empty-string                          $default
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
      *
      * @return non-empty-string
      *
@@ -646,14 +665,17 @@ readonly class ActionConfigurationResolver
     }
 
     /**
-     * @param array<string, mixed>  $config
-     * @param non-empty-string      $key
+     * @param array<string, mixed>   $config
+     * @param non-empty-string       $key
      * @param list<non-empty-string> $default
      *
      * @return list<non-empty-string>
      */
-    private function getPatterns(array $config, string $key, array $default): array
-    {
+    private function getPatterns(
+        array $config,
+        string $key,
+        array $default,
+    ): array {
         if (!array_key_exists($key, $config)) {
             return $default;
         }
@@ -671,10 +693,10 @@ readonly class ActionConfigurationResolver
     }
 
     /**
-     * @param non-empty-string                           $value
-     * @param array<non-empty-string, non-empty-string>  $keys
-     * @param class-string                               $entityClass
-     * @param non-empty-string                           $action
+     * @param non-empty-string                          $value
+     * @param array<non-empty-string, non-empty-string> $keys
+     * @param class-string                              $entityClass
+     * @param non-empty-string                          $action
      *
      * @throws CrudEngineInvalidConfigurationException
      */
@@ -700,8 +722,10 @@ readonly class ActionConfigurationResolver
      *
      * @return array<string, mixed>
      */
-    private function getMap(array $config, string $key): array
-    {
+    private function getMap(
+        array $config,
+        string $key,
+    ): array {
         if (!array_key_exists($key, $config)) {
             return [];
         }
@@ -718,8 +742,10 @@ readonly class ActionConfigurationResolver
      *
      * @return array<string, string>
      */
-    private function getStringMap(array $config, string $key): array
-    {
+    private function getStringMap(
+        array $config,
+        string $key,
+    ): array {
         if (!array_key_exists($key, $config)) {
             return [];
         }
@@ -743,8 +769,10 @@ readonly class ActionConfigurationResolver
      * @param array<string, mixed> $config
      * @param non-empty-string     $key
      */
-    private function getNullableString(array $config, string $key): ?string
-    {
+    private function getNullableString(
+        array $config,
+        string $key,
+    ): ?string {
         if (!array_key_exists($key, $config) || null === $config[$key]) {
             return null;
         }
