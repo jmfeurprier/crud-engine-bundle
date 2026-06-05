@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Form;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\Persistence\ManagerRegistry;
+use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineFormException;
+use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Override;
-use Throwable;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Throwable;
 use Webmozart\Assert\Assert;
 
 /**
@@ -28,7 +28,7 @@ class CrudEngineEntityType extends AbstractType
     private const string FALLBACK_NOTICE_FIELD = '_crudEngineFallbackNotice';
 
     public function __construct(
-        private readonly ManagerRegistry $managerRegistry,
+        private readonly EntityManagerResolver $entityManagerResolver,
         private readonly FieldGenerator $fieldGenerator,
     ) {
     }
@@ -120,19 +120,11 @@ class CrudEngineEntityType extends AbstractType
      *
      * @return ClassMetadata<object>
      *
-     * @throws CrudEngineFormException
+     * @throws CrudEngineEntityManagerNotFoundException
      */
     private function getClassMetadata(string $entityClass): ClassMetadata
     {
-        $manager = $this->managerRegistry->getManagerForClass($entityClass);
-
-        Assert::isInstanceOf($manager, EntityManagerInterface::class);
-
-        try {
-            return $manager->getClassMetadata($entityClass);
-        } catch (Throwable $e) {
-            throw new CrudEngineFormException($entityClass, $e);
-        }
+        return $this->entityManagerResolver->resolve($entityClass)->getClassMetadata($entityClass);
     }
 
     /**

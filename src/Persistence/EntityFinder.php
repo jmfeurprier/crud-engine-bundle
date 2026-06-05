@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Controller\Dependencies;
+namespace Jmf\CrudEngine\Persistence;
 
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
@@ -12,7 +12,7 @@ use Throwable;
 readonly class EntityFinder
 {
     public function __construct(
-        private EntityManagerResolver $entityManagerResolver,
+        private EntityManagerResolver $objectManagerResolver,
     ) {
     }
 
@@ -31,7 +31,7 @@ readonly class EntityFinder
         string $entityClass,
         string $id,
     ): object {
-        $objectManager = $this->entityManagerResolver->resolve($entityClass);
+        $objectManager = $this->objectManagerResolver->resolve($entityClass);
 
         try {
             $entity = $objectManager->find($entityClass, $id);

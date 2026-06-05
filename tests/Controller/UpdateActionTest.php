@@ -12,14 +12,14 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
-use Jmf\CrudEngine\Controller\Dependencies\EntityFinder;
-use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
-use Jmf\CrudEngine\Controller\Dependencies\FormCreator;
-use Jmf\CrudEngine\Controller\Dependencies\RedirectionGenerator;
-use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
 use Jmf\CrudEngine\Controller\UpdateAction;
+use Jmf\CrudEngine\Form\FormCreator;
+use Jmf\CrudEngine\Persistence\EntityFinder;
+use Jmf\CrudEngine\Persistence\EntityManagerResolver;
+use Jmf\CrudEngine\Redirection\RedirectionGenerator;
+use Jmf\CrudEngine\View\ViewRenderer;
 use Override;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -37,19 +37,19 @@ final class UpdateActionTest extends TestCase
     private ActionHelperResolver&Stub $actionHelperResolver;
 
     /**
-     * @var UpdateActionHelperInterface<stdClass>&Stub
+     * @var UpdateActionHelperInterface<stdClass> & Stub
      */
-    private UpdateActionHelperInterface&Stub $defaultActionHelper;
+    private UpdateActionHelperInterface & Stub $defaultActionHelper;
 
-    private EntityFinder&Stub $entityFinder;
+    private EntityFinder & Stub $entityFinder;
 
-    private FormCreator&Stub $formCreator;
+    private FormCreator & Stub $formCreator;
 
-    private EntityManagerResolver&Stub $entityManagerResolver;
+    private EntityManagerResolver & Stub $objectManagerResolver;
 
-    private RedirectionGenerator&Stub $redirectionGenerator;
+    private RedirectionGenerator & Stub $redirectionGenerator;
 
-    private ViewRenderer&Stub $viewRenderer;
+    private ViewRenderer & Stub $viewRenderer;
 
     #[Override]
     protected function setUp(): void
@@ -59,7 +59,7 @@ final class UpdateActionTest extends TestCase
         $this->defaultActionHelper           = $this->createStub(UpdateActionHelperInterface::class);
         $this->entityFinder                  = $this->createStub(EntityFinder::class);
         $this->formCreator                   = $this->createStub(FormCreator::class);
-        $this->entityManagerResolver         = $this->createStub(EntityManagerResolver::class);
+        $this->objectManagerResolver         = $this->createStub(EntityManagerResolver::class);
         $this->redirectionGenerator          = $this->createStub(RedirectionGenerator::class);
         $this->viewRenderer                  = $this->createStub(ViewRenderer::class);
     }
@@ -173,7 +173,7 @@ final class UpdateActionTest extends TestCase
             $this->defaultActionHelper,
             $this->entityFinder,
             $this->formCreator,
-            $this->entityManagerResolver,
+            $this->objectManagerResolver,
             $this->redirectionGenerator,
             $this->viewRenderer,
         );
@@ -191,9 +191,9 @@ final class UpdateActionTest extends TestCase
             action:                   $action,
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
-                                          formTypeClass:    null,
+                                          formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode: FormFallbackMode::PROVIDE,
+                                          formFallbackMode:       FormFallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: new ActionRedirectionConfiguration(
                                           route:      '',

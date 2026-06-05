@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
 
 use Doctrine\Persistence\ObjectManager;
-use Jmf\CrudEngine\Controller\Dependencies\EntityFinder;
-use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
+use Jmf\CrudEngine\Persistence\EntityFinder;
+use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
@@ -52,9 +52,9 @@ final class EntityFinderTest extends TestCase
 
     private function createEntityFinder(ObjectManager $objectManager): EntityFinder
     {
-        $entityManagerResolver = $this->createStub(EntityManagerResolver::class);
-        $entityManagerResolver->method('resolve')->willReturn($objectManager);
+        $objectManagerResolver = $this->createStub(EntityManagerResolver::class);
+        $objectManagerResolver->method('resolve')->willReturn($objectManager);
 
-        return new EntityFinder($entityManagerResolver);
+        return new EntityFinder($objectManagerResolver);
     }
 }

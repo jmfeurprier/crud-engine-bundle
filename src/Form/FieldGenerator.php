@@ -17,9 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormTypeInterface;
 
-/**
- * @todo Refactor.
- */
 readonly class FieldGenerator
 {
     private const array TYPE_MAPPING = [

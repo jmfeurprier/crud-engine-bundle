@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Form;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\FieldMapping;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Jmf\CrudEngine\Exception\CrudEngineFormException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FieldGenerator;
@@ -57,11 +57,11 @@ final class CrudEngineEntityTypeTest extends TestCase
                 ],
             ],
         );
-        $entityManager = $this->createStub(EntityManagerInterface::class);
-        $entityManager->method('getClassMetadata')->willReturn($metadata);
+        $objectManager = $this->createStub(ObjectManager::class);
+        $objectManager->method('getClassMetadata')->willReturn($metadata);
 
         $managerRegistry = $this->createStub(ManagerRegistry::class);
-        $managerRegistry->method('getManagerForClass')->willReturn($entityManager);
+        $managerRegistry->method('getManagerForClass')->willReturn($objectManager);
 
         /** @var array<string, array{type: string, options: array<string, mixed>}> $added */
         $added   = [];
@@ -126,11 +126,11 @@ final class CrudEngineEntityTypeTest extends TestCase
 
     public function testWrapsMetadataFailure(): void
     {
-        $entityManager = $this->createStub(EntityManagerInterface::class);
-        $entityManager->method('getClassMetadata')->willThrowException(new RuntimeException('boom'));
+        $objectManager = $this->createStub(ObjectManager::class);
+        $objectManager->method('getClassMetadata')->willThrowException(new RuntimeException('boom'));
 
         $managerRegistry = $this->createStub(ManagerRegistry::class);
-        $managerRegistry->method('getManagerForClass')->willReturn($entityManager);
+        $managerRegistry->method('getManagerForClass')->willReturn($objectManager);
 
         $this->expectException(CrudEngineFormException::class);
 

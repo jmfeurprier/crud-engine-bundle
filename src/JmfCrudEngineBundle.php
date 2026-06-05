@@ -7,14 +7,13 @@ namespace Jmf\CrudEngine;
 use Jmf\CrudEngine\Configuration\ActionConfigurationResolverFactory;
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepository;
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryFactory;
-use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
+use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Routing\RouteLoader;
 use Override;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
@@ -47,10 +46,11 @@ class JmfCrudEngineBundle extends AbstractBundle
     ): void {
         $configurator->import('../config/services.yaml');
 
-        $configurator->services()
-            ->set(ActionHelperResolver::class)
-            ->autowire()
-            ->arg('$container', new Reference('service_container'))
+        // Action helpers are resolved by class name at runtime through a service locator.
+        // Tagging every implementation lets them stay private (their location/visibility
+        // no longer matters) instead of relying on the container as a global locator.
+        $container->registerForAutoconfiguration(ActionHelperInterface::class)
+            ->addTag('jmf_crud_engine.action_helper')
         ;
 
         // The configuration is resolved once, here at container build time, and the

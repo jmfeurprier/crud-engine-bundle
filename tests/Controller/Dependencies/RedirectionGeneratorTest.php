@@ -11,8 +11,8 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionCo
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
-use Jmf\CrudEngine\Controller\Dependencies\RedirectionGenerator;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
+use Jmf\CrudEngine\Redirection\RedirectionGenerator;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;

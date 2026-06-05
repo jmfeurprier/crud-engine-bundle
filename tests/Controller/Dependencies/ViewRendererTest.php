@@ -11,8 +11,8 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionCo
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
-use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
+use Jmf\CrudEngine\View\ViewRenderer;
 use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
 use PHPUnit\Framework\TestCase;

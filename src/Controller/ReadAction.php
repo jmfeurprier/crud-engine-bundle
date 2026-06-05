@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller;
 
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
-use Jmf\CrudEngine\Controller\Dependencies\EntityFinder;
-use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
@@ -15,6 +13,8 @@ use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
+use Jmf\CrudEngine\Persistence\EntityFinder;
+use Jmf\CrudEngine\View\ViewRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;

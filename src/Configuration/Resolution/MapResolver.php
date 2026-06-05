@@ -6,7 +6,7 @@ namespace Jmf\CrudEngine\Configuration\Resolution;
 
 use Webmozart\Assert\Assert;
 
-class MapResolver
+readonly class MapResolver
 {
     /**
      * @param array<string, mixed> $config

@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller;
 
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
-use Jmf\CrudEngine\Controller\Dependencies\EntityFinder;
-use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
-use Jmf\CrudEngine\Controller\Dependencies\RedirectionGenerator;
-use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
@@ -16,6 +12,10 @@ use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
+use Jmf\CrudEngine\Persistence\EntityFinder;
+use Jmf\CrudEngine\Persistence\EntityManagerResolver;
+use Jmf\CrudEngine\Redirection\RedirectionGenerator;
+use Jmf\CrudEngine\View\ViewRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -35,7 +35,7 @@ readonly class DeleteAction
         private ActionHelperResolver $actionHelperResolver,
         private DeleteActionHelperInterface $defaultActionHelper,
         private EntityFinder $entityFinder,
-        private EntityManagerResolver $entityManagerResolver,
+        private EntityManagerResolver $objectManagerResolver,
         private RedirectionGenerator $redirectionGenerator,
         private ViewRenderer $viewRenderer,
     ) {
@@ -72,7 +72,7 @@ readonly class DeleteAction
                 );
 
                 $actionHelper->remove(
-                    $this->entityManagerResolver->resolve($entityClass),
+                    $this->objectManagerResolver->resolve($entityClass),
                     $entity,
                 );
 

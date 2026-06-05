@@ -12,11 +12,11 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
-use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
-use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
 use Jmf\CrudEngine\Controller\IndexAction;
+use Jmf\CrudEngine\Persistence\EntityManagerResolver;
+use Jmf\CrudEngine\View\ViewRenderer;
 use Override;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -26,18 +26,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class IndexActionTest extends TestCase
 {
-    private ActionConfigurationRepositoryInterface&Stub $actionConfigurationRepository;
+    private ActionConfigurationRepositoryInterface & Stub $actionConfigurationRepository;
 
-    private ActionHelperResolver&Stub $actionHelperResolver;
+    private ActionHelperResolver & Stub $actionHelperResolver;
 
     /**
-     * @var IndexActionHelperInterface<stdClass>&Stub
+     * @var IndexActionHelperInterface<stdClass> & Stub
      */
-    private IndexActionHelperInterface&Stub $defaultActionHelper;
+    private IndexActionHelperInterface & Stub $defaultActionHelper;
 
-    private EntityManagerResolver&Stub $entityManagerResolver;
+    private EntityManagerResolver & Stub $objectManagerResolver;
 
-    private ViewRenderer&Stub $viewRenderer;
+    private ViewRenderer & Stub $viewRenderer;
 
     #[Override]
     protected function setUp(): void
@@ -45,7 +45,7 @@ final class IndexActionTest extends TestCase
         $this->actionConfigurationRepository = $this->createStub(ActionConfigurationRepositoryInterface::class);
         $this->actionHelperResolver          = $this->createStub(ActionHelperResolver::class);
         $this->defaultActionHelper           = $this->createStub(IndexActionHelperInterface::class);
-        $this->entityManagerResolver         = $this->createStub(EntityManagerResolver::class);
+        $this->objectManagerResolver         = $this->createStub(EntityManagerResolver::class);
         $this->viewRenderer                  = $this->createStub(ViewRenderer::class);
     }
 
@@ -125,7 +125,7 @@ final class IndexActionTest extends TestCase
             $this->actionConfigurationRepository,
             $this->actionHelperResolver,
             $this->defaultActionHelper,
-            $this->entityManagerResolver,
+            $this->objectManagerResolver,
             $this->viewRenderer,
         );
     }

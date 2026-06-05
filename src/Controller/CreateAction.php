@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller;
 
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
-use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
-use Jmf\CrudEngine\Controller\Dependencies\FormCreator;
-use Jmf\CrudEngine\Controller\Dependencies\RedirectionGenerator;
-use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
@@ -21,6 +17,10 @@ use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
+use Jmf\CrudEngine\Form\FormCreator;
+use Jmf\CrudEngine\Persistence\EntityManagerResolver;
+use Jmf\CrudEngine\Redirection\RedirectionGenerator;
+use Jmf\CrudEngine\View\ViewRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -40,7 +40,7 @@ readonly class CreateAction
         private ActionHelperResolver $actionHelperResolver,
         private CreateActionHelperInterface $defaultActionHelper,
         private FormCreator $formCreator,
-        private EntityManagerResolver $entityManagerResolver,
+        private EntityManagerResolver $objectManagerResolver,
         private RedirectionGenerator $redirectionGenerator,
         private ViewRenderer $viewRenderer,
     ) {
@@ -92,7 +92,7 @@ readonly class CreateAction
                 $request,
                 $entity,
                 $form,
-                $this->entityManagerResolver->resolve($entityClass),
+                $this->objectManagerResolver->resolve($entityClass),
             );
 
             $actionHelper->hookAfterPersist(

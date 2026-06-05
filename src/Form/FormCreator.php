@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Controller\Dependencies;
+namespace Jmf\CrudEngine\Form;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineFormException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Throwable;

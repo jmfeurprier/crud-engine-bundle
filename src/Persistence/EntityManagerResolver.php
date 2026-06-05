@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Controller\Dependencies;
+namespace Jmf\CrudEngine\Persistence;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 
 readonly class EntityManagerResolver
@@ -20,14 +20,19 @@ readonly class EntityManagerResolver
      *
      * @throws CrudEngineEntityManagerNotFoundException
      */
-    public function resolve(string $entityClass): ObjectManager
+    public function resolve(string $entityClass): EntityManagerInterface
     {
-        $entityManager = $this->managerRegistry->getManagerForClass($entityClass);
+        $objectManager = $this->managerRegistry->getManagerForClass($entityClass);
 
-        if ($entityManager instanceof ObjectManager) {
-            return $entityManager;
+        if (null === $objectManager) {
+            throw new CrudEngineEntityManagerNotFoundException($entityClass);
         }
 
+        if ($objectManager instanceof EntityManagerInterface) {
+            return $objectManager;
+        }
+
+        // @xxx
         throw new CrudEngineEntityManagerNotFoundException($entityClass);
     }
 }

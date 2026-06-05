@@ -13,12 +13,12 @@ use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Controller\DeleteAction;
-use Jmf\CrudEngine\Controller\Dependencies\EntityFinder;
-use Jmf\CrudEngine\Controller\Dependencies\EntityManagerResolver;
-use Jmf\CrudEngine\Controller\Dependencies\RedirectionGenerator;
-use Jmf\CrudEngine\Controller\Dependencies\ViewRenderer;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
+use Jmf\CrudEngine\Persistence\EntityFinder;
+use Jmf\CrudEngine\Persistence\EntityManagerResolver;
+use Jmf\CrudEngine\Redirection\RedirectionGenerator;
+use Jmf\CrudEngine\View\ViewRenderer;
 use Override;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -35,17 +35,17 @@ final class DeleteActionTest extends TestCase
     private ActionHelperResolver&Stub $actionHelperResolver;
 
     /**
-     * @var DeleteActionHelperInterface<stdClass>&Stub
+     * @var DeleteActionHelperInterface<stdClass> & Stub
      */
-    private DeleteActionHelperInterface&Stub $defaultActionHelper;
+    private DeleteActionHelperInterface & Stub $defaultActionHelper;
 
-    private EntityFinder&Stub $entityFinder;
+    private EntityFinder & Stub $entityFinder;
 
-    private EntityManagerResolver&Stub $entityManagerResolver;
+    private EntityManagerResolver & Stub $objectManagerResolver;
 
-    private RedirectionGenerator&Stub $redirectionGenerator;
+    private RedirectionGenerator & Stub $redirectionGenerator;
 
-    private ViewRenderer&Stub $viewRenderer;
+    private ViewRenderer & Stub $viewRenderer;
 
     #[Override]
     protected function setUp(): void
@@ -54,7 +54,7 @@ final class DeleteActionTest extends TestCase
         $this->actionHelperResolver          = $this->createStub(ActionHelperResolver::class);
         $this->defaultActionHelper           = $this->createStub(DeleteActionHelperInterface::class);
         $this->entityFinder                  = $this->createStub(EntityFinder::class);
-        $this->entityManagerResolver         = $this->createStub(EntityManagerResolver::class);
+        $this->objectManagerResolver         = $this->createStub(EntityManagerResolver::class);
         $this->redirectionGenerator          = $this->createStub(RedirectionGenerator::class);
         $this->viewRenderer                  = $this->createStub(ViewRenderer::class);
     }
@@ -181,7 +181,7 @@ final class DeleteActionTest extends TestCase
             $this->actionHelperResolver,
             $this->defaultActionHelper,
             $this->entityFinder,
-            $this->entityManagerResolver,
+            $this->objectManagerResolver,
             $this->redirectionGenerator,
             $this->viewRenderer,
         );
@@ -199,9 +199,9 @@ final class DeleteActionTest extends TestCase
             action:                   $action,
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
-                                          formTypeClass:    null,
+                                          formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode: FormFallbackMode::PROVIDE,
+                                          formFallbackMode:       FormFallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: new ActionRedirectionConfiguration(
                                           route:      '',
