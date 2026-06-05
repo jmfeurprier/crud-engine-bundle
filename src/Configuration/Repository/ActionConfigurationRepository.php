@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Repository;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationResolver;
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Override;
 
-/**
- * @phpstan-import-type ResolvedConfigurations from ActionConfigurationResolver
- */
 readonly class ActionConfigurationRepository implements ActionConfigurationRepositoryInterface
 {
     /**
-     * @param ActionConfiguration $config
+     * @param array<class-string, array<non-empty-string, ActionConfiguration>> $config
      */
     public function __construct(
         private array $config,

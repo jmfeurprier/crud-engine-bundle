@@ -26,7 +26,7 @@ readonly class ActionConfigurationHydrator
     /**
      * @param ResolvedConfigurations $resolvedConfigurations
      *
-     * @return ActionConfiguration
+     * @return array<class-string, array<non-empty-string, ActionConfiguration>>
      */
     public function hydrate(array $resolvedConfigurations): array
     {

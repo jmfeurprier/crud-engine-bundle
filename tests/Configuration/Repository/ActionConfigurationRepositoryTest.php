@@ -73,7 +73,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
     }
 
     /**
-     * @param ActionConfiguration $configuration
+     * @param array<class-string, array<non-empty-string, ActionConfiguration>> $configuration
      */
     private function givenConfiguration(array $configuration): void
     {
