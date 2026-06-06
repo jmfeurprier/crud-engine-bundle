@@ -71,7 +71,13 @@ class CrudEngineEntityType extends AbstractType
                 continue;
             }
 
-            $this->addField($builder, $metadata, $fieldName);
+            $this->addField(
+                builder:     $builder,
+                metadata:    $metadata,
+                entityClass: $entityClass,
+                action:      $action,
+                fieldName:   $fieldName,
+            );
         }
     }
 
@@ -138,6 +144,9 @@ class CrudEngineEntityType extends AbstractType
 
     /**
      * @param ClassMetadata<object> $metadata
+     *
+     * @param class-string          $entityClass
+     * @param non-empty-string      $action
      *
      * @throws CrudEngineFormFieldException
      */

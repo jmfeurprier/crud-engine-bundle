@@ -57,6 +57,7 @@ final class FormCreatorTest extends TestCase
                 CrudEngineEntityType::class,
                 $article,
                 [
+                    'action'                    => 'create',
                     'entity_class'              => Article::class,
                     'suggested_form_type_class' => 'StubFormType',
                 ],

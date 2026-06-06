@@ -94,6 +94,7 @@ final class CrudEngineEntityTypeTest extends TestCase
         (new CrudEngineEntityType($entityManagerResolver, new FieldGenerator()))->buildForm(
             $builder,
             [
+                'action'                    => 'create',
                 'entity_class'              => Article::class,
                 'suggested_form_type_class' => 'StubFormType',
             ],
@@ -144,6 +145,7 @@ final class CrudEngineEntityTypeTest extends TestCase
         (new CrudEngineEntityType($entityManagerResolver, new FieldGenerator()))->buildForm(
             $this->createStub(FormBuilderInterface::class),
             [
+                'action'                    => 'create',
                 'entity_class'              => Article::class,
                 'suggested_form_type_class' => 'StubFormType',
             ],

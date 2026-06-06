@@ -14,6 +14,7 @@ readonly class ActionConfiguration
 {
     /**
      * @param class-string      $entityClass
+     * @param non-empty-string  $action
      * @param null|class-string $helperClass
      */
     public function __construct(
@@ -35,6 +36,9 @@ readonly class ActionConfiguration
         return $this->entityClass;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getAction(): string
     {
         return $this->action;

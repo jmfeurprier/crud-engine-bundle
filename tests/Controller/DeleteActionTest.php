@@ -188,7 +188,8 @@ final class DeleteActionTest extends TestCase
     }
 
     /**
-     * @param class-string $entityClass
+     * @param class-string     $entityClass
+     * @param non-empty-string $action
      */
     private function givenActionConfiguration(
         string $entityClass,
