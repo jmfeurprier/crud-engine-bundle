@@ -61,7 +61,11 @@ readonly class RedirectionConfigurationResolver
             Assert::isMap($redirectionConfig);
 
             if (!array_key_exists('route', $redirectionConfig)) {
-                throw new CrudEngineMissingConfigurationException($entityClass, $action, 'redirection.route');
+                throw new CrudEngineMissingConfigurationException(
+                    $entityClass,
+                    $action,
+                    'redirection.route',
+                );
             }
 
             Assert::stringNotEmpty($redirectionConfig['route']);

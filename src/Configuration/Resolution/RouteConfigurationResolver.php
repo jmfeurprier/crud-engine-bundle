@@ -106,10 +106,19 @@ readonly class RouteConfigurationResolver
         );
 
         if (!array_key_exists($action, $paths)) {
-            throw new CrudEngineMissingConfigurationException($entityClass, $action, 'route.path');
+            throw new CrudEngineMissingConfigurationException(
+                $entityClass,
+                $action,
+                'route.path',
+            );
         }
 
-        $path = $this->configurationValueResolver->resolve($paths[$action], $keys, $entityClass, $action);
+        $path = $this->configurationValueResolver->resolve(
+            $paths[$action],
+            $keys,
+            $entityClass,
+            $action,
+        );
 
         Assert::stringNotEmpty($path);
 
