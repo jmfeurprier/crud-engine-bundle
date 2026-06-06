@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 
 readonly class ActionHelperResolver
@@ -25,6 +27,7 @@ readonly class ActionHelperResolver
      *
      * @psalm-return T
      *
+     * @throws CrudEngineActionHelperNotFoundException
      * @throws CrudEngineInvalidActionHelperException
      */
     public function resolve(
@@ -37,19 +40,13 @@ readonly class ActionHelperResolver
         if (null !== $actionConfiguration->getHelperClass()) {
             $helperClass = $actionConfiguration->getHelperClass();
 
-            if (!$this->container->has($helperClass)) {
-                throw new CrudEngineInvalidActionHelperException(
-                    sprintf(
-                        'Action Helper %s for Entity %s and Action %s not found.',
-                        $helperClass,
-                        $actionConfiguration->getEntityAction()->getEntityClass(),
-                        $actionConfiguration->getEntityAction()->getAction(),
-                    ),
-                );
-            }
-
             try {
                 $actionHelper = $this->container->get($helperClass);
+            } catch (NotFoundExceptionInterface $e) {
+                throw new CrudEngineActionHelperNotFoundException(
+                    $actionConfiguration,
+                    $helperClass,
+                );
             } catch (ContainerExceptionInterface $e) {
                 throw new CrudEngineInvalidActionHelperException(
                     message:  sprintf(
