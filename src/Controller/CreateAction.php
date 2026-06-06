@@ -7,13 +7,16 @@ namespace Jmf\CrudEngine\Controller;
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperInterface;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperRetrievalException;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
-use Jmf\CrudEngine\Exception\CrudEngineFormException;
+use Jmf\CrudEngine\Exception\CrudEngineFormCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineFormRequestHandlingException;
 use Jmf\CrudEngine\Exception\CrudEngineFormViewCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
-use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
@@ -51,11 +54,16 @@ readonly class CreateAction
     /**
      * @psalm-param class-string<E> $entityClass
      *
+     * @throws CrudEngineActionHelperNotAnObjectException
+     * @throws CrudEngineActionHelperNotFoundException
+     * @throws CrudEngineActionHelperRetrievalException
+     * @throws CrudEngineActionHelperTypeMismatchException
      * @throws CrudEngineConfigurationException
      * @throws CrudEngineEntityManagerNotFoundException
-     * @throws CrudEngineFormException
+     * @throws CrudEngineFormCreationException
+     * @throws CrudEngineFormRequestHandlingException
+     * @throws CrudEngineFormViewCreationException
      * @throws CrudEngineInstantiationFailureException
-     * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineMissingViewException
      * @throws CrudEnginePersistenceException
      * @throws CrudEngineRedirectionException

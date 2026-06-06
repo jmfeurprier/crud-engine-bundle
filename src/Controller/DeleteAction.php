@@ -7,9 +7,12 @@ namespace Jmf\CrudEngine\Controller;
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperRetrievalException;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
-use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\CrudEngine\Persistence\EntityFinder;
@@ -44,9 +47,12 @@ readonly class DeleteAction
     /**
      * @param class-string<E> $entityClass
      *
+     * @throws CrudEngineActionHelperNotAnObjectException
+     * @throws CrudEngineActionHelperNotFoundException
+     * @throws CrudEngineActionHelperRetrievalException
+     * @throws CrudEngineActionHelperTypeMismatchException
      * @throws CrudEngineConfigurationException
      * @throws CrudEngineEntityManagerNotFoundException
-     * @throws CrudEngineInvalidActionHelperException
      * @throws CrudEngineRedirectionParameterRenderingException
      * @throws CrudEngineViewRenderingException
      * @throws Throwable

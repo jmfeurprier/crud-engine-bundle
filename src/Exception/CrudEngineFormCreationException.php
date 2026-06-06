@@ -7,7 +7,7 @@ namespace Jmf\CrudEngine\Exception;
 use Jmf\CrudEngine\Model\EntityAction;
 use Throwable;
 
-final class CrudEngineFormCreationException extends CrudEngineFormException
+final class CrudEngineFormCreationException extends CrudEngineRuntimeException
 {
     public function __construct(
         private readonly EntityAction $entityAction,

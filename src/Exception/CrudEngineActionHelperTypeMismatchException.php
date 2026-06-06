@@ -5,22 +5,25 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Exception;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 
-class CrudEngineActionHelperNotFoundException extends CrudEngineRuntimeException
+class CrudEngineActionHelperTypeMismatchException extends CrudEngineRuntimeException
 {
     /**
-     * @param class-string $helperClass
+     * @param class-string<ActionHelperInterface> $expectedClass
      */
     public function __construct(
         private readonly ActionConfiguration $actionConfiguration,
-        private readonly string $helperClass,
+        private readonly string $actualClass,
+        private readonly string $expectedClass,
     ) {
         parent::__construct(
             message: sprintf(
-                         'Action Helper %s for Entity %s and Action %s not found.',
-                         $this->helperClass,
+                         'Action Helper %s for Entity %s and Action %s does not implement/extend %s',
+                         $this->actualClass,
                          $this->actionConfiguration->getEntityAction()->getEntityClass(),
                          $this->actionConfiguration->getEntityAction()->getAction(),
+                         $this->expectedClass,
                      ),
         );
     }
@@ -30,8 +33,13 @@ class CrudEngineActionHelperNotFoundException extends CrudEngineRuntimeException
         return $this->actionConfiguration;
     }
 
-    public function getHelperClass(): string
+    public function getActualClass(): string
     {
-        return $this->helperClass;
+        return $this->actualClass;
+    }
+
+    public function getExpectedClass(): string
+    {
+        return $this->expectedClass;
     }
 }

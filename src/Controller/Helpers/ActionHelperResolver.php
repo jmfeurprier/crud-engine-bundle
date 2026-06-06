@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller\Helpers;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotFoundException;
-use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperRetrievalException;
+use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -27,8 +29,10 @@ readonly class ActionHelperResolver
      *
      * @psalm-return T
      *
+     * @throws CrudEngineActionHelperNotAnObjectException
      * @throws CrudEngineActionHelperNotFoundException
-     * @throws CrudEngineInvalidActionHelperException
+     * @throws CrudEngineActionHelperRetrievalException
+     * @throws CrudEngineActionHelperTypeMismatchException
      */
     public function resolve(
         string $class,
@@ -42,44 +46,29 @@ readonly class ActionHelperResolver
 
             try {
                 $actionHelper = $this->container->get($helperClass);
-            } catch (NotFoundExceptionInterface $e) {
+            } catch (NotFoundExceptionInterface) {
                 throw new CrudEngineActionHelperNotFoundException(
                     $actionConfiguration,
                     $helperClass,
                 );
             } catch (ContainerExceptionInterface $e) {
-                throw new CrudEngineInvalidActionHelperException(
-                    message:  sprintf(
-                                  'Failed retrieving Action Helper %s for Entity %s and Action %s from container.',
-                                  $helperClass,
-                                  $actionConfiguration->getEntityAction()->getEntityClass(),
-                                  $actionConfiguration->getEntityAction()->getAction(),
-                              ),
-                    code:     $e->getCode(),
-                    previous: $e,
+                throw new CrudEngineActionHelperRetrievalException(
+                    $actionConfiguration,
+                    $helperClass,
+                    $e,
                 );
             }
         }
 
         if (!is_object($actionHelper)) {
-            throw new CrudEngineInvalidActionHelperException(
-                sprintf(
-                    'Retrieved Action Helper for Entity %s and Action %s is not an object.',
-                    $actionConfiguration->getEntityAction()->getEntityClass(),
-                    $actionConfiguration->getEntityAction()->getAction(),
-                ),
-            );
+            throw new CrudEngineActionHelperNotAnObjectException($actionConfiguration);
         }
 
         if (!$actionHelper instanceof $class) {
-            throw new CrudEngineInvalidActionHelperException(
-                sprintf(
-                    'Action Helper %s for Entity %s and Action %s does not implement/extend %s',
-                    $actionHelper::class,
-                    $actionConfiguration->getEntityAction()->getEntityClass(),
-                    $actionConfiguration->getEntityAction()->getAction(),
-                    $class,
-                ),
+            throw new CrudEngineActionHelperTypeMismatchException(
+                $actionConfiguration,
+                $actionHelper::class,
+                $class,
             );
         }
 
