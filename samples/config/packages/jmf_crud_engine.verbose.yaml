@@ -18,13 +18,14 @@ jmf_crud_engine:
             'entity_keys':    "{{ entityClass|u.afterLast('\\\\').snake|plural }}"
             'entitydashkey':  "{{ entityClass|u.afterLast('\\\\').kebab }}"
             'entitydashkeys': "{{ entityClass|u.afterLast('\\\\').kebab|plural }}"
-        formType:
-            # "App\Form\FooBar\UpdateType"
-            - "App\\Form\\{{ EntityKey }}\\{{ ActionKey }}Type"
-            # "App\Form\FooBarUpdateType"
-            - "App\\Form\\{{ EntityKey }}{{ ActionKey }}Type"
-            # "App\Form\FooBarType"
-            - "App\\Form\\{{ EntityKey }}Type"
+        form:
+            type:
+                # "App\Form\FooBar\UpdateType"
+                - "App\\Form\\{{ EntityKey }}\\{{ ActionKey }}Type"
+                # "App\Form\FooBarUpdateType"
+                - "App\\Form\\{{ EntityKey }}{{ ActionKey }}Type"
+                # "App\Form\FooBarType"
+                - "App\\Form\\{{ EntityKey }}Type"
         helper:
             # "App\Controller\FooBar\UpdateActionHelper"
             - "App\\Controller\\{{ EntityKey }}\\{{ ActionKey }}ActionHelper"

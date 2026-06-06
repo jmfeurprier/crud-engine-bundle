@@ -13,7 +13,7 @@ return static function (DefinitionConfigurator $definition): void {
 
             // Defaults for the patterns below live in ActionConfigurationResolver; the
             // values here only override them. Maps (keys/route.paths/redirection) are
-            // merged with the defaults, scalars/lists (route.name/view.path/formType/
+            // merged with the defaults, scalars/lists (route.name/view.path/form.type/
             // helper) replace them.
             ->arrayNode('schema')
                 ->fixXmlConfig('key', 'keys')
@@ -28,13 +28,12 @@ return static function (DefinitionConfigurator $definition): void {
                         ->stringPrototype()->cannotBeEmpty()->end()
                     ->end()
 
-                    ->arrayNode('formType')
-                        ->stringPrototype()->cannotBeEmpty()->end()
-                    ->end()
-
                     ->arrayNode('form')
                         ->addDefaultsIfNotSet()
                         ->children()
+                            ->arrayNode('type')
+                                ->stringPrototype()->cannotBeEmpty()->end()
+                            ->end()
                             ->enumNode('fallback')
                                 ->info('Behavior when no form type is configured or discovered.')
                                 ->values(

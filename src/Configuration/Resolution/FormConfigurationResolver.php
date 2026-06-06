@@ -88,7 +88,7 @@ readonly class FormConfigurationResolver
             }
         }
 
-        foreach ($this->patternsResolver->resolve($schema, 'formType', self::DEFAULT_FORM_TYPES) as $pattern) {
+        foreach ($this->resolveTypePatterns($schema) as $pattern) {
             $class = $this->configurationValueResolver->resolve($pattern, $keys, $entityClass, $action);
 
             if (class_exists($class) && is_subclass_of($class, FormTypeInterface::class)) {
@@ -119,11 +119,7 @@ readonly class FormConfigurationResolver
         string $entityClass,
         string $action,
     ): string {
-        $patterns = $this->patternsResolver->resolve(
-            $schema,
-            'formType',
-            self::DEFAULT_FORM_TYPES,
-        );
+        $patterns = $this->resolveTypePatterns($schema);
 
         $pattern = reset($patterns);
 
@@ -139,6 +135,23 @@ readonly class FormConfigurationResolver
         Assert::stringNotEmpty($suggested);
 
         return $suggested;
+    }
+
+    /**
+     * Form-type discovery patterns, read from `schema.form.type` (falling back
+     * to the conventional defaults).
+     *
+     * @param array<string, mixed> $schema
+     *
+     * @return list<non-empty-string>
+     */
+    private function resolveTypePatterns(array $schema): array
+    {
+        return $this->patternsResolver->resolve(
+            $this->mapResolver->resolve($schema, 'form'),
+            'type',
+            self::DEFAULT_FORM_TYPES,
+        );
     }
 
     /**

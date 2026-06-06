@@ -89,13 +89,13 @@ jmf_crud_engine:
             - "App\\Controller\\{{ EntityKey }}\\{{ ActionKey }}ActionHelper"
             - "App\\Controller\\{{ EntityKey }}{{ ActionKey }}ActionHelper"
 
-        # Default patterns for auto-discovering form types
-        formType:
-            - "App\\Form\\{{ EntityKey }}\\{{ ActionKey }}Type"
-            - "App\\Form\\{{ EntityKey }}{{ ActionKey }}Type"
-            - "App\\Form\\{{ EntityKey }}Type"
-
         form:
+            # Default patterns for auto-discovering form types
+            type:
+                - "App\\Form\\{{ EntityKey }}\\{{ ActionKey }}Type"
+                - "App\\Form\\{{ EntityKey }}{{ ActionKey }}Type"
+                - "App\\Form\\{{ EntityKey }}Type"
+
             # What to do when no form type is configured or discovered:
             #   generic (default) -> build a generic form from the entity's Doctrine metadata
             #   fail              -> throw an exception
@@ -123,7 +123,8 @@ jmf_crud_engine:
 
                 create:
                     # Override the form type (optional)
-                    formType: App\Form\Article\CreateType
+                    form:
+                        type: App\Form\Article\CreateType
 
                     # Override the helper service (optional)
                     helper: App\Controller\Article\CreateActionHelper

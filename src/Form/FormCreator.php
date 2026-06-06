@@ -39,7 +39,7 @@ readonly class FormCreator
             throw new CrudEngineMissingConfigurationException(
                 $actionConfiguration->getEntityAction()->getEntityClass(),
                 $actionConfiguration->getEntityAction()->getAction(),
-                'formType',
+                'form.type',
             );
         }
 

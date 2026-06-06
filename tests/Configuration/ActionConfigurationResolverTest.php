@@ -85,7 +85,9 @@ final class ActionConfigurationResolverTest extends TestCase
                     Article::class => [
                         'actions' => [
                             'create' => [
-                                'formType'    => ArticleType::class,
+                                'form'        => [
+                                    'type' => ArticleType::class,
+                                ],
                                 'route'       => [
                                     'path'         => '/blog/new',
                                     'requirements' => ['id' => '\d+'],
