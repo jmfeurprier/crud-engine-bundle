@@ -73,14 +73,19 @@ readonly class FormConfigurationResolver
         string $action,
         array $actionConfig,
     ): ?string {
-        if (array_key_exists('formType', $actionConfig) && null !== $actionConfig['formType']) {
-            $formTypeClass = $actionConfig['formType'];
+        if (array_key_exists('form', $actionConfig)) {
+            $formConfig = $actionConfig['form'];
+            Assert::isMap($formConfig);
 
-            Assert::string($formTypeClass);
-            Assert::classExists($formTypeClass);
-            Assert::subclassOf($formTypeClass, FormTypeInterface::class);
+            if (array_key_exists('type', $formConfig) && null !== $formConfig['type']) {
+                $formTypeClass = $formConfig['type'];
 
-            return $formTypeClass;
+                Assert::string($formTypeClass);
+                Assert::classExists($formTypeClass);
+                Assert::subclassOf($formTypeClass, FormTypeInterface::class);
+
+                return $formTypeClass;
+            }
         }
 
         foreach ($this->patternsResolver->resolve($schema, 'formType', self::DEFAULT_FORM_TYPES) as $pattern) {

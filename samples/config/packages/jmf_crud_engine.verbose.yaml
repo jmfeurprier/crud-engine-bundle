@@ -69,7 +69,8 @@ jmf_crud_engine:
         App\Entity\Article:
             actions:
                 create:
-                    formType: 'App\Form\ArticleType'
+                    form:
+                        type: 'App\Form\ArticleType'
                     redirection:
                         route: 'article.read'
                         parameters:
@@ -102,7 +103,8 @@ jmf_crud_engine:
                     view:
                         path: 'article/read.html.twig'
                 update:
-                    formType: 'App\Form\ArticleType'
+                    form:
+                        type: 'App\Form\ArticleType'
                     redirection:
                         fragment: 'content'
                         route:    'article.read'

@@ -81,11 +81,13 @@ readonly class ActionConfigurationHydrator
                                           $action,
                                       ),
             helperClass:              $resolvedAction['helperClass'],
-            formConfiguration:        new ActionFormConfiguration(
-                                          formTypeClass:          $form['typeClass'],
-                                          suggestedFormTypeClass: $form['suggestedClass'],
-                                          formFallbackMode:       $formFallbackMode,
-                                      ),
+            formConfiguration:        null === $form
+                                          ? null
+                                          : new ActionFormConfiguration(
+                                              formTypeClass:          $form['typeClass'],
+                                              suggestedFormTypeClass: $form['suggestedClass'],
+                                              formFallbackMode:       $formFallbackMode,
+                                          ),
             redirectionConfiguration: null === $redirection
                                           ? null
                                           : new ActionRedirectionConfiguration(

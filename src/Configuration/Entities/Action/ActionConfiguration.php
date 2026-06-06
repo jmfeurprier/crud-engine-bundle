@@ -19,7 +19,7 @@ readonly class ActionConfiguration
     public function __construct(
         private EntityAction $entityAction,
         private ?string $helperClass,
-        private ActionFormConfiguration $formConfiguration,
+        private ?ActionFormConfiguration $formConfiguration,
         private ?ActionRedirectionConfiguration $redirectionConfiguration,
         private ActionRouteConfiguration $routeConfiguration,
         private ActionViewConfiguration $viewConfiguration,
@@ -39,9 +39,18 @@ readonly class ActionConfiguration
         return $this->helperClass;
     }
 
+    /**
+     * @throws CrudEngineMissingConfigurationException
+     */
     public function getFormConfiguration(): ActionFormConfiguration
     {
-        return $this->formConfiguration;
+        return $this->formConfiguration
+            ??
+            throw new CrudEngineMissingConfigurationException(
+                $this->entityAction->getEntityClass(),
+                $this->entityAction->getAction(),
+                'form',
+            );
     }
 
     /**
@@ -49,7 +58,13 @@ readonly class ActionConfiguration
      */
     public function getRedirectionConfiguration(): ActionRedirectionConfiguration
     {
-        return $this->redirectionConfiguration ?? $this->onMissingConfiguration('redirection');
+        return $this->redirectionConfiguration
+            ??
+            throw new CrudEngineMissingConfigurationException(
+                $this->entityAction->getEntityClass(),
+                $this->entityAction->getAction(),
+                'redirection',
+            );
     }
 
     public function getRouteConfiguration(): ActionRouteConfiguration
@@ -60,17 +75,5 @@ readonly class ActionConfiguration
     public function getViewConfiguration(): ActionViewConfiguration
     {
         return $this->viewConfiguration;
-    }
-
-    /**
-     * @throws CrudEngineMissingConfigurationException
-     */
-    private function onMissingConfiguration(string $configurationKey): never
-    {
-        throw new CrudEngineMissingConfigurationException(
-            $this->entityAction->getEntityClass(),
-            $this->entityAction->getAction(),
-            $configurationKey,
-        );
     }
 }
