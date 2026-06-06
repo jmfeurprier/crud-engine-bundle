@@ -18,8 +18,8 @@ final class ActionConfigurationHydratorTest extends TestCase
     {
         $actionConfiguration = $this->hydrate()[Article::class]['create'];
 
-        self::assertSame(Article::class, $actionConfiguration->getEntityClass());
-        self::assertSame('create', $actionConfiguration->getAction());
+        self::assertSame(Article::class, $actionConfiguration->getEntityAction()->getEntityClass());
+        self::assertSame('create', $actionConfiguration->getEntityAction()->getAction());
         self::assertNull($actionConfiguration->getHelperClass());
 
         $formConfiguration = $actionConfiguration->getFormConfiguration();

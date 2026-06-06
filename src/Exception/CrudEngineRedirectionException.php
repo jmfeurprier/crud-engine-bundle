@@ -16,8 +16,8 @@ class CrudEngineRedirectionException extends CrudEngineRuntimeException
         parent::__construct(
             message:  sprintf(
                           'Failed generating redirection URL for class %s and action "%s".',
-                          $this->actionConfiguration->getEntityClass(),
-                          $this->actionConfiguration->getAction(),
+                          $this->actionConfiguration->getEntityAction()->getEntityClass(),
+                          $this->actionConfiguration->getEntityAction()->getAction(),
                       ),
             previous: $previousException,
         );

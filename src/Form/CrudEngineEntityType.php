@@ -7,6 +7,7 @@ namespace Jmf\CrudEngine\Form;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineFormFieldException;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Override;
 use Symfony\Component\Form\AbstractType;
@@ -44,13 +45,9 @@ class CrudEngineEntityType extends AbstractType
         FormBuilderInterface $builder,
         array $options,
     ): void {
-        $entityClass = $options['entity_class'];
-        $action      = $options['action'];
+        $entityAction = $options['entity_action'];
 
-        Assert::string($entityClass);
-        Assert::classExists($entityClass);
-
-        Assert::stringNotEmpty($action);
+        Assert::isInstanceOf($entityAction, EntityAction::class);
 
         $suggestedFormTypeClass = $options['suggested_form_type_class'];
 
@@ -58,7 +55,7 @@ class CrudEngineEntityType extends AbstractType
 
         $this->addFallbackNotice($builder, $suggestedFormTypeClass);
 
-        $metadata             = $this->getClassMetadata($entityClass);
+        $metadata             = $this->getClassMetadata($entityAction->getEntityClass());
         $identifierFieldNames = $metadata->getIdentifierFieldNames();
 
         foreach ($metadata->getFieldNames() as $fieldName) {
@@ -72,11 +69,10 @@ class CrudEngineEntityType extends AbstractType
             }
 
             $this->addField(
-                builder:     $builder,
-                metadata:    $metadata,
-                entityClass: $entityClass,
-                action:      $action,
-                fieldName:   $fieldName,
+                builder:      $builder,
+                metadata:     $metadata,
+                entityAction: $entityAction,
+                fieldName:    $fieldName,
             );
         }
     }
@@ -109,11 +105,8 @@ class CrudEngineEntityType extends AbstractType
     #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setRequired('entity_class');
-        $resolver->setAllowedTypes('entity_class', 'string');
-
-        $resolver->setRequired('action');
-        $resolver->setAllowedTypes('action', 'string');
+        $resolver->setRequired('entity_action');
+        $resolver->setAllowedTypes('entity_action', EntityAction::class);
 
         $resolver->setRequired('suggested_form_type_class');
         $resolver->setAllowedTypes('suggested_form_type_class', 'string');
@@ -123,9 +116,9 @@ class CrudEngineEntityType extends AbstractType
             static function (
                 Options $options,
             ): string {
-                Assert::string($options['entity_class']);
+                Assert::isInstanceOf($options['entity_action'], EntityAction::class);
 
-                return $options['entity_class'];
+                return $options['entity_action']->getEntityClass();
             },
         );
     }
@@ -145,25 +138,20 @@ class CrudEngineEntityType extends AbstractType
     /**
      * @param ClassMetadata<object> $metadata
      *
-     * @param class-string          $entityClass
-     * @param non-empty-string      $action
-     *
      * @throws CrudEngineFormFieldException
      */
     private function addField(
         FormBuilderInterface $builder,
         ClassMetadata $metadata,
-        string $entityClass,
-        string $action,
+        EntityAction $entityAction,
         string $fieldName,
     ): void {
         try {
             $fieldMapping = $metadata->getFieldMapping($fieldName);
         } catch (Throwable $e) {
             throw new CrudEngineFormFieldException(
-                entityClass: $entityClass,
-                action:      $action,
-                previous:    $e,
+                entityAction: $entityAction,
+                previous:     $e,
             );
         }
 

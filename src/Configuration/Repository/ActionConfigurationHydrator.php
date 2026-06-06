@@ -12,6 +12,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionCo
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
+use Jmf\CrudEngine\Model\EntityAction;
 use Webmozart\Assert\Assert;
 
 /**
@@ -75,8 +76,10 @@ readonly class ActionConfigurationHydrator
         );
 
         return new ActionConfiguration(
-            entityClass:              $entityClass,
-            action:                   $action,
+            entityAction:             new EntityAction(
+                                          $entityClass,
+                                          $action,
+                                      ),
             helperClass:              $resolvedAction['helperClass'],
             formConfiguration:        new ActionFormConfiguration(
                                           formTypeClass:          $form['typeClass'],

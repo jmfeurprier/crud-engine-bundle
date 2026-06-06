@@ -15,6 +15,7 @@ use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterfa
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
 use Jmf\CrudEngine\Controller\IndexAction;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Jmf\CrudEngine\View\ViewRenderer;
 use Override;
@@ -92,13 +93,15 @@ final class IndexActionTest extends TestCase
         string $action,
     ): ActionConfiguration {
         return new ActionConfiguration(
-            entityClass:              $entityClass,
-            action:                   $action,
+            entityAction:             new EntityAction(
+                                          $entityClass,
+                                          $action,
+                                      ),
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
-                                          formTypeClass:    null,
+                                          formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode: FormFallbackMode::PROVIDE,
+                                          formFallbackMode:       FormFallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: new ActionRedirectionConfiguration(
                                           route:      '',

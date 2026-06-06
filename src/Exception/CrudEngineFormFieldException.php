@@ -4,42 +4,27 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
+use Jmf\CrudEngine\Model\EntityAction;
 use Throwable;
 
 final class CrudEngineFormFieldException extends CrudEngineFormException
 {
-    /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
-     */
     public function __construct(
-        private readonly string $entityClass,
-        private readonly string $action,
+        private readonly EntityAction $entityAction,
         ?Throwable $previous = null,
     ) {
         parent::__construct(
             message:  sprintf(
                           'Failed building a form field for entity "%s" for action "%s".',
-                          $entityClass,
-                          $action,
+                          $entityAction->getEntityClass(),
+                          $entityAction->getAction(),
                       ),
             previous: $previous,
         );
     }
 
-    /**
-     * @return class-string
-     */
-    public function getEntityClass(): string
+    public function getEntityAction(): EntityAction
     {
-        return $this->entityClass;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getAction(): string
-    {
-        return $this->action;
+        return $this->entityAction;
     }
 }

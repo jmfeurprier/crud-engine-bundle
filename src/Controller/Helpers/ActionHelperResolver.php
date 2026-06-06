@@ -42,8 +42,8 @@ readonly class ActionHelperResolver
                     sprintf(
                         'Action Helper %s for Entity %s and Action %s not found.',
                         $helperClass,
-                        $actionConfiguration->getEntityClass(),
-                        $actionConfiguration->getAction(),
+                        $actionConfiguration->getEntityAction()->getEntityClass(),
+                        $actionConfiguration->getEntityAction()->getAction(),
                     ),
                 );
             }
@@ -55,8 +55,8 @@ readonly class ActionHelperResolver
                     message:  sprintf(
                                   'Failed retrieving Action Helper %s for Entity %s and Action %s from container.',
                                   $helperClass,
-                                  $actionConfiguration->getEntityClass(),
-                                  $actionConfiguration->getAction(),
+                                  $actionConfiguration->getEntityAction()->getEntityClass(),
+                                  $actionConfiguration->getEntityAction()->getAction(),
                               ),
                     code:     $e->getCode(),
                     previous: $e,
@@ -68,8 +68,8 @@ readonly class ActionHelperResolver
             throw new CrudEngineInvalidActionHelperException(
                 sprintf(
                     'Retrieved Action Helper for Entity %s and Action %s is not an object.',
-                    $actionConfiguration->getEntityClass(),
-                    $actionConfiguration->getAction(),
+                    $actionConfiguration->getEntityAction()->getEntityClass(),
+                    $actionConfiguration->getEntityAction()->getAction(),
                 ),
             );
         }
@@ -79,8 +79,8 @@ readonly class ActionHelperResolver
                 sprintf(
                     'Action Helper %s for Entity %s and Action %s does not implement/extend %s',
                     $actionHelper::class,
-                    $actionConfiguration->getEntityClass(),
-                    $actionConfiguration->getAction(),
+                    $actionConfiguration->getEntityAction()->getEntityClass(),
+                    $actionConfiguration->getEntityAction()->getAction(),
                     $class,
                 ),
             );

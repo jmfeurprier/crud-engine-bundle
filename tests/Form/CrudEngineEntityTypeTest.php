@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\FieldMapping;
 use Jmf\CrudEngine\Exception\CrudEngineFormFieldException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FieldGenerator;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\Status;
@@ -94,8 +95,7 @@ final class CrudEngineEntityTypeTest extends TestCase
         (new CrudEngineEntityType($entityManagerResolver, new FieldGenerator()))->buildForm(
             $builder,
             [
-                'action'                    => 'create',
-                'entity_class'              => Article::class,
+                'entity_action'             => new EntityAction(Article::class, 'create'),
                 'suggested_form_type_class' => 'StubFormType',
             ],
         );
@@ -145,8 +145,7 @@ final class CrudEngineEntityTypeTest extends TestCase
         (new CrudEngineEntityType($entityManagerResolver, new FieldGenerator()))->buildForm(
             $this->createStub(FormBuilderInterface::class),
             [
-                'action'                    => 'create',
-                'entity_class'              => Article::class,
+                'entity_action'             => new EntityAction(Article::class, 'create'),
                 'suggested_form_type_class' => 'StubFormType',
             ],
         );

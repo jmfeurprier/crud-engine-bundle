@@ -15,6 +15,7 @@ use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterfa
 use Jmf\CrudEngine\Controller\DeleteAction;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityFinder;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Jmf\CrudEngine\Redirection\RedirectionGenerator;
@@ -196,8 +197,10 @@ final class DeleteActionTest extends TestCase
         string $action,
     ): ActionConfiguration {
         return new ActionConfiguration(
-            entityClass:              $entityClass,
-            action:                   $action,
+            entityAction:             new EntityAction(
+                                          $entityClass,
+                                          $action,
+                                      ),
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
                                           formTypeClass:          null,

@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
 use Jmf\CrudEngine\Routing\RouteLoader;
 use Override;
@@ -129,13 +130,15 @@ final class RouteLoaderTest extends TestCase
         );
 
         return new ActionConfiguration(
-            entityClass:              $entityClass,
-            action:                   $action,
+            entityAction:             new EntityAction(
+                                          $entityClass,
+                                          $action,
+                                      ),
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
-                                          formTypeClass:    null,
+                                          formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode: FormFallbackMode::PROVIDE,
+                                          formFallbackMode:       FormFallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: $actionRedirectionConfiguration,
             routeConfiguration:       $actionRouteConfiguration,

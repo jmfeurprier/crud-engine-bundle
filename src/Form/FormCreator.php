@@ -37,8 +37,8 @@ readonly class FormCreator
 
         if (FormFallbackMode::FAIL === $formConfiguration->getFormFallbackMode()) {
             throw new CrudEngineMissingConfigurationException(
-                $actionConfiguration->getEntityClass(),
-                $actionConfiguration->getAction(),
+                $actionConfiguration->getEntityAction()->getEntityClass(),
+                $actionConfiguration->getEntityAction()->getAction(),
                 'formType',
             );
         }
@@ -48,8 +48,7 @@ readonly class FormCreator
             CrudEngineEntityType::class,
             $entity,
             [
-                'action'                    => $actionConfiguration->getAction(),
-                'entity_class'              => $actionConfiguration->getEntityClass(),
+                'entity_action'             => $actionConfiguration->getEntityAction(),
                 'suggested_form_type_class' => $formConfiguration->getSuggestedFormTypeClass(),
             ],
         );
@@ -71,9 +70,8 @@ readonly class FormCreator
             return $this->formFactory->create($formTypeClass, $entity, $options);
         } catch (Throwable $e) {
             throw new CrudEngineFormCreationException(
-                entityClass: $actionConfiguration->getEntityClass(),
-                action:      $actionConfiguration->getAction(),
-                previous:    $e,
+                entityAction: $actionConfiguration->getEntityAction(),
+                previous:     $e,
             );
         }
     }

@@ -12,6 +12,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\View\ViewRenderer;
 use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
@@ -80,13 +81,15 @@ final class ViewRendererTest extends TestCase
         ViewFallbackMode $fallback,
     ): ActionConfiguration {
         return new ActionConfiguration(
-            entityClass:              stdClass::class,
-            action:                   'read',
+            entityAction:             new EntityAction(
+                                          stdClass::class,
+                                          'read',
+                                      ),
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
-                                          formTypeClass:    null,
+                                          formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode: FormFallbackMode::PROVIDE,
+                                          formFallbackMode:       FormFallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: new ActionRedirectionConfiguration(
                                           route:      '',

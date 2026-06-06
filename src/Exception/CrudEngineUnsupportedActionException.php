@@ -14,8 +14,8 @@ class CrudEngineUnsupportedActionException extends CrudEngineRuntimeException
         parent::__construct(
             message: sprintf(
                          'Unsupported CRUD action "%s" for entity class %s.',
-                         $this->actionConfiguration->getAction(),
-                         $this->actionConfiguration->getEntityClass(),
+                         $this->actionConfiguration->getEntityAction()->getAction(),
+                         $this->actionConfiguration->getEntityAction()->getEntityClass(),
                      ),
         );
     }

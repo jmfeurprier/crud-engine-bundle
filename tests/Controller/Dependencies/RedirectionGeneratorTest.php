@@ -12,6 +12,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Redirection\RedirectionGenerator;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\TemplateRendering\TemplateRendererInterface;
@@ -61,8 +62,10 @@ final class RedirectionGeneratorTest extends TestCase
     private function givenActionConfiguration(): ActionConfiguration
     {
         return new ActionConfiguration(
-            entityClass:              Article::class,
-            action:                   'create',
+            entityAction:             new EntityAction(
+                                          Article::class,
+                                          'create',
+                                      ),
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(null, 'StubFormType', FormFallbackMode::PROVIDE),
             redirectionConfiguration: new ActionRedirectionConfiguration('article.index', []),

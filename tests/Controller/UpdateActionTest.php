@@ -16,6 +16,7 @@ use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
 use Jmf\CrudEngine\Controller\UpdateAction;
 use Jmf\CrudEngine\Form\FormCreator;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityFinder;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Jmf\CrudEngine\Redirection\RedirectionGenerator;
@@ -188,8 +189,10 @@ final class UpdateActionTest extends TestCase
         string $action,
     ): ActionConfiguration {
         return new ActionConfiguration(
-            entityClass:              $entityClass,
-            action:                   $action,
+            entityAction:             new EntityAction(
+                                          $entityClass,
+                                          $action,
+                                      ),
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
                                           formTypeClass:          null,

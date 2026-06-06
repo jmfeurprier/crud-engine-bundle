@@ -14,6 +14,7 @@ use Jmf\CrudEngine\Exception\CrudEngineFormCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FormCreator;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
 use PHPUnit\Framework\TestCase;
@@ -57,8 +58,7 @@ final class FormCreatorTest extends TestCase
                 CrudEngineEntityType::class,
                 $article,
                 [
-                    'action'                    => 'create',
-                    'entity_class'              => Article::class,
+                    'entity_action'             => new EntityAction(Article::class, 'create'),
                     'suggested_form_type_class' => 'StubFormType',
                 ],
             )
@@ -107,13 +107,15 @@ final class FormCreatorTest extends TestCase
         FormFallbackMode $formFallbackMode,
     ): ActionConfiguration {
         return new ActionConfiguration(
-            entityClass:              Article::class,
-            action:                   'create',
+            entityAction:             new EntityAction(
+                                          Article::class,
+                                          'create',
+                                      ),
             helperClass:              null,
             formConfiguration:        new ActionFormConfiguration(
-                                          formTypeClass:    $formTypeClass,
+                                          formTypeClass:          $formTypeClass,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode: $formFallbackMode,
+                                          formFallbackMode:       $formFallbackMode,
 
                                       ),
             redirectionConfiguration: null,

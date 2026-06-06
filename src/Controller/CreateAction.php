@@ -91,9 +91,8 @@ readonly class CreateAction
             $form->handleRequest($request);
         } catch (Throwable $e) {
             throw new CrudEngineFormRequestHandlingException(
-                entityClass: $entityClass,
-                action:      $actionConfiguration->getAction(),
-                previous:    $e,
+                entityAction: $actionConfiguration->getEntityAction(),
+                previous:     $e,
             );
         }
 
@@ -124,9 +123,8 @@ readonly class CreateAction
             $formView = $form->createView();
         } catch (Throwable $e) {
             throw new CrudEngineFormViewCreationException(
-                entityClass: $entityClass,
-                action:      $actionConfiguration->getAction(),
-                previous:    $e,
+                entityAction: $actionConfiguration->getEntityAction(),
+                previous:     $e,
             );
         }
 

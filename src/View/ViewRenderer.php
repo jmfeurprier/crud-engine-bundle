@@ -54,8 +54,15 @@ readonly class ViewRenderer
                 throw new CrudEngineMissingViewException($actionConfiguration, $configuredPath);
             }
 
-            $viewPath                   = sprintf(self::BUILT_IN_TEMPLATE, $actionConfiguration->getAction());
-            $parameters['_crud_engine'] = $this->getProvidedContext($actionConfiguration, $configuredPath);
+            $viewPath = sprintf(
+                self::BUILT_IN_TEMPLATE,
+                $actionConfiguration->getEntityAction()->getAction(),
+            );
+
+            $parameters['_crud_engine'] = $this->getProvidedContext(
+                $actionConfiguration,
+                $configuredPath,
+            );
         }
 
         try {
@@ -83,8 +90,8 @@ readonly class ViewRenderer
         string $viewPath,
     ): array {
         return [
-            'entityClass' => $actionConfiguration->getEntityClass(),
-            'action'      => $actionConfiguration->getAction(),
+            'entityClass' => $actionConfiguration->getEntityAction()->getEntityClass(),
+            'action'      => $actionConfiguration->getEntityAction()->getAction(),
             'viewPath'    => $viewPath,
         ];
     }

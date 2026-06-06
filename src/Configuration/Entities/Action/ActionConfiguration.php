@@ -9,17 +9,15 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionCo
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Model\EntityAction;
 
 readonly class ActionConfiguration
 {
     /**
-     * @param class-string      $entityClass
-     * @param non-empty-string  $action
      * @param null|class-string $helperClass
      */
     public function __construct(
-        private string $entityClass,
-        private string $action,
+        private EntityAction $entityAction,
         private ?string $helperClass,
         private ActionFormConfiguration $formConfiguration,
         private ?ActionRedirectionConfiguration $redirectionConfiguration,
@@ -28,20 +26,9 @@ readonly class ActionConfiguration
     ) {
     }
 
-    /**
-     * @return class-string
-     */
-    public function getEntityClass(): string
+    public function getEntityAction(): EntityAction
     {
-        return $this->entityClass;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getAction(): string
-    {
-        return $this->action;
+        return $this->entityAction;
     }
 
     /**
@@ -81,8 +68,8 @@ readonly class ActionConfiguration
     private function onMissingConfiguration(string $configurationKey): never
     {
         throw new CrudEngineMissingConfigurationException(
-            $this->entityClass,
-            $this->action,
+            $this->entityAction->getEntityClass(),
+            $this->entityAction->getAction(),
             $configurationKey,
         );
     }

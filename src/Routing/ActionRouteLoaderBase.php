@@ -17,7 +17,7 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
         RouteCollection $routeCollection,
         ActionConfiguration $actionConfiguration,
     ): void {
-        Assert::same($this->getActionName(), $actionConfiguration->getAction());
+        Assert::same($this->getActionName(), $actionConfiguration->getEntityAction()->getAction());
 
         $routeCollection->add(
             $this->getRouteName($actionConfiguration),
@@ -36,7 +36,7 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
             path:         $this->getRoutePath($actionConfiguration),
             defaults:     [
                               '_controller' => $this->getActionClass(),
-                              'entityClass' => $actionConfiguration->getEntityClass(),
+                              'entityClass' => $actionConfiguration->getEntityAction()->getEntityClass(),
                           ],
             requirements: $this->getRequirements($actionConfiguration),
             methods:      (array) $this->getMethods(),

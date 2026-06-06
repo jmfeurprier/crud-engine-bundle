@@ -16,8 +16,8 @@ class CrudEngineMissingViewException extends CrudEngineRuntimeException
             sprintf(
                 'No view template "%s" found for class %s and action "%s".',
                 $this->viewPath,
-                $this->actionConfiguration->getEntityClass(),
-                $this->actionConfiguration->getAction(),
+                $this->actionConfiguration->getEntityAction()->getEntityClass(),
+                $this->actionConfiguration->getEntityAction()->getAction(),
             ),
         );
     }

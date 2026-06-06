@@ -69,7 +69,7 @@ readonly class RouteLoader implements RouteLoaderInterface
     private function getLoader(
         ActionConfiguration $actionConfiguration,
     ): ActionRouteLoaderInterface {
-        $action = $actionConfiguration->getAction();
+        $action = $actionConfiguration->getEntityAction()->getAction();
 
         return $this->loaderByAction[$action]
             ??
