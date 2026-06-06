@@ -6,10 +6,11 @@ namespace Jmf\CrudEngine\Form;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
-use Jmf\CrudEngine\Exception\CrudEngineFormException;
+use Jmf\CrudEngine\Exception\CrudEngineFormCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
 use Throwable;
 
 readonly class FormCreator
@@ -20,7 +21,7 @@ readonly class FormCreator
     }
 
     /**
-     * @throws CrudEngineFormException
+     * @throws CrudEngineFormCreationException
      * @throws CrudEngineMissingConfigurationException
      */
     public function create(
@@ -47,6 +48,7 @@ readonly class FormCreator
             CrudEngineEntityType::class,
             $entity,
             [
+                'action'                    => $actionConfiguration->getAction(),
                 'entity_class'              => $actionConfiguration->getEntityClass(),
                 'suggested_form_type_class' => $formConfiguration->getSuggestedFormTypeClass(),
             ],
@@ -54,10 +56,10 @@ readonly class FormCreator
     }
 
     /**
-     * @param class-string<\Symfony\Component\Form\FormTypeInterface> $formTypeClass
-     * @param array<string, mixed>                                    $options
+     * @param class-string<FormTypeInterface> $formTypeClass
+     * @param array<string, mixed>            $options
      *
-     * @throws CrudEngineFormException
+     * @throws CrudEngineFormCreationException
      */
     private function createForm(
         ActionConfiguration $actionConfiguration,
@@ -68,7 +70,11 @@ readonly class FormCreator
         try {
             return $this->formFactory->create($formTypeClass, $entity, $options);
         } catch (Throwable $e) {
-            throw new CrudEngineFormException($actionConfiguration->getEntityClass(), $e);
+            throw new CrudEngineFormCreationException(
+                entityClass: $actionConfiguration->getEntityClass(),
+                action:      $actionConfiguration->getAction(),
+                previous:    $e,
+            );
         }
     }
 }

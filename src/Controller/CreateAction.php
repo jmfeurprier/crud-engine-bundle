@@ -10,6 +10,8 @@ use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineFormException;
+use Jmf\CrudEngine\Exception\CrudEngineFormRequestHandlingException;
+use Jmf\CrudEngine\Exception\CrudEngineFormViewCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineInstantiationFailureException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
@@ -64,21 +66,35 @@ readonly class CreateAction
         Request $request,
         string $entityClass,
     ): Response {
-        $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'create');
-        $actionHelper        = $this->actionHelperResolver->resolve(
+        $actionConfiguration = $this->actionConfigurationRepository->get(
+            $entityClass,
+            'create',
+        );
+
+        $actionHelper = $this->actionHelperResolver->resolve(
             CreateActionHelperInterface::class,
             $actionConfiguration,
             $this->defaultActionHelper,
         );
 
-        $entity = $actionHelper->createEntity($request, $entityClass);
+        $entity = $actionHelper->createEntity(
+            $request,
+            $entityClass,
+        );
 
-        $form = $this->formCreator->create($actionConfiguration, $entity);
+        $form = $this->formCreator->create(
+            $actionConfiguration,
+            $entity,
+        );
 
         try {
             $form->handleRequest($request);
         } catch (Throwable $e) {
-            throw new CrudEngineFormException($entityClass, $e);
+            throw new CrudEngineFormRequestHandlingException(
+                entityClass: $entityClass,
+                action:      $actionConfiguration->getAction(),
+                previous:    $e,
+            );
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -107,7 +123,11 @@ readonly class CreateAction
         try {
             $formView = $form->createView();
         } catch (Throwable $e) {
-            throw new CrudEngineFormException($entityClass, $e);
+            throw new CrudEngineFormViewCreationException(
+                entityClass: $entityClass,
+                action:      $actionConfiguration->getAction(),
+                previous:    $e,
+            );
         }
 
         return $this->viewRenderer->render(

@@ -6,7 +6,7 @@ namespace Jmf\CrudEngine\Form;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
-use Jmf\CrudEngine\Exception\CrudEngineFormException;
+use Jmf\CrudEngine\Exception\CrudEngineFormFieldException;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Override;
 use Symfony\Component\Form\AbstractType;
@@ -36,7 +36,8 @@ class CrudEngineEntityType extends AbstractType
     /**
      * @param array<string, mixed> $options
      *
-     * @throws CrudEngineFormException
+     * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineFormFieldException
      */
     #[Override]
     public function buildForm(
@@ -44,9 +45,12 @@ class CrudEngineEntityType extends AbstractType
         array $options,
     ): void {
         $entityClass = $options['entity_class'];
+        $action      = $options['action'];
 
         Assert::string($entityClass);
         Assert::classExists($entityClass);
+
+        Assert::stringNotEmpty($action);
 
         $suggestedFormTypeClass = $options['suggested_form_type_class'];
 
@@ -101,8 +105,13 @@ class CrudEngineEntityType extends AbstractType
     {
         $resolver->setRequired('entity_class');
         $resolver->setAllowedTypes('entity_class', 'string');
+
+        $resolver->setRequired('action');
+        $resolver->setAllowedTypes('action', 'string');
+
         $resolver->setRequired('suggested_form_type_class');
         $resolver->setAllowedTypes('suggested_form_type_class', 'string');
+
         $resolver->setDefault(
             'data_class',
             static function (
@@ -130,17 +139,23 @@ class CrudEngineEntityType extends AbstractType
     /**
      * @param ClassMetadata<object> $metadata
      *
-     * @throws CrudEngineFormException
+     * @throws CrudEngineFormFieldException
      */
     private function addField(
         FormBuilderInterface $builder,
         ClassMetadata $metadata,
+        string $entityClass,
+        string $action,
         string $fieldName,
     ): void {
         try {
             $fieldMapping = $metadata->getFieldMapping($fieldName);
         } catch (Throwable $e) {
-            throw new CrudEngineFormException($metadata->getName(), $e);
+            throw new CrudEngineFormFieldException(
+                entityClass: $entityClass,
+                action:      $action,
+                previous:    $e,
+            );
         }
 
         $generatedField = $this->fieldGenerator->generate($fieldMapping);

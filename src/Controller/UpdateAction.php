@@ -10,6 +10,8 @@ use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineFormException;
+use Jmf\CrudEngine\Exception\CrudEngineFormRequestHandlingException;
+use Jmf\CrudEngine\Exception\CrudEngineFormViewCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidActionHelperException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
@@ -79,7 +81,11 @@ readonly class UpdateAction
         try {
             $form->handleRequest($request);
         } catch (Throwable $e) {
-            throw new CrudEngineFormException($entityClass, $e);
+            throw new CrudEngineFormRequestHandlingException(
+                entityClass: $entityClass,
+                action:      $actionConfiguration->getAction(),
+                previous:    $e,
+            );
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -108,7 +114,11 @@ readonly class UpdateAction
         try {
             $formView = $form->createView();
         } catch (Throwable $e) {
-            throw new CrudEngineFormException($entityClass, $e);
+            throw new CrudEngineFormViewCreationException(
+                entityClass: $entityClass,
+                action:      $actionConfiguration->getAction(),
+                previous:    $e,
+            );
         }
 
         return $this->viewRenderer->render(

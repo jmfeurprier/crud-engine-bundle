@@ -10,7 +10,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
-use Jmf\CrudEngine\Exception\CrudEngineFormException;
+use Jmf\CrudEngine\Exception\CrudEngineFormCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FormCreator;
@@ -90,7 +90,7 @@ final class FormCreatorTest extends TestCase
         $formFactory = $this->createStub(FormFactoryInterface::class);
         $formFactory->method('create')->willThrowException(new RuntimeException('boom'));
 
-        $this->expectException(CrudEngineFormException::class);
+        $this->expectException(CrudEngineFormCreationException::class);
 
         (new FormCreator($formFactory))->create(
             $this->givenActionConfiguration(ArticleType::class, FormFallbackMode::PROVIDE),

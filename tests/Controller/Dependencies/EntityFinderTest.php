@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Jmf\CrudEngine\Persistence\EntityFinder;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
@@ -34,7 +34,7 @@ final class EntityFinderTest extends TestCase
 
     public function testWrapsLookupFailure(): void
     {
-        $objectManager = $this->createStub(ObjectManager::class);
+        $objectManager = $this->createStub(EntityManagerInterface::class);
         $objectManager->method('find')->willThrowException(new RuntimeException('boom'));
 
         $this->expectException(CrudEnginePersistenceException::class);
@@ -42,15 +42,15 @@ final class EntityFinderTest extends TestCase
         $this->createEntityFinder($objectManager)->find(stdClass::class, '1');
     }
 
-    private function givenObjectManager(?object $entity): ObjectManager
+    private function givenObjectManager(?object $entity): EntityManagerInterface
     {
-        $objectManager = $this->createStub(ObjectManager::class);
+        $objectManager = $this->createStub(EntityManagerInterface::class);
         $objectManager->method('find')->willReturn($entity);
 
         return $objectManager;
     }
 
-    private function createEntityFinder(ObjectManager $objectManager): EntityFinder
+    private function createEntityFinder(EntityManagerInterface $objectManager): EntityFinder
     {
         $objectManagerResolver = $this->createStub(EntityManagerResolver::class);
         $objectManagerResolver->method('resolve')->willReturn($objectManager);

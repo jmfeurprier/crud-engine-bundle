@@ -12,7 +12,7 @@ use Throwable;
 readonly class EntityFinder
 {
     public function __construct(
-        private EntityManagerResolver $objectManagerResolver,
+        private EntityManagerResolver $entityManagerResolver,
     ) {
     }
 
@@ -31,7 +31,7 @@ readonly class EntityFinder
         string $entityClass,
         string $id,
     ): object {
-        $objectManager = $this->objectManagerResolver->resolve($entityClass);
+        $objectManager = $this->entityManagerResolver->resolve($entityClass);
 
         try {
             $entity = $objectManager->find($entityClass, $id);

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Form;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\FieldMapping;
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
-use Jmf\CrudEngine\Exception\CrudEngineFormException;
+use Jmf\CrudEngine\Exception\CrudEngineFormFieldException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FieldGenerator;
+use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\Status;
 use PHPUnit\Framework\TestCase;
@@ -57,11 +57,12 @@ final class CrudEngineEntityTypeTest extends TestCase
                 ],
             ],
         );
-        $objectManager = $this->createStub(ObjectManager::class);
-        $objectManager->method('getClassMetadata')->willReturn($metadata);
 
-        $managerRegistry = $this->createStub(ManagerRegistry::class);
-        $managerRegistry->method('getManagerForClass')->willReturn($objectManager);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('getClassMetadata')->willReturn($metadata);
+
+        $entityManagerResolver = $this->createStub(EntityManagerResolver::class);
+        $entityManagerResolver->method('resolve')->willReturn($entityManager);
 
         /** @var array<string, array{type: string, options: array<string, mixed>}> $added */
         $added   = [];
@@ -90,7 +91,7 @@ final class CrudEngineEntityTypeTest extends TestCase
             )
         ;
 
-        (new CrudEngineEntityType($managerRegistry, new FieldGenerator()))->buildForm(
+        (new CrudEngineEntityType($entityManagerResolver, new FieldGenerator()))->buildForm(
             $builder,
             [
                 'entity_class'              => Article::class,
@@ -126,15 +127,21 @@ final class CrudEngineEntityTypeTest extends TestCase
 
     public function testWrapsMetadataFailure(): void
     {
-        $objectManager = $this->createStub(ObjectManager::class);
-        $objectManager->method('getClassMetadata')->willThrowException(new RuntimeException('boom'));
+        $metadata = $this->createStub(ClassMetadata::class);
+        $metadata->method('getName')->willReturn(Article::class);
+        $metadata->method('getIdentifierFieldNames')->willReturn(['id']);
+        $metadata->method('getFieldNames')->willReturn(['id', 'title']);
+        $metadata->method('getFieldMapping')->willThrowException(new RuntimeException('boom'));
 
-        $managerRegistry = $this->createStub(ManagerRegistry::class);
-        $managerRegistry->method('getManagerForClass')->willReturn($objectManager);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('getClassMetadata')->willReturn($metadata);
 
-        $this->expectException(CrudEngineFormException::class);
+        $entityManagerResolver = $this->createStub(EntityManagerResolver::class);
+        $entityManagerResolver->method('resolve')->willReturn($entityManager);
 
-        (new CrudEngineEntityType($managerRegistry, new FieldGenerator()))->buildForm(
+        $this->expectException(CrudEngineFormFieldException::class);
+
+        (new CrudEngineEntityType($entityManagerResolver, new FieldGenerator()))->buildForm(
             $this->createStub(FormBuilderInterface::class),
             [
                 'entity_class'              => Article::class,
