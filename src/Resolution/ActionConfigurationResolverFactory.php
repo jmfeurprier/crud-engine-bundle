@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration;
+namespace Jmf\CrudEngine\Resolution;
 
-use Jmf\CrudEngine\Configuration\Resolution\Action\CreateActionConfigResolver;
-use Jmf\CrudEngine\Configuration\Resolution\Action\DeleteActionConfigResolver;
-use Jmf\CrudEngine\Configuration\Resolution\Action\IndexActionConfigResolver;
-use Jmf\CrudEngine\Configuration\Resolution\Action\ReadActionConfigResolver;
-use Jmf\CrudEngine\Configuration\Resolution\Action\UpdateActionConfigResolver;
-use Jmf\CrudEngine\Configuration\Resolution\ConfigurationValueResolver;
-use Jmf\CrudEngine\Configuration\Resolution\FormConfigurationResolver;
-use Jmf\CrudEngine\Configuration\Resolution\MapResolver;
-use Jmf\CrudEngine\Configuration\Resolution\OverridableConfigurationValueResolver;
-use Jmf\CrudEngine\Configuration\Resolution\PatternsResolver;
-use Jmf\CrudEngine\Configuration\Resolution\RedirectionConfigurationResolver;
-use Jmf\CrudEngine\Configuration\Resolution\RouteConfigurationResolver;
-use Jmf\CrudEngine\Configuration\Resolution\SchemaValueExpander;
-use Jmf\CrudEngine\Configuration\Resolution\ViewConfigurationResolver;
+use Jmf\CrudEngine\Resolution\Action\CreateActionConfigResolver;
+use Jmf\CrudEngine\Resolution\Action\DeleteActionConfigResolver;
+use Jmf\CrudEngine\Resolution\Action\IndexActionConfigResolver;
+use Jmf\CrudEngine\Resolution\Action\ReadActionConfigResolver;
+use Jmf\CrudEngine\Resolution\Action\UpdateActionConfigResolver;
+use Jmf\CrudEngine\Resolution\ConfigurationValueResolver;
+use Jmf\CrudEngine\Resolution\FormConfigurationResolver;
+use Jmf\CrudEngine\Resolution\MapResolver;
+use Jmf\CrudEngine\Resolution\OverridableConfigurationValueResolver;
+use Jmf\CrudEngine\Resolution\PatternsResolver;
+use Jmf\CrudEngine\Resolution\RedirectionConfigurationResolver;
+use Jmf\CrudEngine\Resolution\RouteConfigurationResolver;
+use Jmf\CrudEngine\Resolution\SchemaValueExpander;
+use Jmf\CrudEngine\Resolution\ViewConfigurationResolver;
 use Jmf\TemplateRendering\TemplateRenderer;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Twig\Environment;

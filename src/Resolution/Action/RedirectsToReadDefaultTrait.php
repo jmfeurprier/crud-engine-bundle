@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Resolution\Action;
+namespace Jmf\CrudEngine\Resolution\Action;
 
 use Override;
 

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Resolution\Action;
+namespace Jmf\CrudEngine\Resolution\Action;
 
-use Jmf\CrudEngine\Configuration\Resolution\ConfigurationValueResolver;
-use Jmf\CrudEngine\Configuration\Resolution\FormConfigurationResolver;
-use Jmf\CrudEngine\Configuration\Resolution\MapResolver;
-use Jmf\CrudEngine\Configuration\Resolution\PatternsResolver;
-use Jmf\CrudEngine\Configuration\Resolution\RedirectionConfigurationResolver;
-use Jmf\CrudEngine\Configuration\Resolution\RouteConfigurationResolver;
-use Jmf\CrudEngine\Configuration\Resolution\ViewConfigurationResolver;
+use Jmf\CrudEngine\Resolution\ConfigurationValueResolver;
+use Jmf\CrudEngine\Resolution\FormConfigurationResolver;
+use Jmf\CrudEngine\Resolution\MapResolver;
+use Jmf\CrudEngine\Resolution\PatternsResolver;
+use Jmf\CrudEngine\Resolution\RedirectionConfigurationResolver;
+use Jmf\CrudEngine\Resolution\RouteConfigurationResolver;
+use Jmf\CrudEngine\Resolution\ViewConfigurationResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;

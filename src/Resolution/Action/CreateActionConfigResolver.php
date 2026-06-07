@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Resolution\Action;
+namespace Jmf\CrudEngine\Resolution\Action;
 
-use Jmf\CrudEngine\Controller\UpdateAction;
+use Jmf\CrudEngine\Model\CrudAction;
 use Override;
 
-readonly class UpdateActionConfigResolver extends ActionConfigResolverBase
+readonly class CreateActionConfigResolver extends ActionConfigResolverBase
 {
     use RedirectsToReadDefaultTrait;
 
     #[Override]
     public function getActionName(): string
     {
-        return UpdateAction::ACTION;
+        return CrudAction::Create->value;
     }
 
     #[Override]
     protected function getDefaultRoutePath(): string
     {
-        return "{{ entitydashkeys }}/{id}/update";
+        return "{{ entitydashkeys }}/create";
     }
 
     #[Override]

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Controller;
 
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
@@ -37,8 +38,6 @@ use Throwable;
 #[AsController]
 readonly class UpdateAction
 {
-    public const string ACTION = 'update';
-
     /**
      * @psalm-param UpdateActionHelperInterface<E> $defaultActionHelper
      */
@@ -79,7 +78,7 @@ readonly class UpdateAction
     ): Response {
         $actionConfiguration = $this->actionConfigurationRegistry->get(
             $entityClass,
-            self::ACTION,
+            CrudAction::Update->value,
         );
 
         $actionHelper = $this->actionHelperResolver->resolve(

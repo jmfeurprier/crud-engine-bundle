@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Tests\Configuration;
+namespace Jmf\CrudEngine\Tests\Resolution;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationResolver;
-use Jmf\CrudEngine\Configuration\ActionConfigurationResolverFactory;
+use Jmf\CrudEngine\Resolution\ActionConfigurationResolver;
+use Jmf\CrudEngine\Resolution\ActionConfigurationResolverFactory;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
 use Override;

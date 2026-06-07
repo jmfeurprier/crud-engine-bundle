@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Registry;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationResolver;
+use Jmf\CrudEngine\Resolution\ActionConfigurationResolver;
 
 /**
  * @phpstan-import-type ResolvedConfigurations from ActionConfigurationResolver

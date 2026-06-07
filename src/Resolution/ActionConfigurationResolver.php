@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration;
+namespace Jmf\CrudEngine\Resolution;
 
-use Jmf\CrudEngine\Configuration\Resolution\Action\ActionConfigResolverInterface;
-use Jmf\CrudEngine\Configuration\Resolution\MapResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
+use Jmf\CrudEngine\Resolution\Action\ActionConfigResolverInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -31,12 +30,14 @@ readonly class ActionConfigurationResolver
     private array $resolverByAction;
 
     /**
-     * @param iterable<ActionConfigResolverInterface> $actionConfigResolvers
+     * @param ActionConfigResolverInterface[] $actionConfigResolvers
      */
     public function __construct(
         private MapResolver $mapResolver,
         iterable $actionConfigResolvers,
     ) {
+        Assert::allIsInstanceOf($actionConfigResolvers, ActionConfigResolverInterface::class);
+
         $indexed = [];
 
         foreach ($actionConfigResolvers as $actionConfigResolver) {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Resolution\Action;
+namespace Jmf\CrudEngine\Resolution\Action;
 
-use Jmf\CrudEngine\Controller\IndexAction;
+use Jmf\CrudEngine\Model\CrudAction;
 use Override;
 
 readonly class IndexActionConfigResolver extends ActionConfigResolverBase
@@ -12,7 +12,7 @@ readonly class IndexActionConfigResolver extends ActionConfigResolverBase
     #[Override]
     public function getActionName(): string
     {
-        return IndexAction::ACTION;
+        return CrudAction::Index->value;
     }
 
     #[Override]

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Resolution\Action;
+namespace Jmf\CrudEngine\Resolution\Action;
 
-use Jmf\CrudEngine\Configuration\Resolution\FormConfigurationResolver;
-use Jmf\CrudEngine\Configuration\Resolution\RedirectionConfigurationResolver;
-use Jmf\CrudEngine\Configuration\Resolution\RouteConfigurationResolver;
-use Jmf\CrudEngine\Configuration\Resolution\ViewConfigurationResolver;
+use Jmf\CrudEngine\Resolution\FormConfigurationResolver;
+use Jmf\CrudEngine\Resolution\RedirectionConfigurationResolver;
+use Jmf\CrudEngine\Resolution\RouteConfigurationResolver;
+use Jmf\CrudEngine\Resolution\ViewConfigurationResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 

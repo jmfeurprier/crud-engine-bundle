@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Controller;
 
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
@@ -30,8 +31,6 @@ use Throwable;
 #[AsController]
 readonly class DeleteAction
 {
-    public const string ACTION = 'delete';
-
     /**
      * @param DeleteActionHelperInterface<E> $defaultActionHelper
      */
@@ -64,7 +63,7 @@ readonly class DeleteAction
         string $entityClass,
         string $id,
     ): Response {
-        $actionConfiguration = $this->actionConfigurationRegistry->get($entityClass, self::ACTION);
+        $actionConfiguration = $this->actionConfigurationRegistry->get($entityClass, CrudAction::Delete->value);
         $actionHelper        = $this->actionHelperResolver->resolve(
             DeleteActionHelperInterface::class,
             $actionConfiguration,

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Registry;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationResolver;
-use Jmf\CrudEngine\Configuration\Resolution\Action\ActionConfigResolverInterface;
+use Jmf\CrudEngine\Resolution\ActionConfigurationResolver;
+use Jmf\CrudEngine\Resolution\Action\ActionConfigResolverInterface;
 use Jmf\CrudEngine\Form\FormFallbackMode;
 use Jmf\CrudEngine\Model\ActionConfiguration;
 use Jmf\CrudEngine\Model\EntityAction;

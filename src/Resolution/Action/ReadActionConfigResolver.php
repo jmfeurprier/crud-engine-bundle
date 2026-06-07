@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Resolution\Action;
+namespace Jmf\CrudEngine\Resolution\Action;
 
-use Jmf\CrudEngine\Controller\ReadAction;
+use Jmf\CrudEngine\Model\CrudAction;
 use Override;
 
 readonly class ReadActionConfigResolver extends ActionConfigResolverBase
@@ -12,7 +12,7 @@ readonly class ReadActionConfigResolver extends ActionConfigResolverBase
     #[Override]
     public function getActionName(): string
     {
-        return ReadAction::ACTION;
+        return CrudAction::Read->value;
     }
 
     #[Override]

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Resolution;
+namespace Jmf\CrudEngine\Resolution;
 
 use Webmozart\Assert\Assert;
 

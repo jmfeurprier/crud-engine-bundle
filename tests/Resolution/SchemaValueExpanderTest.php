@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Tests\Configuration\Resolution;
+namespace Jmf\CrudEngine\Tests\Resolution;
 
-use Jmf\CrudEngine\Configuration\Resolution\SchemaValueExpander;
+use Jmf\CrudEngine\Resolution\SchemaValueExpander;
 use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;

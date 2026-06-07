@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Controller;
 
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperInterface;
@@ -37,8 +38,6 @@ use Throwable;
 #[AsController]
 readonly class CreateAction
 {
-    public const string ACTION = 'create';
-
     /**
      * @psalm-param CreateActionHelperInterface<E> $defaultActionHelper
      */
@@ -78,7 +77,7 @@ readonly class CreateAction
     ): Response {
         $actionConfiguration = $this->actionConfigurationRegistry->get(
             $entityClass,
-            self::ACTION,
+            CrudAction::Create->value,
         );
 
         $actionHelper = $this->actionHelperResolver->resolve(

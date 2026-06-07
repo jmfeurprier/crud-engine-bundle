@@ -7,7 +7,7 @@ services:
     Jmf\CrudEngine\:
         resource: '../src/'
         exclude:
-            - '../src/Configuration/'
+            - '../src/Resolution/'
             - '../src/Exception/'
             - '../src/JmfCrudEngineBundle.php'
             - '../src/Model/'

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine;
 
-use Jmf\CrudEngine\Configuration\ActionConfigurationResolverFactory;
+use Jmf\CrudEngine\Resolution\ActionConfigurationResolverFactory;
 use Jmf\CrudEngine\Registry\ActionConfigurationRegistry;
 use Jmf\CrudEngine\Registry\ActionConfigurationRegistryFactory;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
