@@ -45,12 +45,12 @@ readonly class ViewRenderer
             $actionDefinition,
         );
 
-        $configuredPath = $actionDefinition->getViewConfiguration()->getPath();
+        $configuredPath = $actionDefinition->getViewDefinition()->getPath();
 
         if ($this->twigEnvironment->getLoader()->exists($configuredPath)) {
             $viewPath = $configuredPath;
         } else {
-            if (FallbackMode::FAIL === $actionDefinition->getViewConfiguration()->getFallbackMode()) {
+            if (FallbackMode::FAIL === $actionDefinition->getViewDefinition()->getFallbackMode()) {
                 throw new CrudEngineMissingViewException($actionDefinition, $configuredPath);
             }
 
@@ -108,7 +108,7 @@ readonly class ViewRenderer
         ActionDefinition $actionDefinition,
     ): array {
         $parameters = array_merge($viewVariables, $defaults);
-        $configVars = $actionDefinition->getViewConfiguration()->getVariables();
+        $configVars = $actionDefinition->getViewDefinition()->getVariables();
 
         foreach ($parameters as $key => $value) {
             Assert::stringNotEmpty($key);

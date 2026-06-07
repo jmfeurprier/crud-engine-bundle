@@ -25,15 +25,15 @@ use Webmozart\Assert\Assert;
 readonly class ActionDefinitionHydrator
 {
     /**
-     * @param CompiledDefinitions $resolvedConfigurations
+     * @param CompiledDefinitions $compiledDefinitions
      *
      * @return array<class-string, array<non-empty-string, ActionDefinition>>
      */
-    public function hydrate(array $resolvedConfigurations): array
+    public function hydrate(array $compiledDefinitions): array
     {
         $hydrated = [];
 
-        foreach ($resolvedConfigurations as $entityClass => $actions) {
+        foreach ($compiledDefinitions as $entityClass => $actions) {
             foreach ($actions as $action => $resolvedAction) {
                 $hydrated[$entityClass][$action] = $this->hydrateAction(
                     $entityClass,
@@ -68,7 +68,7 @@ readonly class ActionDefinitionHydrator
             sprintf('Unknown view fallback mode "%s".', $view['fallback']),
         );
 
-        $formConfiguration = null;
+        $formDefinition = null;
 
         if (null !== $form) {
             $formFallbackMode = FallbackMode::tryFrom($form['fallback']);
@@ -78,10 +78,10 @@ readonly class ActionDefinitionHydrator
                 sprintf('Unknown form fallback mode "%s".', $form['fallback']),
             );
 
-            $formConfiguration = new FormDefinition(
+            $formDefinition = new FormDefinition(
                 formTypeClass:          $form['typeClass'],
                 suggestedFormTypeClass: $form['suggestedClass'],
-                formFallbackMode:       $formFallbackMode,
+                fallbackMode:       $formFallbackMode,
             );
         }
 
@@ -91,23 +91,23 @@ readonly class ActionDefinitionHydrator
                                           $action,
                                       ),
             helperClass:              $resolvedAction['helperClass'],
-            formConfiguration:        $formConfiguration,
-            redirectionConfiguration: null === $redirection
+            formDefinition:        $formDefinition,
+            redirectionDefinition: null === $redirection
                                           ? null
                                           : new RedirectionDefinition(
                                               route:      $redirection['route'],
                                               parameters: $redirection['parameters'],
                                               fragment:   $redirection['fragment'],
                                           ),
-            routeConfiguration:       new RouteDefinition(
+            routeDefinition:       new RouteDefinition(
                                           name:         $route['name'],
                                           path:         $route['path'],
                                           requirements: $route['requirements'],
                                       ),
-            viewConfiguration:        new ViewDefinition(
+            viewDefinition:        new ViewDefinition(
                                           path:             $view['path'],
                                           variables:        $view['variables'],
-                                          viewFallbackMode: $viewFallbackMode,
+                                          fallbackMode: $viewFallbackMode,
                                       ),
         );
     }

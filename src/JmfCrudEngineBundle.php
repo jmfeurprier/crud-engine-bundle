@@ -62,7 +62,7 @@ class JmfCrudEngineBundle extends AbstractBundle
         $configurator->services()
             ->set(ActionDefinitionRegistryFactory::class)
             ->autowire()
-            ->arg('$resolvedConfigurations', $this->getCompiledDefinitions($config))
+            ->arg('$compiledDefinitions', $this->getCompiledDefinitions($config))
         ;
 
         $configurator->services()

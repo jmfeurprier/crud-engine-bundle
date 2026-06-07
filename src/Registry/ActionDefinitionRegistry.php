@@ -11,10 +11,10 @@ use Override;
 readonly class ActionDefinitionRegistry implements ActionDefinitionRegistryInterface
 {
     /**
-     * @param array<class-string, array<non-empty-string, ActionDefinition>> $config
+     * @param array<class-string, array<non-empty-string, ActionDefinition>> $definitions
      */
     public function __construct(
-        private array $config,
+        private array $definitions,
     ) {
     }
 
@@ -36,14 +36,14 @@ readonly class ActionDefinitionRegistry implements ActionDefinitionRegistryInter
         string $entityClass,
         string $action,
     ): ?ActionDefinition {
-        return $this->config[$entityClass][$action] ?? null;
+        return $this->definitions[$entityClass][$action] ?? null;
     }
 
     #[Override]
     public function all(): iterable
     {
-        foreach ($this->config as $configurationsByAction) {
-            yield from $configurationsByAction;
+        foreach ($this->definitions as $definitionsByAction) {
+            yield from $definitionsByAction;
         }
     }
 }

@@ -28,14 +28,14 @@ readonly class FormCreator
         ActionDefinition $actionDefinition,
         object $entity,
     ): FormInterface {
-        $formConfiguration = $actionDefinition->getFormConfiguration();
-        $formTypeClass     = $formConfiguration->getFormTypeClass();
+        $formDefinition = $actionDefinition->getFormDefinition();
+        $formTypeClass     = $formDefinition->getFormTypeClass();
 
         if (null !== $formTypeClass) {
             return $this->createForm($actionDefinition, $formTypeClass, $entity);
         }
 
-        if (FallbackMode::FAIL === $formConfiguration->getFallbackMode()) {
+        if (FallbackMode::FAIL === $formDefinition->getFallbackMode()) {
             throw new CrudEngineMissingConfigurationException(
                 $actionDefinition->getEntityAction()->getEntityClass(),
                 $actionDefinition->getEntityAction()->getAction(),
@@ -49,7 +49,7 @@ readonly class FormCreator
             $entity,
             [
                 'entity_action'             => $actionDefinition->getEntityAction(),
-                'suggested_form_type_class' => $formConfiguration->getSuggestedFormTypeClass(),
+                'suggested_form_type_class' => $formDefinition->getSuggestedFormTypeClass(),
             ],
         );
     }

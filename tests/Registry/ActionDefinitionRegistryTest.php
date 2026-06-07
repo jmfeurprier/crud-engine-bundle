@@ -14,11 +14,11 @@ final class ActionDefinitionRegistryTest extends TestCase
 {
     private ActionDefinitionRegistry $actionDefinitionRegistry;
 
-    public function testGetReturnsConfiguration(): void
+    public function testGetReturnsDefinition(): void
     {
         $actionDefinition = $this->createStub(ActionDefinition::class);
 
-        $this->givenConfiguration(
+        $this->givenDefinitions(
             [
                 Article::class => [
                     'create' => $actionDefinition,
@@ -33,7 +33,7 @@ final class ActionDefinitionRegistryTest extends TestCase
 
     public function testGetThrowsWhenMissing(): void
     {
-        $this->givenConfiguration([]);
+        $this->givenDefinitions([]);
 
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
@@ -42,19 +42,19 @@ final class ActionDefinitionRegistryTest extends TestCase
 
     public function testTryGetReturnsNullForUnknown(): void
     {
-        $this->givenConfiguration([]);
+        $this->givenDefinitions([]);
 
         $result = $this->actionDefinitionRegistry->tryGet(Article::class, 'unknown');
 
         self::assertNull($result);
     }
 
-    public function testAllYieldsEveryConfiguration(): void
+    public function testAllYieldsEveryDefinition(): void
     {
         $createActionDefinition = $this->createStub(ActionDefinition::class);
         $indexActionDefinition  = $this->createStub(ActionDefinition::class);
 
-        $this->givenConfiguration(
+        $this->givenDefinitions(
             [
                 Article::class => [
                     'create' => $createActionDefinition,
@@ -73,12 +73,12 @@ final class ActionDefinitionRegistryTest extends TestCase
     }
 
     /**
-     * @param array<class-string, array<non-empty-string, ActionDefinition>> $configuration
+     * @param array<class-string, array<non-empty-string, ActionDefinition>> $definitions
      */
-    private function givenConfiguration(array $configuration): void
+    private function givenDefinitions(array $definitions): void
     {
         $this->actionDefinitionRegistry = new ActionDefinitionRegistry(
-            $configuration,
+            $definitions,
         );
     }
 }

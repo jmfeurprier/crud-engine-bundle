@@ -12,9 +12,9 @@ use PHPUnit\Framework\TestCase;
 
 final class ActionDefinitionRegistryFactoryTest extends TestCase
 {
-    public function testCreateBuildsRepositoryFromHydratedConfigurations(): void
+    public function testCreateBuildsRegistryFromHydratedDefinitions(): void
     {
-        $resolvedConfigurations = [];
+        $compiledDefinitions = [];
 
         $actionDefinition = $this->createStub(ActionDefinition::class);
 
@@ -22,7 +22,7 @@ final class ActionDefinitionRegistryFactoryTest extends TestCase
         $hydrator
             ->expects(self::once())
             ->method('hydrate')
-            ->with($resolvedConfigurations)
+            ->with($compiledDefinitions)
             ->willReturn(
                 [
                     Article::class => [
@@ -33,7 +33,7 @@ final class ActionDefinitionRegistryFactoryTest extends TestCase
         ;
 
         $actionDefinitionRegistryFactory = new ActionDefinitionRegistryFactory(
-            $resolvedConfigurations,
+            $compiledDefinitions,
             $hydrator,
         );
 

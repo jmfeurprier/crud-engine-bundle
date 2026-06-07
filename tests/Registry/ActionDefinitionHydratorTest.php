@@ -21,36 +21,36 @@ final class ActionDefinitionHydratorTest extends TestCase
         self::assertSame('create', $actionDefinition->getEntityAction()->getAction());
         self::assertNull($actionDefinition->getHelperClass());
 
-        $formConfiguration = $actionDefinition->getFormConfiguration();
-        self::assertSame(ArticleType::class, $formConfiguration->getFormTypeClass());
-        self::assertSame('App\\Form\\Article\\CreateType', $formConfiguration->getSuggestedFormTypeClass());
-        self::assertSame(FallbackMode::PROVIDE, $formConfiguration->getFallbackMode());
+        $formDefinition = $actionDefinition->getFormDefinition();
+        self::assertSame(ArticleType::class, $formDefinition->getFormTypeClass());
+        self::assertSame('App\\Form\\Article\\CreateType', $formDefinition->getSuggestedFormTypeClass());
+        self::assertSame(FallbackMode::PROVIDE, $formDefinition->getFallbackMode());
 
-        $redirectionConfiguration = $actionDefinition->getRedirectionConfiguration();
-        self::assertSame('article.read', $redirectionConfiguration->getRoute());
-        self::assertSame(['id' => '{{ _entity.id }}'], $redirectionConfiguration->getParameters());
-        self::assertNull($redirectionConfiguration->getFragment());
+        $redirectionDefinition = $actionDefinition->getRedirectionDefinition();
+        self::assertSame('article.read', $redirectionDefinition->getRoute());
+        self::assertSame(['id' => '{{ _entity.id }}'], $redirectionDefinition->getParameters());
+        self::assertNull($redirectionDefinition->getFragment());
 
-        $routeConfiguration = $actionDefinition->getRouteConfiguration();
-        self::assertSame('article.create', $routeConfiguration->getName());
-        self::assertSame('articles/create', $routeConfiguration->getPath());
-        self::assertSame(['id' => '\d+'], $routeConfiguration->getRequirements());
+        $routeDefinition = $actionDefinition->getRouteDefinition();
+        self::assertSame('article.create', $routeDefinition->getName());
+        self::assertSame('articles/create', $routeDefinition->getPath());
+        self::assertSame(['id' => '\d+'], $routeDefinition->getRequirements());
 
-        $viewConfiguration = $actionDefinition->getViewConfiguration();
-        self::assertSame('article/create.html.twig', $viewConfiguration->getPath());
-        self::assertSame(['form' => ['articleForm']], $viewConfiguration->getVariables());
-        self::assertSame(FallbackMode::PROVIDE, $viewConfiguration->getFallbackMode());
+        $viewDefinition = $actionDefinition->getViewDefinition();
+        self::assertSame('article/create.html.twig', $viewDefinition->getPath());
+        self::assertSame(['form' => ['articleForm']], $viewDefinition->getVariables());
+        self::assertSame(FallbackMode::PROVIDE, $viewDefinition->getFallbackMode());
     }
 
     public function testHydratesIndexActionWithoutRedirection(): void
     {
         $actionDefinition = $this->hydrate()[Article::class]['index'];
 
-        self::assertSame(FallbackMode::FAIL, $actionDefinition->getViewConfiguration()->getFallbackMode());
+        self::assertSame(FallbackMode::FAIL, $actionDefinition->getViewDefinition()->getFallbackMode());
 
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
-        $actionDefinition->getRedirectionConfiguration();
+        $actionDefinition->getRedirectionDefinition();
     }
 
     public function testHydratesActionWithoutForm(): void
@@ -59,7 +59,7 @@ final class ActionDefinitionHydratorTest extends TestCase
 
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
-        $actionDefinition->getFormConfiguration();
+        $actionDefinition->getFormDefinition();
     }
 
     /**

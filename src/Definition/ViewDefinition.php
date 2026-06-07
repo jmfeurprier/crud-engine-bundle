@@ -14,7 +14,7 @@ readonly class ViewDefinition
     public function __construct(
         private string $path,
         private array $variables,
-        private FallbackMode $viewFallbackMode,
+        private FallbackMode $fallbackMode,
     ) {
     }
 
@@ -33,6 +33,6 @@ readonly class ViewDefinition
 
     public function getFallbackMode(): FallbackMode
     {
-        return $this->viewFallbackMode;
+        return $this->fallbackMode;
     }
 }

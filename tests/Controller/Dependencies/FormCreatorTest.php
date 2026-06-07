@@ -111,15 +111,15 @@ final class FormCreatorTest extends TestCase
                                           'create',
                                       ),
             helperClass:              null,
-            formConfiguration:        new FormDefinition(
+            formDefinition:        new FormDefinition(
                                           formTypeClass:          $formTypeClass,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode:       $formFallbackMode,
+                                          fallbackMode:       $formFallbackMode,
 
                                       ),
-            redirectionConfiguration: null,
-            routeConfiguration:       new RouteDefinition('', '', []),
-            viewConfiguration:        new ViewDefinition('', [], FallbackMode::PROVIDE),
+            redirectionDefinition: null,
+            routeDefinition:       new RouteDefinition('', '', []),
+            viewDefinition:        new ViewDefinition('', [], FallbackMode::PROVIDE),
         );
     }
 }

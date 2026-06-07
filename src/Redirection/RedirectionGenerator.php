@@ -53,7 +53,7 @@ readonly class RedirectionGenerator
      */
     private function getRedirectRoute(ActionDefinition $actionDefinition): string
     {
-        return $actionDefinition->getRedirectionConfiguration()->getRoute();
+        return $actionDefinition->getRedirectionDefinition()->getRoute();
     }
 
     /**
@@ -66,7 +66,7 @@ readonly class RedirectionGenerator
         ActionDefinition $actionDefinition,
         object $entity,
     ): array {
-        $definitions = $actionDefinition->getRedirectionConfiguration()->getParameters();
+        $definitions = $actionDefinition->getRedirectionDefinition()->getParameters();
         $parameters  = [];
 
         foreach ($definitions as $key => $definition) {
@@ -113,6 +113,6 @@ readonly class RedirectionGenerator
     private function getRedirectFragment(
         ActionDefinition $actionDefinition,
     ): ?string {
-        return $actionDefinition->getRedirectionConfiguration()->getFragment();
+        return $actionDefinition->getRedirectionDefinition()->getFragment();
     }
 }

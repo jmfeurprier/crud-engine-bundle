@@ -63,21 +63,21 @@ final class IndexActionRouteLoaderTest extends TestCase
         string $routePath = '',
         string $viewPath = '',
     ): ActionDefinition {
-        $actionRedirectionConfiguration = new RedirectionDefinition(
+        $redirectionDefinition = new RedirectionDefinition(
             route:      $redirectionRoute,
             parameters: [],
         );
 
-        $actionRouteConfiguration = new RouteDefinition(
+        $routeDefinition = new RouteDefinition(
             name:         $routeName,
             path:         $routePath,
             requirements: [],
         );
 
-        $actionViewConfiguration = new ViewDefinition(
+        $viewDefinition = new ViewDefinition(
             path:             $viewPath,
             variables:        [],
-            viewFallbackMode: FallbackMode::PROVIDE,
+            fallbackMode: FallbackMode::PROVIDE,
         );
 
         return new ActionDefinition(
@@ -86,14 +86,14 @@ final class IndexActionRouteLoaderTest extends TestCase
                                           $action,
                                       ),
             helperClass:              null,
-            formConfiguration:        new FormDefinition(
+            formDefinition:        new FormDefinition(
                                           formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode:       FallbackMode::PROVIDE,
+                                          fallbackMode:       FallbackMode::PROVIDE,
                                       ),
-            redirectionConfiguration: $actionRedirectionConfiguration,
-            routeConfiguration:       $actionRouteConfiguration,
-            viewConfiguration:        $actionViewConfiguration,
+            redirectionDefinition: $redirectionDefinition,
+            routeDefinition:       $routeDefinition,
+            viewDefinition:        $viewDefinition,
         );
     }
 }

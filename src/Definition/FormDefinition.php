@@ -16,7 +16,7 @@ readonly class FormDefinition
     public function __construct(
         private ?string $formTypeClass,
         private string $suggestedFormTypeClass,
-        private FallbackMode $formFallbackMode,
+        private FallbackMode $fallbackMode,
     ) {
     }
 
@@ -40,6 +40,6 @@ readonly class FormDefinition
 
     public function getFallbackMode(): FallbackMode
     {
-        return $this->formFallbackMode;
+        return $this->fallbackMode;
     }
 }

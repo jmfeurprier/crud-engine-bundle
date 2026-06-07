@@ -19,10 +19,10 @@ readonly class ActionDefinition
     public function __construct(
         private EntityAction $entityAction,
         private ?string $helperClass,
-        private ?FormDefinition $formConfiguration,
-        private ?RedirectionDefinition $redirectionConfiguration,
-        private RouteDefinition $routeConfiguration,
-        private ViewDefinition $viewConfiguration,
+        private ?FormDefinition $formDefinition,
+        private ?RedirectionDefinition $redirectionDefinition,
+        private RouteDefinition $routeDefinition,
+        private ViewDefinition $viewDefinition,
     ) {
     }
 
@@ -42,9 +42,9 @@ readonly class ActionDefinition
     /**
      * @throws CrudEngineMissingConfigurationException
      */
-    public function getFormConfiguration(): FormDefinition
+    public function getFormDefinition(): FormDefinition
     {
-        return $this->formConfiguration
+        return $this->formDefinition
             ??
             throw new CrudEngineMissingConfigurationException(
                 $this->entityAction->getEntityClass(),
@@ -56,9 +56,9 @@ readonly class ActionDefinition
     /**
      * @throws CrudEngineMissingConfigurationException
      */
-    public function getRedirectionConfiguration(): RedirectionDefinition
+    public function getRedirectionDefinition(): RedirectionDefinition
     {
-        return $this->redirectionConfiguration
+        return $this->redirectionDefinition
             ??
             throw new CrudEngineMissingConfigurationException(
                 $this->entityAction->getEntityClass(),
@@ -67,13 +67,13 @@ readonly class ActionDefinition
             );
     }
 
-    public function getRouteConfiguration(): RouteDefinition
+    public function getRouteDefinition(): RouteDefinition
     {
-        return $this->routeConfiguration;
+        return $this->routeDefinition;
     }
 
-    public function getViewConfiguration(): ViewDefinition
+    public function getViewDefinition(): ViewDefinition
     {
-        return $this->viewConfiguration;
+        return $this->viewDefinition;
     }
 }

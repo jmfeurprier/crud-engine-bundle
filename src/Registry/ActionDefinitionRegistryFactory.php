@@ -12,10 +12,10 @@ use Jmf\CrudEngine\Compilation\ActionDefinitionCompiler;
 readonly class ActionDefinitionRegistryFactory
 {
     /**
-     * @param CompiledDefinitions $resolvedConfigurations
+     * @param CompiledDefinitions $compiledDefinitions
      */
     public function __construct(
-        private array $resolvedConfigurations,
+        private array $compiledDefinitions,
         private ActionDefinitionHydrator $actionDefinitionHydrator,
     ) {
     }
@@ -23,7 +23,7 @@ readonly class ActionDefinitionRegistryFactory
     public function create(): ActionDefinitionRegistryInterface
     {
         return new ActionDefinitionRegistry(
-            $this->actionDefinitionHydrator->hydrate($this->resolvedConfigurations),
+            $this->actionDefinitionHydrator->hydrate($this->compiledDefinitions),
         );
     }
 }

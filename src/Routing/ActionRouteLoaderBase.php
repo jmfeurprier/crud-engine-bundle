@@ -27,7 +27,7 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
 
     private function getRouteName(ActionDefinition $actionDefinition): string
     {
-        return $actionDefinition->getRouteConfiguration()->getName();
+        return $actionDefinition->getRouteDefinition()->getName();
     }
 
     private function getRoute(ActionDefinition $actionDefinition): Route
@@ -52,7 +52,7 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
 
     private function getRoutePath(ActionDefinition $actionDefinition): string
     {
-        return $actionDefinition->getRouteConfiguration()->getPath();
+        return $actionDefinition->getRouteDefinition()->getPath();
     }
 
     /**
@@ -60,6 +60,6 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
      */
     private function getRequirements(ActionDefinition $actionDefinition): array
     {
-        return $actionDefinition->getRouteConfiguration()->getRequirements();
+        return $actionDefinition->getRouteDefinition()->getRequirements();
     }
 }

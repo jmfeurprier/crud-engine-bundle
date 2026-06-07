@@ -57,7 +57,7 @@ final class RouteLoaderTest extends TestCase
         self::assertNotNull($routeCollection->get('foo.index'));
     }
 
-    public function testInvokeReturnsEmptyCollectionWhenNoConfigurations(): void
+    public function testInvokeReturnsEmptyCollectionWhenNoDefinitions(): void
     {
         $this->actionDefinitionRegistry
             ->method('all')
@@ -111,21 +111,21 @@ final class RouteLoaderTest extends TestCase
         string $routePath = '',
         string $viewPath = '',
     ): ActionDefinition {
-        $actionRedirectionConfiguration = new RedirectionDefinition(
+        $redirectionDefinition = new RedirectionDefinition(
             route:      $redirectionRoute,
             parameters: [],
         );
 
-        $actionRouteConfiguration = new RouteDefinition(
+        $routeDefinition = new RouteDefinition(
             name:         $routeName,
             path:         $routePath,
             requirements: [],
         );
 
-        $actionViewConfiguration = new ViewDefinition(
+        $viewDefinition = new ViewDefinition(
             path:             $viewPath,
             variables:        [],
-            viewFallbackMode: FallbackMode::PROVIDE,
+            fallbackMode: FallbackMode::PROVIDE,
         );
 
         return new ActionDefinition(
@@ -134,14 +134,14 @@ final class RouteLoaderTest extends TestCase
                                           $action,
                                       ),
             helperClass:              null,
-            formConfiguration:        new FormDefinition(
+            formDefinition:        new FormDefinition(
                                           formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode:       FallbackMode::PROVIDE,
+                                          fallbackMode:       FallbackMode::PROVIDE,
                                       ),
-            redirectionConfiguration: $actionRedirectionConfiguration,
-            routeConfiguration:       $actionRouteConfiguration,
-            viewConfiguration:        $actionViewConfiguration,
+            redirectionDefinition: $redirectionDefinition,
+            routeDefinition:       $routeDefinition,
+            viewDefinition:        $viewDefinition,
         );
     }
 }

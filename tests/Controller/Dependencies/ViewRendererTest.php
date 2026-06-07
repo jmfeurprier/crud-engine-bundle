@@ -85,24 +85,24 @@ final class ViewRendererTest extends TestCase
                                           'read',
                                       ),
             helperClass:              null,
-            formConfiguration:        new FormDefinition(
+            formDefinition:        new FormDefinition(
                                           formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode:       FallbackMode::PROVIDE,
+                                          fallbackMode:       FallbackMode::PROVIDE,
                                       ),
-            redirectionConfiguration: new RedirectionDefinition(
+            redirectionDefinition: new RedirectionDefinition(
                                           route:      '',
                                           parameters: [],
                                       ),
-            routeConfiguration:       new RouteDefinition(
+            routeDefinition:       new RouteDefinition(
                                           name:         '',
                                           path:         '',
                                           requirements: [],
                                       ),
-            viewConfiguration:        new ViewDefinition(
+            viewDefinition:        new ViewDefinition(
                                           path:             $viewPath,
                                           variables:        [],
-                                          viewFallbackMode: $fallback,
+                                          fallbackMode: $fallback,
                                       ),
         );
     }

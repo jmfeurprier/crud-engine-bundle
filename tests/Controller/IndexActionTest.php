@@ -97,24 +97,24 @@ final class IndexActionTest extends TestCase
                                           $action,
                                       ),
             helperClass:              null,
-            formConfiguration:        new FormDefinition(
+            formDefinition:        new FormDefinition(
                                           formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode:       FallbackMode::PROVIDE,
+                                          fallbackMode:       FallbackMode::PROVIDE,
                                       ),
-            redirectionConfiguration: new RedirectionDefinition(
+            redirectionDefinition: new RedirectionDefinition(
                                           route:      '',
                                           parameters: [],
                                       ),
-            routeConfiguration:       new RouteDefinition(
+            routeDefinition:       new RouteDefinition(
                                           name:         '',
                                           path:         '',
                                           requirements: [],
                                       ),
-            viewConfiguration:        new ViewDefinition(
+            viewDefinition:        new ViewDefinition(
                                           path:             '',
                                           variables:        [],
-                                          viewFallbackMode: FallbackMode::PROVIDE,
+                                          fallbackMode: FallbackMode::PROVIDE,
                                       ),
         );
     }
