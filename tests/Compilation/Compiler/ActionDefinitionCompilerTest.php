@@ -23,7 +23,7 @@ final class ActionDefinitionCompilerTest extends TestCase
 
     public function testResolvesDefaults(): void
     {
-        $resolved = $this->resolver->resolve(
+        $resolved = $this->resolver->compile(
             [
                 'entities' => [
                     Article::class => [
@@ -86,7 +86,7 @@ final class ActionDefinitionCompilerTest extends TestCase
 
     public function testActionOverridesWin(): void
     {
-        $resolved = $this->resolver->resolve(
+        $resolved = $this->resolver->compile(
             [
                 'entities' => [
                     Article::class => [
@@ -136,7 +136,7 @@ final class ActionDefinitionCompilerTest extends TestCase
 
     public function testSchemaPathOverrideMergesWithDefaults(): void
     {
-        $resolved = $this->resolver->resolve(
+        $resolved = $this->resolver->compile(
             [
                 'schema'   => [
                     'route' => [
@@ -171,7 +171,7 @@ final class ActionDefinitionCompilerTest extends TestCase
 
     public function testResolvesFormFallbackOverride(): void
     {
-        $resolved = $this->resolver->resolve(
+        $resolved = $this->resolver->compile(
             [
                 'schema'   => [
                     'form' => [

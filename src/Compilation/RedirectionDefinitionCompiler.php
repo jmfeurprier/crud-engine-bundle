@@ -32,7 +32,7 @@ readonly class RedirectionDefinitionCompiler
      * @throws CrudEngineInvalidConfigurationException
      * @throws CrudEngineMissingConfigurationException
      */
-    public function resolve(
+    public function compile(
         array $schema,
         array $keys,
         string $entityClass,

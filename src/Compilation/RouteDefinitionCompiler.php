@@ -36,7 +36,7 @@ readonly class RouteDefinitionCompiler
      *
      * @throws CrudEngineInvalidConfigurationException
      */
-    public function resolve(
+    public function compile(
         array $schema,
         array $keys,
         string $entityClass,

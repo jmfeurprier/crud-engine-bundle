@@ -41,7 +41,7 @@ readonly class FormDefinitionCompiler
      *
      * @throws CrudEngineInvalidConfigurationException
      */
-    public function resolve(
+    public function compile(
         array $schema,
         array $keys,
         string $entityClass,

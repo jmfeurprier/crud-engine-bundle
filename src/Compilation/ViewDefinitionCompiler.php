@@ -21,7 +21,7 @@ readonly class ViewDefinitionCompiler
     public function __construct(
         private ConfigurationValueResolver $configurationValueResolver,
         private MapResolver $mapResolver,
-        private OverridableConfigurationValueResolver $overridableConfigurationValueExpander,
+        private OverridableConfigurationValueResolver $overridableConfigurationValueResolver,
     ) {
     }
 
@@ -36,7 +36,7 @@ readonly class ViewDefinitionCompiler
      *
      * @throws CrudEngineInvalidConfigurationException
      */
-    public function resolve(
+    public function compile(
         array $schema,
         array $keys,
         string $entityClass,
@@ -47,7 +47,7 @@ readonly class ViewDefinitionCompiler
         $schemaView = $this->mapResolver->resolve($schema, 'view');
 
         return [
-            'path'      => $this->overridableConfigurationValueExpander->resolve(
+            'path'      => $this->overridableConfigurationValueResolver->resolve(
                 $viewConfig,
                 'path',
                 $schemaView,

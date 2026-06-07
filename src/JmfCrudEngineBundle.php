@@ -87,6 +87,6 @@ class JmfCrudEngineBundle extends AbstractBundle
     private function getCompiledDefinitions(
         array $config,
     ): array {
-        return $this->actionDefinitionCompilerFactory->create()->resolve($config);
+        return $this->actionDefinitionCompilerFactory->create()->compile($config);
     }
 }

@@ -56,7 +56,7 @@ readonly class ActionDefinitionCompiler
      * @throws CrudEngineMissingConfigurationException
      * @throws CrudEngineUnsupportedActionException
      */
-    public function resolve(array $config): array
+    public function compile(array $config): array
     {
         $schema = $this->mapResolver->resolve($config, 'schema');
 
@@ -84,7 +84,7 @@ readonly class ActionDefinitionCompiler
                 Assert::stringNotEmpty($action);
                 Assert::isMap($actionConfig);
 
-                $resolved[$entityClass][$action] = $this->getCompiler($entityClass, $action)->resolve(
+                $resolved[$entityClass][$action] = $this->getCompiler($entityClass, $action)->compile(
                     $schema,
                     $entityClass,
                     $action,
