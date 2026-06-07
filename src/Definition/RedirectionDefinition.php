@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Registry;
+namespace Jmf\CrudEngine\Definition;
 
 readonly class RedirectionDefinition
 {

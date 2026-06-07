@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\View;
 
+use Jmf\CrudEngine\Definition\ActionDefinition;
+use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
-use Jmf\CrudEngine\Model\ActionDefinition;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -49,7 +50,7 @@ readonly class ViewRenderer
         if ($this->twigEnvironment->getLoader()->exists($configuredPath)) {
             $viewPath = $configuredPath;
         } else {
-            if (ViewFallbackMode::FAIL === $actionDefinition->getViewConfiguration()->getViewFallbackMode()) {
+            if (FallbackMode::FAIL === $actionDefinition->getViewConfiguration()->getFallbackMode()) {
                 throw new CrudEngineMissingViewException($actionDefinition, $configuredPath);
             }
 

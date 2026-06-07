@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
 
+use Jmf\CrudEngine\Definition\ActionDefinition;
+use Jmf\CrudEngine\Definition\FallbackMode;
+use Jmf\CrudEngine\Definition\FormDefinition;
+use Jmf\CrudEngine\Definition\RouteDefinition;
+use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineFormCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FormCreator;
-use Jmf\CrudEngine\Form\FormFallbackMode;
-use Jmf\CrudEngine\Model\ActionDefinition;
 use Jmf\CrudEngine\Model\EntityAction;
-use Jmf\CrudEngine\Registry\FormDefinition;
-use Jmf\CrudEngine\Registry\RouteDefinition;
-use Jmf\CrudEngine\Registry\ViewDefinition;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
-use Jmf\CrudEngine\View\ViewFallbackMode;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -38,7 +37,7 @@ final class FormCreatorTest extends TestCase
         ;
 
         $result = (new FormCreator($formFactory))->create(
-            $this->givenActionDefinition(ArticleType::class, FormFallbackMode::PROVIDE),
+            $this->givenActionDefinition(ArticleType::class, FallbackMode::PROVIDE),
             $article,
         );
 
@@ -66,7 +65,7 @@ final class FormCreatorTest extends TestCase
         ;
 
         $result = (new FormCreator($formFactory))->create(
-            $this->givenActionDefinition(null, FormFallbackMode::PROVIDE),
+            $this->givenActionDefinition(null, FallbackMode::PROVIDE),
             $article,
         );
 
@@ -81,7 +80,7 @@ final class FormCreatorTest extends TestCase
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
         (new FormCreator($formFactory))->create(
-            $this->givenActionDefinition(null, FormFallbackMode::FAIL),
+            $this->givenActionDefinition(null, FallbackMode::FAIL),
             new Article(),
         );
     }
@@ -94,7 +93,7 @@ final class FormCreatorTest extends TestCase
         $this->expectException(CrudEngineFormCreationException::class);
 
         (new FormCreator($formFactory))->create(
-            $this->givenActionDefinition(ArticleType::class, FormFallbackMode::PROVIDE),
+            $this->givenActionDefinition(ArticleType::class, FallbackMode::PROVIDE),
             new Article(),
         );
     }
@@ -104,7 +103,7 @@ final class FormCreatorTest extends TestCase
      */
     private function givenActionDefinition(
         ?string $formTypeClass,
-        FormFallbackMode $formFallbackMode,
+        FallbackMode $formFallbackMode,
     ): ActionDefinition {
         return new ActionDefinition(
             entityAction:             new EntityAction(
@@ -120,7 +119,7 @@ final class FormCreatorTest extends TestCase
                                       ),
             redirectionConfiguration: null,
             routeConfiguration:       new RouteDefinition('', '', []),
-            viewConfiguration:        new ViewDefinition('', [], ViewFallbackMode::PROVIDE),
+            viewConfiguration:        new ViewDefinition('', [], FallbackMode::PROVIDE),
         );
     }
 }

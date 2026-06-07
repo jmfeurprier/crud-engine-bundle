@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Routing;
 
-use Jmf\CrudEngine\Model\ActionDefinition;
+use Jmf\CrudEngine\Definition\ActionDefinition;
 use Override;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;

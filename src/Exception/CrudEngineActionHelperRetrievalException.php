@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
-use Jmf\CrudEngine\Model\ActionDefinition;
+use Jmf\CrudEngine\Definition\ActionDefinition;
 use Throwable;
 
 class CrudEngineActionHelperRetrievalException extends CrudEngineRuntimeException

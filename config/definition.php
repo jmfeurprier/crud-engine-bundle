@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-use Jmf\CrudEngine\Form\FormFallbackMode;
-use Jmf\CrudEngine\View\ViewFallbackMode;
+use Jmf\CrudEngine\Definition\FallbackMode;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -109,11 +108,11 @@ return static function (DefinitionConfigurator $definition): void {
                                 ->info('Behavior when no form type is configured or discovered.')
                                 ->values(
                                     [
-                                        FormFallbackMode::PROVIDE->value,
-                                        FormFallbackMode::FAIL->value,
+                                        FallbackMode::PROVIDE->value,
+                                        FallbackMode::FAIL->value,
                                     ]
                                 )
-                                ->defaultValue(FormFallbackMode::PROVIDE->value)
+                                ->defaultValue(FallbackMode::PROVIDE->value)
                             ->end()
                         ->end()
                     ->end()
@@ -126,11 +125,11 @@ return static function (DefinitionConfigurator $definition): void {
                                 ->info('Behavior when a view template is missing.')
                                 ->values(
                                     [
-                                        ViewFallbackMode::PROVIDE->value,
-                                        ViewFallbackMode::FAIL->value,
+                                        FallbackMode::PROVIDE->value,
+                                        FallbackMode::FAIL->value,
                                     ]
                                 )
-                                ->defaultValue(ViewFallbackMode::PROVIDE->value)
+                                ->defaultValue(FallbackMode::PROVIDE->value)
                             ->end()
                             ->arrayNode('variables')
                                 ->variablePrototype()->end()

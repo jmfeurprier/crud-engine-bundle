@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Registry;
 
-use Jmf\CrudEngine\Model\ActionDefinition;
+use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Registry\ActionDefinitionHydrator;
 use Jmf\CrudEngine\Registry\ActionDefinitionRegistryFactory;
 use Jmf\CrudEngine\Tests\Fixtures\Article;

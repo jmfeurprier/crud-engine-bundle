@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Registry;
 
-use Jmf\CrudEngine\Compilation\ActionDefinitionCompiler;
 use Jmf\CrudEngine\Compilation\Action\ActionDefinitionCompilerInterface;
-use Jmf\CrudEngine\Form\FormFallbackMode;
-use Jmf\CrudEngine\Model\ActionDefinition;
+use Jmf\CrudEngine\Compilation\ActionDefinitionCompiler;
+use Jmf\CrudEngine\Definition\ActionDefinition;
+use Jmf\CrudEngine\Definition\FallbackMode;
+use Jmf\CrudEngine\Definition\FormDefinition;
+use Jmf\CrudEngine\Definition\RedirectionDefinition;
+use Jmf\CrudEngine\Definition\RouteDefinition;
+use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Model\EntityAction;
-use Jmf\CrudEngine\View\ViewFallbackMode;
 use Webmozart\Assert\Assert;
 
 /**
@@ -58,7 +61,7 @@ readonly class ActionDefinitionHydrator
         $redirection = $resolvedAction['redirection'];
         $view        = $resolvedAction['view'];
 
-        $viewFallbackMode = ViewFallbackMode::tryFrom($view['fallback']);
+        $viewFallbackMode = FallbackMode::tryFrom($view['fallback']);
 
         Assert::notNull(
             $viewFallbackMode,
@@ -68,7 +71,7 @@ readonly class ActionDefinitionHydrator
         $formConfiguration = null;
 
         if (null !== $form) {
-            $formFallbackMode = FormFallbackMode::tryFrom($form['fallback']);
+            $formFallbackMode = FallbackMode::tryFrom($form['fallback']);
 
             Assert::notNull(
                 $formFallbackMode,

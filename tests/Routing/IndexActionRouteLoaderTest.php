@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Routing;
 
-use Jmf\CrudEngine\Form\FormFallbackMode;
-use Jmf\CrudEngine\Model\ActionDefinition;
+use Jmf\CrudEngine\Definition\ActionDefinition;
+use Jmf\CrudEngine\Definition\FallbackMode;
+use Jmf\CrudEngine\Definition\FormDefinition;
+use Jmf\CrudEngine\Definition\RedirectionDefinition;
+use Jmf\CrudEngine\Definition\RouteDefinition;
+use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Model\EntityAction;
-use Jmf\CrudEngine\Registry\FormDefinition;
-use Jmf\CrudEngine\Registry\RedirectionDefinition;
-use Jmf\CrudEngine\Registry\RouteDefinition;
-use Jmf\CrudEngine\Registry\ViewDefinition;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
-use Jmf\CrudEngine\View\ViewFallbackMode;
 use Override;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -78,7 +77,7 @@ final class IndexActionRouteLoaderTest extends TestCase
         $actionViewConfiguration = new ViewDefinition(
             path:             $viewPath,
             variables:        [],
-            viewFallbackMode: ViewFallbackMode::PROVIDE,
+            viewFallbackMode: FallbackMode::PROVIDE,
         );
 
         return new ActionDefinition(
@@ -90,7 +89,7 @@ final class IndexActionRouteLoaderTest extends TestCase
             formConfiguration:        new FormDefinition(
                                           formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode:       FormFallbackMode::PROVIDE,
+                                          formFallbackMode:       FallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: $actionRedirectionConfiguration,
             routeConfiguration:       $actionRouteConfiguration,

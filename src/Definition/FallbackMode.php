@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Form;
+namespace Jmf\CrudEngine\Definition;
 
-enum FormFallbackMode: string
+enum FallbackMode: string
 {
     case FAIL    = 'fail';
     case PROVIDE = 'provide';

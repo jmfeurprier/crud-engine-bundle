@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Exception;
 
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
-use Jmf\CrudEngine\Model\ActionDefinition;
+use Jmf\CrudEngine\Definition\ActionDefinition;
 
 class CrudEngineActionHelperTypeMismatchException extends CrudEngineRuntimeException
 {

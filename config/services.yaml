@@ -8,6 +8,7 @@ services:
         resource: '../src/'
         exclude:
             - '../src/Compilation/'
+            - '../src/Definition/'
             - '../src/Exception/'
             - '../src/JmfCrudEngineBundle.php'
             - '../src/Model/'

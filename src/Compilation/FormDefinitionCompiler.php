@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Compilation;
 
+use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Jmf\CrudEngine\Form\FormFallbackMode;
 use Symfony\Component\Form\FormTypeInterface;
 use Webmozart\Assert\Assert;
 
@@ -164,12 +164,12 @@ readonly class FormDefinitionCompiler
         $schemaForm = $this->mapResolver->resolve($schema, 'form');
 
         if (!array_key_exists('fallback', $schemaForm)) {
-            return FormFallbackMode::PROVIDE->value;
+            return FallbackMode::PROVIDE->value;
         }
 
         Assert::stringNotEmpty($schemaForm['fallback']);
 
-        $fallback = FormFallbackMode::tryFrom($schemaForm['fallback']);
+        $fallback = FallbackMode::tryFrom($schemaForm['fallback']);
 
         Assert::notNull(
             $fallback,

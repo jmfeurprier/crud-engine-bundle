@@ -7,16 +7,15 @@ namespace Jmf\CrudEngine\Tests\Controller;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
 use Jmf\CrudEngine\Controller\IndexAction;
-use Jmf\CrudEngine\Form\FormFallbackMode;
-use Jmf\CrudEngine\Model\ActionDefinition;
+use Jmf\CrudEngine\Definition\ActionDefinition;
+use Jmf\CrudEngine\Definition\FallbackMode;
+use Jmf\CrudEngine\Definition\FormDefinition;
+use Jmf\CrudEngine\Definition\RedirectionDefinition;
+use Jmf\CrudEngine\Definition\RouteDefinition;
+use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Jmf\CrudEngine\Registry\ActionDefinitionRegistryInterface;
-use Jmf\CrudEngine\Registry\FormDefinition;
-use Jmf\CrudEngine\Registry\RedirectionDefinition;
-use Jmf\CrudEngine\Registry\RouteDefinition;
-use Jmf\CrudEngine\Registry\ViewDefinition;
-use Jmf\CrudEngine\View\ViewFallbackMode;
 use Jmf\CrudEngine\View\ViewRenderer;
 use Override;
 use PHPUnit\Framework\MockObject\Stub;
@@ -101,7 +100,7 @@ final class IndexActionTest extends TestCase
             formConfiguration:        new FormDefinition(
                                           formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode:       FormFallbackMode::PROVIDE,
+                                          formFallbackMode:       FallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: new RedirectionDefinition(
                                           route:      '',
@@ -115,7 +114,7 @@ final class IndexActionTest extends TestCase
             viewConfiguration:        new ViewDefinition(
                                           path:             '',
                                           variables:        [],
-                                          viewFallbackMode: ViewFallbackMode::PROVIDE,
+                                          viewFallbackMode: FallbackMode::PROVIDE,
                                       ),
         );
     }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Registry;
+namespace Jmf\CrudEngine\Definition;
 
-use Jmf\CrudEngine\Form\FormFallbackMode;
+use Jmf\CrudEngine\Definition\FallbackMode;
 use Symfony\Component\Form\FormTypeInterface;
 
 readonly class FormDefinition
@@ -16,7 +16,7 @@ readonly class FormDefinition
     public function __construct(
         private ?string $formTypeClass,
         private string $suggestedFormTypeClass,
-        private FormFallbackMode $formFallbackMode,
+        private FallbackMode $formFallbackMode,
     ) {
     }
 
@@ -38,7 +38,7 @@ readonly class FormDefinition
         return $this->suggestedFormTypeClass;
     }
 
-    public function getFormFallbackMode(): FormFallbackMode
+    public function getFallbackMode(): FallbackMode
     {
         return $this->formFallbackMode;
     }

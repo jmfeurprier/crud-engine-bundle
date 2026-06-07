@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Form;
 
+use Jmf\CrudEngine\Definition\ActionDefinition;
+use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineFormCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\CrudEngine\Model\ActionDefinition;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormTypeInterface;
@@ -34,7 +35,7 @@ readonly class FormCreator
             return $this->createForm($actionDefinition, $formTypeClass, $entity);
         }
 
-        if (FormFallbackMode::FAIL === $formConfiguration->getFormFallbackMode()) {
+        if (FallbackMode::FAIL === $formConfiguration->getFallbackMode()) {
             throw new CrudEngineMissingConfigurationException(
                 $actionDefinition->getEntityAction()->getEntityClass(),
                 $actionDefinition->getEntityAction()->getAction(),

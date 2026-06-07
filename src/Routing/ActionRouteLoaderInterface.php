@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Routing;
 
+use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\CrudEngine\Model\ActionDefinition;
 use Symfony\Component\Routing\RouteCollection;
 
 interface ActionRouteLoaderInterface

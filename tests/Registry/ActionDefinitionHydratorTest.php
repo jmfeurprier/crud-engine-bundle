@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Registry;
 
+use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\CrudEngine\Form\FormFallbackMode;
 use Jmf\CrudEngine\Registry\ActionDefinitionHydrator;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
-use Jmf\CrudEngine\View\ViewFallbackMode;
 use PHPUnit\Framework\TestCase;
 
 final class ActionDefinitionHydratorTest extends TestCase
@@ -25,7 +24,7 @@ final class ActionDefinitionHydratorTest extends TestCase
         $formConfiguration = $actionDefinition->getFormConfiguration();
         self::assertSame(ArticleType::class, $formConfiguration->getFormTypeClass());
         self::assertSame('App\\Form\\Article\\CreateType', $formConfiguration->getSuggestedFormTypeClass());
-        self::assertSame(FormFallbackMode::PROVIDE, $formConfiguration->getFormFallbackMode());
+        self::assertSame(FallbackMode::PROVIDE, $formConfiguration->getFallbackMode());
 
         $redirectionConfiguration = $actionDefinition->getRedirectionConfiguration();
         self::assertSame('article.read', $redirectionConfiguration->getRoute());
@@ -40,14 +39,14 @@ final class ActionDefinitionHydratorTest extends TestCase
         $viewConfiguration = $actionDefinition->getViewConfiguration();
         self::assertSame('article/create.html.twig', $viewConfiguration->getPath());
         self::assertSame(['form' => ['articleForm']], $viewConfiguration->getVariables());
-        self::assertSame(ViewFallbackMode::PROVIDE, $viewConfiguration->getViewFallbackMode());
+        self::assertSame(FallbackMode::PROVIDE, $viewConfiguration->getFallbackMode());
     }
 
     public function testHydratesIndexActionWithoutRedirection(): void
     {
         $actionDefinition = $this->hydrate()[Article::class]['index'];
 
-        self::assertSame(ViewFallbackMode::FAIL, $actionDefinition->getViewConfiguration()->getViewFallbackMode());
+        self::assertSame(FallbackMode::FAIL, $actionDefinition->getViewConfiguration()->getFallbackMode());
 
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
@@ -64,7 +63,7 @@ final class ActionDefinitionHydratorTest extends TestCase
     }
 
     /**
-     * @return array<class-string, array<non-empty-string, \Jmf\CrudEngine\Model\ActionDefinition>>
+     * @return array<class-string, array<non-empty-string, \Jmf\CrudEngine\Definition\ActionDefinition>>
      */
     private function hydrate(): array
     {

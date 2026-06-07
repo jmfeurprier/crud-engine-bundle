@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine;
 
 use Jmf\CrudEngine\Compilation\ActionDefinitionCompilerFactory;
-use Jmf\CrudEngine\Registry\ActionDefinitionRegistry;
-use Jmf\CrudEngine\Registry\ActionDefinitionRegistryFactory;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
+use Jmf\CrudEngine\Registry\ActionDefinitionRegistry;
+use Jmf\CrudEngine\Registry\ActionDefinitionRegistryFactory;
 use Jmf\CrudEngine\Routing\RouteLoader;
 use Override;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;

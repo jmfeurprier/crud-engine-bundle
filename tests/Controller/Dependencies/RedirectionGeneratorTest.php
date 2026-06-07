@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
 
+use Jmf\CrudEngine\Definition\ActionDefinition;
+use Jmf\CrudEngine\Definition\FallbackMode;
+use Jmf\CrudEngine\Definition\FormDefinition;
+use Jmf\CrudEngine\Definition\RedirectionDefinition;
+use Jmf\CrudEngine\Definition\RouteDefinition;
+use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
-use Jmf\CrudEngine\Form\FormFallbackMode;
-use Jmf\CrudEngine\Model\ActionDefinition;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Redirection\RedirectionGenerator;
-use Jmf\CrudEngine\Registry\FormDefinition;
-use Jmf\CrudEngine\Registry\RedirectionDefinition;
-use Jmf\CrudEngine\Registry\RouteDefinition;
-use Jmf\CrudEngine\Registry\ViewDefinition;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
-use Jmf\CrudEngine\View\ViewFallbackMode;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -67,10 +66,10 @@ final class RedirectionGeneratorTest extends TestCase
                                           'create',
                                       ),
             helperClass:              null,
-            formConfiguration:        new FormDefinition(null, 'StubFormType', FormFallbackMode::PROVIDE),
+            formConfiguration:        new FormDefinition(null, 'StubFormType', FallbackMode::PROVIDE),
             redirectionConfiguration: new RedirectionDefinition('article.index', []),
             routeConfiguration:       new RouteDefinition('', '', []),
-            viewConfiguration:        new ViewDefinition('', [], ViewFallbackMode::PROVIDE),
+            viewConfiguration:        new ViewDefinition('', [], FallbackMode::PROVIDE),
         );
     }
 }

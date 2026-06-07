@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Registry;
+namespace Jmf\CrudEngine\Definition;
 
-use Jmf\CrudEngine\View\ViewFallbackMode;
+use Jmf\CrudEngine\Definition\FallbackMode;
 
 readonly class ViewDefinition
 {
@@ -14,7 +14,7 @@ readonly class ViewDefinition
     public function __construct(
         private string $path,
         private array $variables,
-        private ViewFallbackMode $viewFallbackMode,
+        private FallbackMode $viewFallbackMode,
     ) {
     }
 
@@ -31,7 +31,7 @@ readonly class ViewDefinition
         return $this->variables;
     }
 
-    public function getViewFallbackMode(): ViewFallbackMode
+    public function getFallbackMode(): FallbackMode
     {
         return $this->viewFallbackMode;
     }

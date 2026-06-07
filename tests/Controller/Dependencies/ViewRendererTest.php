@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
 
+use Jmf\CrudEngine\Definition\ActionDefinition;
+use Jmf\CrudEngine\Definition\FallbackMode;
+use Jmf\CrudEngine\Definition\FormDefinition;
+use Jmf\CrudEngine\Definition\RedirectionDefinition;
+use Jmf\CrudEngine\Definition\RouteDefinition;
+use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
-use Jmf\CrudEngine\Form\FormFallbackMode;
-use Jmf\CrudEngine\Model\ActionDefinition;
 use Jmf\CrudEngine\Model\EntityAction;
-use Jmf\CrudEngine\Registry\FormDefinition;
-use Jmf\CrudEngine\Registry\RedirectionDefinition;
-use Jmf\CrudEngine\Registry\RouteDefinition;
-use Jmf\CrudEngine\Registry\ViewDefinition;
-use Jmf\CrudEngine\View\ViewFallbackMode;
 use Jmf\CrudEngine\View\ViewRenderer;
 use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
@@ -46,7 +45,7 @@ final class ViewRendererTest extends TestCase
     public function testRendersConfiguredTemplateWhenItExists(): void
     {
         $response = $this->viewRenderer->render(
-            $this->givenActionDefinition('article/read.html.twig', ViewFallbackMode::PROVIDE),
+            $this->givenActionDefinition('article/read.html.twig', FallbackMode::PROVIDE),
             [],
             ['entity' => new stdClass()],
         );
@@ -57,7 +56,7 @@ final class ViewRendererTest extends TestCase
     public function testRendersBuiltInTemplateWhenConfiguredTemplateMissing(): void
     {
         $response = $this->viewRenderer->render(
-            $this->givenActionDefinition('article/missing.html.twig', ViewFallbackMode::PROVIDE),
+            $this->givenActionDefinition('article/missing.html.twig', FallbackMode::PROVIDE),
             [],
             ['entity' => new stdClass()],
         );
@@ -70,7 +69,7 @@ final class ViewRendererTest extends TestCase
         $this->expectException(CrudEngineMissingViewException::class);
 
         $this->viewRenderer->render(
-            $this->givenActionDefinition('article/missing.html.twig', ViewFallbackMode::FAIL),
+            $this->givenActionDefinition('article/missing.html.twig', FallbackMode::FAIL),
             [],
             ['entity' => new stdClass()],
         );
@@ -78,7 +77,7 @@ final class ViewRendererTest extends TestCase
 
     private function givenActionDefinition(
         string $viewPath,
-        ViewFallbackMode $fallback,
+        FallbackMode $fallback,
     ): ActionDefinition {
         return new ActionDefinition(
             entityAction:             new EntityAction(
@@ -89,7 +88,7 @@ final class ViewRendererTest extends TestCase
             formConfiguration:        new FormDefinition(
                                           formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
-                                          formFallbackMode:       FormFallbackMode::PROVIDE,
+                                          formFallbackMode:       FallbackMode::PROVIDE,
                                       ),
             redirectionConfiguration: new RedirectionDefinition(
                                           route:      '',

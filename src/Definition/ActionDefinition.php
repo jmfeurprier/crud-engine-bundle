@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Model;
+namespace Jmf\CrudEngine\Definition;
 
+use Jmf\CrudEngine\Definition\FormDefinition;
+use Jmf\CrudEngine\Definition\RedirectionDefinition;
+use Jmf\CrudEngine\Definition\RouteDefinition;
+use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\CrudEngine\Registry\FormDefinition;
-use Jmf\CrudEngine\Registry\RedirectionDefinition;
-use Jmf\CrudEngine\Registry\RouteDefinition;
-use Jmf\CrudEngine\Registry\ViewDefinition;
+use Jmf\CrudEngine\Model\EntityAction;
 
 readonly class ActionDefinition
 {

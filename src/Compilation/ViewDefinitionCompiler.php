@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Compilation;
 
+use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Jmf\CrudEngine\View\ViewFallbackMode;
 use Webmozart\Assert\Assert;
 
 /**
@@ -120,12 +120,12 @@ readonly class ViewDefinitionCompiler
     private function resolveFallback(array $schemaView): string
     {
         if (!array_key_exists('fallback', $schemaView)) {
-            return ViewFallbackMode::PROVIDE->value;
+            return FallbackMode::PROVIDE->value;
         }
 
         Assert::stringNotEmpty($schemaView['fallback']);
 
-        $fallback = ViewFallbackMode::tryFrom($schemaView['fallback']);
+        $fallback = FallbackMode::tryFrom($schemaView['fallback']);
 
         Assert::notNull(
             $fallback,

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Compilation;
 
+use Jmf\CrudEngine\Compilation\Action\ActionDefinitionCompilerInterface;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
-use Jmf\CrudEngine\Compilation\Action\ActionDefinitionCompilerInterface;
 use Webmozart\Assert\Assert;
 
 /**
