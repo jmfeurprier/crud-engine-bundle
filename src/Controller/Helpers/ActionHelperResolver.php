@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
-use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperRetrievalException;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Registry;
 
-use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Registry\ActionConfigurationRegistryFactory;
 use Jmf\CrudEngine\Registry\ActionConfigurationHydrator;
 use Jmf\CrudEngine\Tests\Fixtures\Article;

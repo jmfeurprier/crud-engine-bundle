@@ -64,7 +64,7 @@ final class ActionConfigurationHydratorTest extends TestCase
     }
 
     /**
-     * @return array<class-string, array<non-empty-string, \Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration>>
+     * @return array<class-string, array<non-empty-string, \Jmf\CrudEngine\Configuration\ActionConfiguration>>
      */
     private function hydrate(): array
     {

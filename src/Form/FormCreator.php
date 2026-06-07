@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Form;
 
-use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
+use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineFormCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;

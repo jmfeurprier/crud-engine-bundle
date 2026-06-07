@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Entities\Action;
+namespace Jmf\CrudEngine\Configuration;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Form\ActionFormConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionConfiguration;
