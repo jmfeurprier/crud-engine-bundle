@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Throwable;
 
 class CrudEngineActionHelperRetrievalException extends CrudEngineRuntimeException
@@ -13,7 +13,7 @@ class CrudEngineActionHelperRetrievalException extends CrudEngineRuntimeExceptio
      * @param class-string $helperClass
      */
     public function __construct(
-        private readonly ActionConfiguration $actionConfiguration,
+        private readonly ActionDefinition $actionDefinition,
         private readonly string $helperClass,
         ?Throwable $previous = null,
     ) {
@@ -21,16 +21,16 @@ class CrudEngineActionHelperRetrievalException extends CrudEngineRuntimeExceptio
             message:  sprintf(
                           'Failed retrieving Action Helper %s for Entity %s and Action %s from container.',
                           $this->helperClass,
-                          $this->actionConfiguration->getEntityAction()->getEntityClass(),
-                          $this->actionConfiguration->getEntityAction()->getAction(),
+                          $this->actionDefinition->getEntityAction()->getEntityClass(),
+                          $this->actionDefinition->getEntityAction()->getAction(),
                       ),
             previous: $previous,
         );
     }
 
-    public function getActionConfiguration(): ActionConfiguration
+    public function getActionDefinition(): ActionDefinition
     {
-        return $this->actionConfiguration;
+        return $this->actionDefinition;
     }
 
     public function getHelperClass(): string

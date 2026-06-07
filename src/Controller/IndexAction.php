@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller;
 
 use Jmf\CrudEngine\Model\CrudAction;
-use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
+use Jmf\CrudEngine\Registry\ActionDefinitionRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
@@ -32,7 +32,7 @@ readonly class IndexAction
      * @psalm-param IndexActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private ActionConfigurationRegistryInterface $actionConfigurationRegistry,
+        private ActionDefinitionRegistryInterface $actionDefinitionRegistry,
         private ActionHelperResolver $actionHelperResolver,
         private IndexActionHelperInterface $defaultActionHelper,
         private EntityManagerResolver $objectManagerResolver,
@@ -56,17 +56,17 @@ readonly class IndexAction
         Request $request,
         string $entityClass,
     ): Response {
-        $actionConfiguration = $this->actionConfigurationRegistry->get($entityClass, CrudAction::Index->value);
+        $actionDefinition = $this->actionDefinitionRegistry->get($entityClass, CrudAction::Index->value);
         $actionHelper        = $this->actionHelperResolver->resolve(
             IndexActionHelperInterface::class,
-            $actionConfiguration,
+            $actionDefinition,
             $this->defaultActionHelper,
         );
 
         $actionHelper->hookBeforeRender($request);
 
         return $this->viewRenderer->render(
-            $actionConfiguration,
+            $actionDefinition,
             $actionHelper->getViewVariables($request),
             [
                 'entities' => $this->getEntities($request, $entityClass, $actionHelper),

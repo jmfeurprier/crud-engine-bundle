@@ -8,7 +8,7 @@ use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperRetrievalException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -36,24 +36,24 @@ readonly class ActionHelperResolver
      */
     public function resolve(
         string $class,
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
         ActionHelperInterface $defaultActionHelper,
     ): ActionHelperInterface {
         $actionHelper = $defaultActionHelper;
 
-        if (null !== $actionConfiguration->getHelperClass()) {
-            $helperClass = $actionConfiguration->getHelperClass();
+        if (null !== $actionDefinition->getHelperClass()) {
+            $helperClass = $actionDefinition->getHelperClass();
 
             try {
                 $actionHelper = $this->container->get($helperClass);
             } catch (NotFoundExceptionInterface) {
                 throw new CrudEngineActionHelperNotFoundException(
-                    $actionConfiguration,
+                    $actionDefinition,
                     $helperClass,
                 );
             } catch (ContainerExceptionInterface $e) {
                 throw new CrudEngineActionHelperRetrievalException(
-                    $actionConfiguration,
+                    $actionDefinition,
                     $helperClass,
                     $e,
                 );
@@ -61,12 +61,12 @@ readonly class ActionHelperResolver
         }
 
         if (!is_object($actionHelper)) {
-            throw new CrudEngineActionHelperNotAnObjectException($actionConfiguration);
+            throw new CrudEngineActionHelperNotAnObjectException($actionDefinition);
         }
 
         if (!$actionHelper instanceof $class) {
             throw new CrudEngineActionHelperTypeMismatchException(
-                $actionConfiguration,
+                $actionDefinition,
                 $actionHelper::class,
                 $class,
             );

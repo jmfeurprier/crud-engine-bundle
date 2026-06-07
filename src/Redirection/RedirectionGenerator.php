@@ -7,7 +7,7 @@ namespace Jmf\CrudEngine\Redirection;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -27,19 +27,19 @@ readonly class RedirectionGenerator
      * @throws CrudEngineRedirectionParameterRenderingException
      */
     public function generate(
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
         object $entity,
     ): RedirectResponse {
-        $route      = $this->getRedirectRoute($actionConfiguration);
-        $parameters = $this->getRedirectRouteParameters($actionConfiguration, $entity);
+        $route      = $this->getRedirectRoute($actionDefinition);
+        $parameters = $this->getRedirectRouteParameters($actionDefinition, $entity);
 
         try {
             $url = $this->urlGenerator->generate($route, $parameters);
         } catch (Throwable $e) {
-            throw new CrudEngineRedirectionException($actionConfiguration, $e);
+            throw new CrudEngineRedirectionException($actionDefinition, $e);
         }
 
-        $fragment = $this->getRedirectFragment($actionConfiguration);
+        $fragment = $this->getRedirectFragment($actionDefinition);
 
         if (null !== $fragment) {
             $url .= "#{$fragment}";
@@ -51,9 +51,9 @@ readonly class RedirectionGenerator
     /**
      * @throws CrudEngineMissingConfigurationException
      */
-    private function getRedirectRoute(ActionConfiguration $actionConfiguration): string
+    private function getRedirectRoute(ActionDefinition $actionDefinition): string
     {
-        return $actionConfiguration->getRedirectionConfiguration()->getRoute();
+        return $actionDefinition->getRedirectionConfiguration()->getRoute();
     }
 
     /**
@@ -63,15 +63,15 @@ readonly class RedirectionGenerator
      * @throws CrudEngineRedirectionParameterRenderingException
      */
     private function getRedirectRouteParameters(
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
         object $entity,
     ): array {
-        $definitions = $actionConfiguration->getRedirectionConfiguration()->getParameters();
+        $definitions = $actionDefinition->getRedirectionConfiguration()->getParameters();
         $parameters  = [];
 
         foreach ($definitions as $key => $definition) {
             $parameters[$key] = $this->getRedirectRouteParameter(
-                $actionConfiguration,
+                $actionDefinition,
                 $key,
                 $definition,
                 $entity,
@@ -85,7 +85,7 @@ readonly class RedirectionGenerator
      * @throws CrudEngineRedirectionParameterRenderingException
      */
     private function getRedirectRouteParameter(
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
         string $key,
         string $definition,
         object $entity,
@@ -99,7 +99,7 @@ readonly class RedirectionGenerator
             );
         } catch (Throwable $e) {
             throw new CrudEngineRedirectionParameterRenderingException(
-                actionConfiguration: $actionConfiguration,
+                actionDefinition: $actionDefinition,
                 key:                 $key,
                 definition:          $definition,
                 previousException:   $e,
@@ -111,8 +111,8 @@ readonly class RedirectionGenerator
      * @throws CrudEngineMissingConfigurationException
      */
     private function getRedirectFragment(
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
     ): ?string {
-        return $actionConfiguration->getRedirectionConfiguration()->getFragment();
+        return $actionDefinition->getRedirectionConfiguration()->getFragment();
     }
 }

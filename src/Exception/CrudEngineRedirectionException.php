@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Throwable;
 
 class CrudEngineRedirectionException extends CrudEngineRuntimeException
 {
     public function __construct(
-        private readonly ActionConfiguration $actionConfiguration,
+        private readonly ActionDefinition $actionDefinition,
         ?Throwable $previousException = null,
     ) {
         parent::__construct(
             message:  sprintf(
                           'Failed generating redirection URL for class %s and action "%s".',
-                          $this->actionConfiguration->getEntityAction()->getEntityClass(),
-                          $this->actionConfiguration->getEntityAction()->getAction(),
+                          $this->actionDefinition->getEntityAction()->getEntityClass(),
+                          $this->actionDefinition->getEntityAction()->getAction(),
                       ),
             previous: $previousException,
         );
     }
 
-    public function getActionConfiguration(): ActionConfiguration
+    public function getActionDefinition(): ActionDefinition
     {
-        return $this->actionConfiguration;
+        return $this->actionDefinition;
     }
 }

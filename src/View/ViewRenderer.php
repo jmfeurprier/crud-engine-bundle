@@ -6,7 +6,7 @@ namespace Jmf\CrudEngine\View;
 
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -34,32 +34,32 @@ readonly class ViewRenderer
      * @throws CrudEngineViewRenderingException
      */
     public function render(
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
         array $viewVariables,
         array $defaults,
     ): Response {
         $parameters = $this->getViewParameters(
             $viewVariables,
             $defaults,
-            $actionConfiguration,
+            $actionDefinition,
         );
 
-        $configuredPath = $actionConfiguration->getViewConfiguration()->getPath();
+        $configuredPath = $actionDefinition->getViewConfiguration()->getPath();
 
         if ($this->twigEnvironment->getLoader()->exists($configuredPath)) {
             $viewPath = $configuredPath;
         } else {
-            if (ViewFallbackMode::FAIL === $actionConfiguration->getViewConfiguration()->getViewFallbackMode()) {
-                throw new CrudEngineMissingViewException($actionConfiguration, $configuredPath);
+            if (ViewFallbackMode::FAIL === $actionDefinition->getViewConfiguration()->getViewFallbackMode()) {
+                throw new CrudEngineMissingViewException($actionDefinition, $configuredPath);
             }
 
             $viewPath = sprintf(
                 self::BUILT_IN_TEMPLATE,
-                $actionConfiguration->getEntityAction()->getAction(),
+                $actionDefinition->getEntityAction()->getAction(),
             );
 
             $parameters['_crud_engine'] = $this->getProvidedContext(
-                $actionConfiguration,
+                $actionDefinition,
                 $configuredPath,
             );
         }
@@ -73,7 +73,7 @@ readonly class ViewRenderer
             );
         } catch (Throwable $e) {
             throw new CrudEngineViewRenderingException(
-                actionConfiguration: $actionConfiguration,
+                actionDefinition: $actionDefinition,
                 previousException:   $e,
             );
         }
@@ -85,12 +85,12 @@ readonly class ViewRenderer
      * @return array<string, mixed>
      */
     private function getProvidedContext(
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
         string $viewPath,
     ): array {
         return [
-            'entityClass' => $actionConfiguration->getEntityAction()->getEntityClass(),
-            'action'      => $actionConfiguration->getEntityAction()->getAction(),
+            'entityClass' => $actionDefinition->getEntityAction()->getEntityClass(),
+            'action'      => $actionDefinition->getEntityAction()->getAction(),
             'viewPath'    => $viewPath,
         ];
     }
@@ -104,10 +104,10 @@ readonly class ViewRenderer
     private function getViewParameters(
         array $viewVariables,
         array $defaults,
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
     ): array {
         $parameters = array_merge($viewVariables, $defaults);
-        $configVars = $actionConfiguration->getViewConfiguration()->getVariables();
+        $configVars = $actionDefinition->getViewConfiguration()->getVariables();
 
         foreach ($parameters as $key => $value) {
             Assert::stringNotEmpty($key);

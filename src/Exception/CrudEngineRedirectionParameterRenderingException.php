@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Throwable;
 
 class CrudEngineRedirectionParameterRenderingException extends CrudEngineRuntimeException
 {
     public function __construct(
-        private readonly ActionConfiguration $actionConfiguration,
+        private readonly ActionDefinition $actionDefinition,
         private readonly string $key,
         private readonly string $definition,
         ?Throwable $previousException = null,
@@ -21,16 +21,16 @@ class CrudEngineRedirectionParameterRenderingException extends CrudEngineRuntime
                           . "for entity class %s and action "%s".',
                           $this->key,
                           $this->definition,
-                          $this->actionConfiguration->getEntityAction()->getEntityClass(),
-                          $this->actionConfiguration->getEntityAction()->getAction(),
+                          $this->actionDefinition->getEntityAction()->getEntityClass(),
+                          $this->actionDefinition->getEntityAction()->getAction(),
                       ),
             previous: $previousException,
         );
     }
 
-    public function getActionConfiguration(): ActionConfiguration
+    public function getActionDefinition(): ActionDefinition
     {
-        return $this->actionConfiguration;
+        return $this->actionDefinition;
     }
 
     public function getKey(): string

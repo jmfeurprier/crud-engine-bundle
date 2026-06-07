@@ -6,8 +6,8 @@ namespace Jmf\CrudEngine\Routing;
 
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
-use Jmf\CrudEngine\Model\ActionConfiguration;
-use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
+use Jmf\CrudEngine\Model\ActionDefinition;
+use Jmf\CrudEngine\Registry\ActionDefinitionRegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Webmozart\Assert\Assert;
@@ -23,7 +23,7 @@ readonly class RouteLoader implements RouteLoaderInterface
      * @param ActionRouteLoaderInterface[] $loaders
      */
     public function __construct(
-        private ActionConfigurationRegistryInterface $actionConfigurationRegistry,
+        private ActionDefinitionRegistryInterface $actionDefinitionRegistry,
         iterable $loaders,
     ) {
         Assert::allIsInstanceOf($loaders, ActionRouteLoaderInterface::class);
@@ -45,8 +45,8 @@ readonly class RouteLoader implements RouteLoaderInterface
     {
         $routeCollection = new RouteCollection();
 
-        foreach ($this->actionConfigurationRegistry->all() as $actionConfiguration) {
-            $this->loadAction($routeCollection, $actionConfiguration);
+        foreach ($this->actionDefinitionRegistry->all() as $actionDefinition) {
+            $this->loadAction($routeCollection, $actionDefinition);
         }
 
         return $routeCollection;
@@ -58,21 +58,21 @@ readonly class RouteLoader implements RouteLoaderInterface
      */
     private function loadAction(
         RouteCollection $routeCollection,
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
     ): void {
-        $this->getLoader($actionConfiguration)->load($routeCollection, $actionConfiguration);
+        $this->getLoader($actionDefinition)->load($routeCollection, $actionDefinition);
     }
 
     /**
      * @throws CrudEngineUnsupportedActionException
      */
     private function getLoader(
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
     ): ActionRouteLoaderInterface {
-        $action = $actionConfiguration->getEntityAction()->getAction();
+        $action = $actionDefinition->getEntityAction()->getAction();
 
         return $this->loaderByAction[$action]
             ??
-            throw CrudEngineUnsupportedActionException::forActionConfiguration($actionConfiguration);
+            throw CrudEngineUnsupportedActionException::forActionDefinition($actionDefinition);
     }
 }

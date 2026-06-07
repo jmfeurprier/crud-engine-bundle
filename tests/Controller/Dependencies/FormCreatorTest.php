@@ -9,11 +9,11 @@ use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FormCreator;
 use Jmf\CrudEngine\Form\FormFallbackMode;
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Jmf\CrudEngine\Model\EntityAction;
-use Jmf\CrudEngine\Registry\ActionFormConfiguration;
-use Jmf\CrudEngine\Registry\ActionRouteConfiguration;
-use Jmf\CrudEngine\Registry\ActionViewConfiguration;
+use Jmf\CrudEngine\Registry\FormDefinition;
+use Jmf\CrudEngine\Registry\RouteDefinition;
+use Jmf\CrudEngine\Registry\ViewDefinition;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
 use Jmf\CrudEngine\View\ViewFallbackMode;
@@ -38,7 +38,7 @@ final class FormCreatorTest extends TestCase
         ;
 
         $result = (new FormCreator($formFactory))->create(
-            $this->givenActionConfiguration(ArticleType::class, FormFallbackMode::PROVIDE),
+            $this->givenActionDefinition(ArticleType::class, FormFallbackMode::PROVIDE),
             $article,
         );
 
@@ -66,7 +66,7 @@ final class FormCreatorTest extends TestCase
         ;
 
         $result = (new FormCreator($formFactory))->create(
-            $this->givenActionConfiguration(null, FormFallbackMode::PROVIDE),
+            $this->givenActionDefinition(null, FormFallbackMode::PROVIDE),
             $article,
         );
 
@@ -81,7 +81,7 @@ final class FormCreatorTest extends TestCase
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
         (new FormCreator($formFactory))->create(
-            $this->givenActionConfiguration(null, FormFallbackMode::FAIL),
+            $this->givenActionDefinition(null, FormFallbackMode::FAIL),
             new Article(),
         );
     }
@@ -94,7 +94,7 @@ final class FormCreatorTest extends TestCase
         $this->expectException(CrudEngineFormCreationException::class);
 
         (new FormCreator($formFactory))->create(
-            $this->givenActionConfiguration(ArticleType::class, FormFallbackMode::PROVIDE),
+            $this->givenActionDefinition(ArticleType::class, FormFallbackMode::PROVIDE),
             new Article(),
         );
     }
@@ -102,25 +102,25 @@ final class FormCreatorTest extends TestCase
     /**
      * @param null|class-string<\Symfony\Component\Form\FormTypeInterface> $formTypeClass
      */
-    private function givenActionConfiguration(
+    private function givenActionDefinition(
         ?string $formTypeClass,
         FormFallbackMode $formFallbackMode,
-    ): ActionConfiguration {
-        return new ActionConfiguration(
+    ): ActionDefinition {
+        return new ActionDefinition(
             entityAction:             new EntityAction(
                                           Article::class,
                                           'create',
                                       ),
             helperClass:              null,
-            formConfiguration:        new ActionFormConfiguration(
+            formConfiguration:        new FormDefinition(
                                           formTypeClass:          $formTypeClass,
                                           suggestedFormTypeClass: 'StubFormType',
                                           formFallbackMode:       $formFallbackMode,
 
                                       ),
             redirectionConfiguration: null,
-            routeConfiguration:       new ActionRouteConfiguration('', '', []),
-            viewConfiguration:        new ActionViewConfiguration('', [], ViewFallbackMode::PROVIDE),
+            routeConfiguration:       new RouteDefinition('', '', []),
+            viewConfiguration:        new ViewDefinition('', [], ViewFallbackMode::PROVIDE),
         );
     }
 }

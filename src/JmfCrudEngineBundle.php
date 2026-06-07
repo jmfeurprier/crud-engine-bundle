@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine;
 
-use Jmf\CrudEngine\Resolution\ActionConfigurationResolverFactory;
-use Jmf\CrudEngine\Registry\ActionConfigurationRegistry;
-use Jmf\CrudEngine\Registry\ActionConfigurationRegistryFactory;
+use Jmf\CrudEngine\Compilation\ActionDefinitionCompilerFactory;
+use Jmf\CrudEngine\Registry\ActionDefinitionRegistry;
+use Jmf\CrudEngine\Registry\ActionDefinitionRegistryFactory;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
@@ -23,7 +23,7 @@ class JmfCrudEngineBundle extends AbstractBundle
     protected string $extensionAlias = 'jmf_crud_engine';
 
     public function __construct(
-        private readonly ActionConfigurationResolverFactory $actionConfigurationResolverFactory = new ActionConfigurationResolverFactory(
+        private readonly ActionDefinitionCompilerFactory $actionDefinitionCompilerFactory = new ActionDefinitionCompilerFactory(
         ),
     ) {
     }
@@ -60,14 +60,14 @@ class JmfCrudEngineBundle extends AbstractBundle
         // container is the cache (rebuilt only on config change / cache:clear). The
         // factory hydrates that array into the repository when the service is created.
         $configurator->services()
-            ->set(ActionConfigurationRegistryFactory::class)
+            ->set(ActionDefinitionRegistryFactory::class)
             ->autowire()
-            ->arg('$resolvedConfigurations', $this->getResolvedConfigurations($config))
+            ->arg('$resolvedConfigurations', $this->getCompiledDefinitions($config))
         ;
 
         $configurator->services()
-            ->set(ActionConfigurationRegistry::class)
-            ->factory([service(ActionConfigurationRegistryFactory::class), 'create'])
+            ->set(ActionDefinitionRegistry::class)
+            ->factory([service(ActionDefinitionRegistryFactory::class), 'create'])
         ;
 
         $configurator->services()
@@ -84,9 +84,9 @@ class JmfCrudEngineBundle extends AbstractBundle
      * @throws CrudEngineConfigurationException
      * @throws CrudEngineUnsupportedActionException
      */
-    private function getResolvedConfigurations(
+    private function getCompiledDefinitions(
         array $config,
     ): array {
-        return $this->actionConfigurationResolverFactory->create()->resolve($config);
+        return $this->actionDefinitionCompilerFactory->create()->resolve($config);
     }
 }

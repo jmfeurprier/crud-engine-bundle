@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller;
 
 use Jmf\CrudEngine\Model\CrudAction;
-use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
+use Jmf\CrudEngine\Registry\ActionDefinitionRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
@@ -35,7 +35,7 @@ readonly class DeleteAction
      * @param DeleteActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private ActionConfigurationRegistryInterface $actionConfigurationRegistry,
+        private ActionDefinitionRegistryInterface $actionDefinitionRegistry,
         private ActionHelperResolver $actionHelperResolver,
         private DeleteActionHelperInterface $defaultActionHelper,
         private EntityFinder $entityFinder,
@@ -63,10 +63,10 @@ readonly class DeleteAction
         string $entityClass,
         string $id,
     ): Response {
-        $actionConfiguration = $this->actionConfigurationRegistry->get($entityClass, CrudAction::Delete->value);
+        $actionDefinition = $this->actionDefinitionRegistry->get($entityClass, CrudAction::Delete->value);
         $actionHelper        = $this->actionHelperResolver->resolve(
             DeleteActionHelperInterface::class,
-            $actionConfiguration,
+            $actionDefinition,
             $this->defaultActionHelper,
         );
 
@@ -90,11 +90,11 @@ readonly class DeleteAction
                 return $actionHelper->onFailure($entity, $e);
             }
 
-            return $this->redirectionGenerator->generate($actionConfiguration, $entity);
+            return $this->redirectionGenerator->generate($actionDefinition, $entity);
         }
 
         return $this->viewRenderer->render(
-            $actionConfiguration,
+            $actionDefinition,
             $actionHelper->getViewVariables($request, $entity),
             [
                 'entity' => $entity,

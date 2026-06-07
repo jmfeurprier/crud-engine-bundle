@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Jmf\CrudEngine\Registry;
+
+use Jmf\CrudEngine\View\ViewFallbackMode;
+
+readonly class ViewDefinition
+{
+    /**
+     * @param array<non-empty-string, list<non-empty-string>> $variables
+     */
+    public function __construct(
+        private string $path,
+        private array $variables,
+        private ViewFallbackMode $viewFallbackMode,
+    ) {
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * @return array<non-empty-string, list<non-empty-string>>
+     */
+    public function getVariables(): array
+    {
+        return $this->variables;
+    }
+
+    public function getViewFallbackMode(): ViewFallbackMode
+    {
+        return $this->viewFallbackMode;
+    }
+}

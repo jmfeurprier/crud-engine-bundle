@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Routing;
 
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Symfony\Component\Routing\RouteCollection;
 
 interface ActionRouteLoaderInterface
@@ -17,6 +17,6 @@ interface ActionRouteLoaderInterface
      */
     public function load(
         RouteCollection $routeCollection,
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
     ): void;
 }

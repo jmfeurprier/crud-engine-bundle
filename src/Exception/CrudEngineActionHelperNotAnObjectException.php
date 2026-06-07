@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 
 class CrudEngineActionHelperNotAnObjectException extends CrudEngineRuntimeException
 {
     public function __construct(
-        private readonly ActionConfiguration $actionConfiguration,
+        private readonly ActionDefinition $actionDefinition,
     ) {
         parent::__construct(
             message: sprintf(
                          'Retrieved Action Helper for Entity %s and Action %s is not an object.',
-                         $this->actionConfiguration->getEntityAction()->getEntityClass(),
-                         $this->actionConfiguration->getEntityAction()->getAction(),
+                         $this->actionDefinition->getEntityAction()->getEntityClass(),
+                         $this->actionDefinition->getEntityAction()->getAction(),
                      ),
         );
     }
 
-    public function getActionConfiguration(): ActionConfiguration
+    public function getActionDefinition(): ActionDefinition
     {
-        return $this->actionConfiguration;
+        return $this->actionDefinition;
     }
 }

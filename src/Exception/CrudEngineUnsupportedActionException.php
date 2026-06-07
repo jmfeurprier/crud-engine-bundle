@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Jmf\CrudEngine\Model\EntityAction;
 
 // @todo Refactor / Split.
 class CrudEngineUnsupportedActionException extends CrudEngineRuntimeException
 {
     // @xxx
-    public static function forActionConfiguration(
-        ActionConfiguration $actionConfiguration,
+    public static function forActionDefinition(
+        ActionDefinition $actionDefinition,
     ): self {
         return new self(
-            $actionConfiguration->getEntityAction(),
-            $actionConfiguration,
+            $actionDefinition->getEntityAction(),
+            $actionDefinition,
         );
     }
 
@@ -36,7 +36,7 @@ class CrudEngineUnsupportedActionException extends CrudEngineRuntimeException
 
     private function __construct(
         private readonly EntityAction $entityAction,
-        private readonly ?ActionConfiguration $actionConfiguration = null,
+        private readonly ?ActionDefinition $actionDefinition = null,
     ) {
         parent::__construct(
             message: sprintf(
@@ -52,8 +52,8 @@ class CrudEngineUnsupportedActionException extends CrudEngineRuntimeException
         return $this->entityAction;
     }
 
-    public function getActionConfiguration(): ?ActionConfiguration
+    public function getActionDefinition(): ?ActionDefinition
     {
-        return $this->actionConfiguration;
+        return $this->actionDefinition;
     }
 }

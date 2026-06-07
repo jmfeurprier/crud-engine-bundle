@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller;
 
 use Jmf\CrudEngine\Model\CrudAction;
-use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
+use Jmf\CrudEngine\Registry\ActionDefinitionRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
@@ -42,7 +42,7 @@ readonly class UpdateAction
      * @psalm-param UpdateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private ActionConfigurationRegistryInterface $actionConfigurationRegistry,
+        private ActionDefinitionRegistryInterface $actionDefinitionRegistry,
         private ActionHelperResolver $actionHelperResolver,
         private UpdateActionHelperInterface $defaultActionHelper,
         private EntityFinder $entityFinder,
@@ -76,26 +76,26 @@ readonly class UpdateAction
         string $entityClass,
         string $id,
     ): Response {
-        $actionConfiguration = $this->actionConfigurationRegistry->get(
+        $actionDefinition = $this->actionDefinitionRegistry->get(
             $entityClass,
             CrudAction::Update->value,
         );
 
         $actionHelper = $this->actionHelperResolver->resolve(
             UpdateActionHelperInterface::class,
-            $actionConfiguration,
+            $actionDefinition,
             $this->defaultActionHelper,
         );
 
         $entity = $this->entityFinder->find($entityClass, $id);
 
-        $form = $this->formCreator->create($actionConfiguration, $entity);
+        $form = $this->formCreator->create($actionDefinition, $entity);
 
         try {
             $form->handleRequest($request);
         } catch (Throwable $e) {
             throw new CrudEngineFormRequestHandlingException(
-                entityAction: $actionConfiguration->getEntityAction(),
+                entityAction: $actionDefinition->getEntityAction(),
                 previous:     $e,
             );
         }
@@ -120,20 +120,20 @@ readonly class UpdateAction
                 $form,
             );
 
-            return $this->redirectionGenerator->generate($actionConfiguration, $entity);
+            return $this->redirectionGenerator->generate($actionDefinition, $entity);
         }
 
         try {
             $formView = $form->createView();
         } catch (Throwable $e) {
             throw new CrudEngineFormViewCreationException(
-                entityAction: $actionConfiguration->getEntityAction(),
+                entityAction: $actionDefinition->getEntityAction(),
                 previous:     $e,
             );
         }
 
         return $this->viewRenderer->render(
-            $actionConfiguration,
+            $actionDefinition,
             $actionHelper->getViewVariables($request, $entity),
             [
                 'entity' => $entity,

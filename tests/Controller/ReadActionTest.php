@@ -8,14 +8,14 @@ use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperInterface;
 use Jmf\CrudEngine\Controller\ReadAction;
 use Jmf\CrudEngine\Form\FormFallbackMode;
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityFinder;
-use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
-use Jmf\CrudEngine\Registry\ActionFormConfiguration;
-use Jmf\CrudEngine\Registry\ActionRedirectionConfiguration;
-use Jmf\CrudEngine\Registry\ActionRouteConfiguration;
-use Jmf\CrudEngine\Registry\ActionViewConfiguration;
+use Jmf\CrudEngine\Registry\ActionDefinitionRegistryInterface;
+use Jmf\CrudEngine\Registry\FormDefinition;
+use Jmf\CrudEngine\Registry\RedirectionDefinition;
+use Jmf\CrudEngine\Registry\RouteDefinition;
+use Jmf\CrudEngine\Registry\ViewDefinition;
 use Jmf\CrudEngine\View\ViewFallbackMode;
 use Jmf\CrudEngine\View\ViewRenderer;
 use Override;
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ReadActionTest extends TestCase
 {
-    private ActionConfigurationRegistryInterface&Stub $actionConfigurationRegistry;
+    private ActionDefinitionRegistryInterface&Stub $actionDefinitionRegistry;
 
     private ActionHelperResolver&Stub $actionHelperResolver;
 
@@ -43,7 +43,7 @@ final class ReadActionTest extends TestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->actionConfigurationRegistry = $this->createStub(ActionConfigurationRegistryInterface::class);
+        $this->actionDefinitionRegistry = $this->createStub(ActionDefinitionRegistryInterface::class);
         $this->actionHelperResolver          = $this->createStub(ActionHelperResolver::class);
         $this->defaultActionHelper           = $this->createStub(ReadActionHelperInterface::class);
         $this->entityFinder                  = $this->createStub(EntityFinder::class);
@@ -52,11 +52,11 @@ final class ReadActionTest extends TestCase
 
     public function testInvokeRendersView(): void
     {
-        $actionConfiguration = $this->givenActionConfiguration(stdClass::class, 'read');
+        $actionDefinition = $this->givenActionDefinition(stdClass::class, 'read');
 
-        $this->actionConfigurationRegistry
+        $this->actionDefinitionRegistry
             ->method('get')
-            ->willReturn($actionConfiguration)
+            ->willReturn($actionDefinition)
         ;
 
         $this->actionHelperResolver
@@ -91,31 +91,31 @@ final class ReadActionTest extends TestCase
      * @param class-string     $entityClass
      * @param non-empty-string $action
      */
-    private function givenActionConfiguration(
+    private function givenActionDefinition(
         string $entityClass,
         string $action,
-    ): ActionConfiguration {
-        return new ActionConfiguration(
+    ): ActionDefinition {
+        return new ActionDefinition(
             entityAction:             new EntityAction(
                                           $entityClass,
                                           $action,
                                       ),
             helperClass:              null,
-            formConfiguration:        new ActionFormConfiguration(
+            formConfiguration:        new FormDefinition(
                                           formTypeClass:          null,
                                           suggestedFormTypeClass: 'StubFormType',
                                           formFallbackMode:       FormFallbackMode::PROVIDE,
                                       ),
-            redirectionConfiguration: new ActionRedirectionConfiguration(
+            redirectionConfiguration: new RedirectionDefinition(
                                           route:      '',
                                           parameters: [],
                                       ),
-            routeConfiguration:       new ActionRouteConfiguration(
+            routeConfiguration:       new RouteDefinition(
                                           name:         '',
                                           path:         '',
                                           requirements: [],
                                       ),
-            viewConfiguration:        new ActionViewConfiguration(
+            viewConfiguration:        new ViewDefinition(
                                           path:             '',
                                           variables:        [],
                                           viewFallbackMode: ViewFallbackMode::PROVIDE,
@@ -129,7 +129,7 @@ final class ReadActionTest extends TestCase
     private function createAction(): ReadAction
     {
         return new ReadAction(
-            $this->actionConfigurationRegistry,
+            $this->actionDefinitionRegistry,
             $this->actionHelperResolver,
             $this->defaultActionHelper,
             $this->entityFinder,

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Controller;
 
 use Jmf\CrudEngine\Model\CrudAction;
-use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
+use Jmf\CrudEngine\Registry\ActionDefinitionRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
@@ -33,7 +33,7 @@ readonly class ReadAction
      * @psalm-param ReadActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private ActionConfigurationRegistryInterface $actionConfigurationRegistry,
+        private ActionDefinitionRegistryInterface $actionDefinitionRegistry,
         private ActionHelperResolver $actionHelperResolver,
         private ReadActionHelperInterface $defaultActionHelper,
         private EntityFinder $entityFinder,
@@ -59,17 +59,17 @@ readonly class ReadAction
         string $id,
         string $entityClass,
     ): Response {
-        $actionConfiguration = $this->actionConfigurationRegistry->get($entityClass, CrudAction::Read->value);
+        $actionDefinition = $this->actionDefinitionRegistry->get($entityClass, CrudAction::Read->value);
         $actionHelper        = $this->actionHelperResolver->resolve(
             ReadActionHelperInterface::class,
-            $actionConfiguration,
+            $actionDefinition,
             $this->defaultActionHelper,
         );
 
         $entity = $this->entityFinder->find($entityClass, $id);
 
         return $this->viewRenderer->render(
-            $actionConfiguration,
+            $actionDefinition,
             $actionHelper->getViewVariables($request, $entity),
             [
                 'entity' => $entity,

@@ -6,13 +6,13 @@ namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
 
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
 use Jmf\CrudEngine\Form\FormFallbackMode;
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Redirection\RedirectionGenerator;
-use Jmf\CrudEngine\Registry\ActionFormConfiguration;
-use Jmf\CrudEngine\Registry\ActionRedirectionConfiguration;
-use Jmf\CrudEngine\Registry\ActionRouteConfiguration;
-use Jmf\CrudEngine\Registry\ActionViewConfiguration;
+use Jmf\CrudEngine\Registry\FormDefinition;
+use Jmf\CrudEngine\Registry\RedirectionDefinition;
+use Jmf\CrudEngine\Registry\RouteDefinition;
+use Jmf\CrudEngine\Registry\ViewDefinition;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\View\ViewFallbackMode;
 use Jmf\TemplateRendering\TemplateRendererInterface;
@@ -30,7 +30,7 @@ final class RedirectionGeneratorTest extends TestCase
         $urlGenerator->method('generate')->willReturn('/articles');
 
         $response = $this->createGenerator($urlGenerator)->generate(
-            $this->givenActionConfiguration(),
+            $this->givenActionDefinition(),
             new stdClass(),
         );
 
@@ -46,7 +46,7 @@ final class RedirectionGeneratorTest extends TestCase
         $this->expectException(CrudEngineRedirectionException::class);
 
         $this->createGenerator($urlGenerator)->generate(
-            $this->givenActionConfiguration(),
+            $this->givenActionDefinition(),
             new stdClass(),
         );
     }
@@ -59,18 +59,18 @@ final class RedirectionGeneratorTest extends TestCase
         );
     }
 
-    private function givenActionConfiguration(): ActionConfiguration
+    private function givenActionDefinition(): ActionDefinition
     {
-        return new ActionConfiguration(
+        return new ActionDefinition(
             entityAction:             new EntityAction(
                                           Article::class,
                                           'create',
                                       ),
             helperClass:              null,
-            formConfiguration:        new ActionFormConfiguration(null, 'StubFormType', FormFallbackMode::PROVIDE),
-            redirectionConfiguration: new ActionRedirectionConfiguration('article.index', []),
-            routeConfiguration:       new ActionRouteConfiguration('', '', []),
-            viewConfiguration:        new ActionViewConfiguration('', [], ViewFallbackMode::PROVIDE),
+            formConfiguration:        new FormDefinition(null, 'StubFormType', FormFallbackMode::PROVIDE),
+            redirectionConfiguration: new RedirectionDefinition('article.index', []),
+            routeConfiguration:       new RouteDefinition('', '', []),
+            viewConfiguration:        new ViewDefinition('', [], ViewFallbackMode::PROVIDE),
         );
     }
 }

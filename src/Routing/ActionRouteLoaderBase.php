@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Routing;
 
-use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionDefinition;
 use Override;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -15,30 +15,30 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
     #[Override]
     public function load(
         RouteCollection $routeCollection,
-        ActionConfiguration $actionConfiguration,
+        ActionDefinition $actionDefinition,
     ): void {
-        Assert::same($this->getActionName(), $actionConfiguration->getEntityAction()->getAction());
+        Assert::same($this->getActionName(), $actionDefinition->getEntityAction()->getAction());
 
         $routeCollection->add(
-            $this->getRouteName($actionConfiguration),
-            $this->getRoute($actionConfiguration),
+            $this->getRouteName($actionDefinition),
+            $this->getRoute($actionDefinition),
         );
     }
 
-    private function getRouteName(ActionConfiguration $actionConfiguration): string
+    private function getRouteName(ActionDefinition $actionDefinition): string
     {
-        return $actionConfiguration->getRouteConfiguration()->getName();
+        return $actionDefinition->getRouteConfiguration()->getName();
     }
 
-    private function getRoute(ActionConfiguration $actionConfiguration): Route
+    private function getRoute(ActionDefinition $actionDefinition): Route
     {
         return new Route(
-            path:         $this->getRoutePath($actionConfiguration),
+            path:         $this->getRoutePath($actionDefinition),
             defaults:     [
                               '_controller' => $this->getActionClass(),
-                              'entityClass' => $actionConfiguration->getEntityAction()->getEntityClass(),
+                              'entityClass' => $actionDefinition->getEntityAction()->getEntityClass(),
                           ],
-            requirements: $this->getRequirements($actionConfiguration),
+            requirements: $this->getRequirements($actionDefinition),
             methods:      (array) $this->getMethods(),
         );
     }
@@ -50,16 +50,16 @@ readonly abstract class ActionRouteLoaderBase implements ActionRouteLoaderInterf
 
     abstract protected function getActionClass(): string;
 
-    private function getRoutePath(ActionConfiguration $actionConfiguration): string
+    private function getRoutePath(ActionDefinition $actionDefinition): string
     {
-        return $actionConfiguration->getRouteConfiguration()->getPath();
+        return $actionDefinition->getRouteConfiguration()->getPath();
     }
 
     /**
      * @return array<non-empty-string, non-empty-string>
      */
-    private function getRequirements(ActionConfiguration $actionConfiguration): array
+    private function getRequirements(ActionDefinition $actionDefinition): array
     {
-        return $actionConfiguration->getRouteConfiguration()->getRequirements();
+        return $actionDefinition->getRouteConfiguration()->getRequirements();
     }
 }
