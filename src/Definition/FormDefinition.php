@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Definition;
 
-use Jmf\CrudEngine\Definition\FallbackMode;
 use Symfony\Component\Form\FormTypeInterface;
 
 readonly class FormDefinition

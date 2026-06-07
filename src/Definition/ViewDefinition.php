@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Definition;
 
-use Jmf\CrudEngine\Definition\FallbackMode;
-
 readonly class ViewDefinition
 {
     /**
