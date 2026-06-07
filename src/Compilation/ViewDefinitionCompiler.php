@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Compilation;
 
+use Jmf\CrudEngine\Compilation\Resolution\ConfigurationValueResolver;
+use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
+use Jmf\CrudEngine\Compilation\Resolution\OverridableConfigurationValueResolver;
 use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;

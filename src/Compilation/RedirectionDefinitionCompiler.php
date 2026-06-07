@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Compilation;
 
+use Jmf\CrudEngine\Compilation\Resolution\ConfigurationValueResolver;
+use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;

@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Compilation;
+namespace Jmf\CrudEngine\Compilation\Resolution;
 
+use;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 
 readonly class ConfigurationValueResolver

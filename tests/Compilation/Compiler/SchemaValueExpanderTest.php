@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Compilation;
 
-use Jmf\CrudEngine\Compilation\SchemaValueExpander;
+use Jmf\CrudEngine\Compilation\Resolution\SchemaValueExpander;
 use Jmf\TemplateRendering\TemplateRenderer;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;

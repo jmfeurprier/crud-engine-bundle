@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Compilation;
 
 use Jmf\CrudEngine\Compilation\Action\ActionDefinitionCompilerInterface;
+use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
@@ -64,7 +65,7 @@ readonly class ActionDefinitionCompiler
         $entitiesConfig = $config['entities'];
         Assert::isMap($entitiesConfig);
 
-        $resolved = [];
+        $compiled = [];
 
         foreach ($entitiesConfig as $entityClass => $entityConfig) {
             Assert::classExists($entityClass);
@@ -84,7 +85,7 @@ readonly class ActionDefinitionCompiler
                 Assert::stringNotEmpty($action);
                 Assert::isMap($actionConfig);
 
-                $resolved[$entityClass][$action] = $this->getCompiler($entityClass, $action)->compile(
+                $compiled[$entityClass][$action] = $this->getCompiler($entityClass, $action)->compile(
                     $schema,
                     $entityClass,
                     $action,
@@ -93,7 +94,7 @@ readonly class ActionDefinitionCompiler
             }
         }
 
-        return $resolved;
+        return $compiled;
     }
 
     /**
