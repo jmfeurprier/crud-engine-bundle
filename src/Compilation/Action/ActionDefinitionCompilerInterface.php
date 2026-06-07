@@ -45,7 +45,7 @@ interface ActionDefinitionCompilerInterface
      * @throws CrudEngineInvalidConfigurationException
      * @throws CrudEngineMissingConfigurationException
      */
-    public function resolve(
+    public function compile(
         array $schema,
         string $entityClass,
         string $action,

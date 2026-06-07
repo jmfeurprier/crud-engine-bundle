@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Compilation\RouteDefinitionCompiler;
 use Jmf\CrudEngine\Compilation\ViewDefinitionCompiler;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Override;
 use Webmozart\Assert\Assert;
 
 /**
@@ -66,18 +67,8 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
     ) {
     }
 
-    /**
-     * @param array<string, mixed> $schema
-     * @param class-string         $entityClass
-     * @param non-empty-string     $action
-     * @param array<string, mixed> $actionConfig
-     *
-     * @return CompiledAction
-     *
-     * @throws CrudEngineInvalidConfigurationException
-     * @throws CrudEngineMissingConfigurationException
-     */
-    final public function resolve(
+    #[Override]
+    final public function compile(
         array $schema,
         string $entityClass,
         string $action,
@@ -86,9 +77,21 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
         $keys = $this->resolveKeys($schema, $entityClass, $action);
 
         return [
-            'form'        => $this->resolveForm($schema, $keys, $entityClass, $action, $actionConfig),
-            'helperClass' => $this->resolveHelperClass($schema, $keys, $entityClass, $action, $actionConfig),
-            'route'       => $this->routeDefinitionCompiler->resolve(
+            'form'        => $this->compileFormDefinition(
+                $schema,
+                $keys,
+                $entityClass,
+                $action,
+                $actionConfig,
+            ),
+            'helperClass' => $this->resolveHelperClass(
+                $schema,
+                $keys,
+                $entityClass,
+                $action,
+                $actionConfig,
+            ),
+            'route'       => $this->routeDefinitionCompiler->compile(
                 $schema,
                 $keys,
                 $entityClass,
@@ -96,8 +99,14 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
                 $actionConfig,
                 $this->getDefaultRoutePath(),
             ),
-            'redirection' => $this->resolveRedirection($schema, $keys, $entityClass, $action, $actionConfig),
-            'view'        => $this->viewDefinitionCompiler->resolve(
+            'redirection' => $this->compileRedirectionDefinition(
+                $schema,
+                $keys,
+                $entityClass,
+                $action,
+                $actionConfig,
+            ),
+            'view'        => $this->viewDefinitionCompiler->compile(
                 $schema,
                 $keys,
                 $entityClass,
@@ -145,7 +154,7 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
      *
      * @throws CrudEngineInvalidConfigurationException
      */
-    private function resolveForm(
+    private function compileFormDefinition(
         array $schema,
         array $keys,
         string $entityClass,
@@ -156,7 +165,7 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
             return null;
         }
 
-        return $this->formDefinitionCompiler->resolve(
+        return $this->formDefinitionCompiler->compile(
             $schema,
             $keys,
             $entityClass,
@@ -177,7 +186,7 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
      * @throws CrudEngineInvalidConfigurationException
      * @throws CrudEngineMissingConfigurationException
      */
-    private function resolveRedirection(
+    private function compileRedirectionDefinition(
         array $schema,
         array $keys,
         string $entityClass,
@@ -190,7 +199,7 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
             return null;
         }
 
-        return $this->redirectionDefinitionCompiler->resolve(
+        return $this->redirectionDefinitionCompiler->compile(
             $schema,
             $keys,
             $entityClass,
