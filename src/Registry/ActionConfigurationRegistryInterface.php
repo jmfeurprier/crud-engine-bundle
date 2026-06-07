@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Registry;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
+use Jmf\CrudEngine\Model\ActionConfiguration;
 
 interface ActionConfigurationRegistryInterface
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Resolution;
 
-use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
+use Jmf\CrudEngine\Configuration\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Symfony\Component\Form\FormTypeInterface;
 use Webmozart\Assert\Assert;

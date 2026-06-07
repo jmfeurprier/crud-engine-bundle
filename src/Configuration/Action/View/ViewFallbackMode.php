@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Entities\Action\View;
+namespace Jmf\CrudEngine\Configuration\Action\View;
 
 enum ViewFallbackMode: string
 {

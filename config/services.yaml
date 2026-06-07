@@ -7,10 +7,10 @@ services:
     Jmf\CrudEngine\:
         resource: '../src/'
         exclude:
-            - '../src/Configuration/ActionConfigurationResolver.php'
-            - '../src/Configuration/Entities/'
+            - '../src/Configuration/'
             - '../src/Exception/'
             - '../src/JmfCrudEngineBundle.php'
+            - '../src/Model/'
 
     Jmf\CrudEngine\Controller\CreateAction:
         arguments:

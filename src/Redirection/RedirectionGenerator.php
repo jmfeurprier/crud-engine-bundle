@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Redirection;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
+use Jmf\CrudEngine\Model\ActionConfiguration;
 use Jmf\TemplateRendering\TemplateRendererInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

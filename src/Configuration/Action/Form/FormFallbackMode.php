@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Entities\Action\Form;
+namespace Jmf\CrudEngine\Configuration\Action\Form;
 
 enum FormFallbackMode: string
 {

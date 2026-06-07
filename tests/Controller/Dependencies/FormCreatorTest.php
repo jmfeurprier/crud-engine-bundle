@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\Form\ActionFormConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
-use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
-use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
+use Jmf\CrudEngine\Configuration\Action\Form\ActionFormConfiguration;
+use Jmf\CrudEngine\Configuration\Action\Form\FormFallbackMode;
+use Jmf\CrudEngine\Configuration\Action\Route\ActionRouteConfiguration;
+use Jmf\CrudEngine\Configuration\Action\View\ActionViewConfiguration;
+use Jmf\CrudEngine\Configuration\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineFormCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FormCreator;
+use Jmf\CrudEngine\Model\ActionConfiguration;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;

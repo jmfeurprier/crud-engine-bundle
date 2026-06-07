@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration\Resolution;
 
-use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
+use Jmf\CrudEngine\Configuration\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Webmozart\Assert\Assert;
 

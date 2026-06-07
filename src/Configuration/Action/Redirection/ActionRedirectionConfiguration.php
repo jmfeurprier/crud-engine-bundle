@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Entities\Action\Redirection;
+namespace Jmf\CrudEngine\Configuration\Action\Redirection;
 
 readonly class ActionRedirectionConfiguration
 {

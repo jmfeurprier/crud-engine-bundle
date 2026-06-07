@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Registry;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Model\ActionConfiguration;
 use Override;
 
 readonly class ActionConfigurationRegistry implements ActionConfigurationRegistryInterface

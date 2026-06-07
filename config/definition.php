@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
-use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
+use Jmf\CrudEngine\Configuration\Action\Form\FormFallbackMode;
+use Jmf\CrudEngine\Configuration\Action\View\ViewFallbackMode;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;

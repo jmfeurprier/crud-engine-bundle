@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Controller\Helpers;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperRetrievalException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
+use Jmf\CrudEngine\Model\ActionConfiguration;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

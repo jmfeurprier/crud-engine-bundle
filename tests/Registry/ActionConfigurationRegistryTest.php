@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Registry;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
-use Jmf\CrudEngine\Registry\ActionConfigurationRegistry;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Model\ActionConfiguration;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistry;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use PHPUnit\Framework\TestCase;
 

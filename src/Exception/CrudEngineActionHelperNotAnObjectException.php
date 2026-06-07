@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
-use Jmf\CrudEngine\Configuration\ActionConfiguration;
+use Jmf\CrudEngine\Model\ActionConfiguration;
 
 class CrudEngineActionHelperNotAnObjectException extends CrudEngineRuntimeException
 {
