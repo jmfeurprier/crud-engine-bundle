@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Routing;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
@@ -23,7 +23,7 @@ readonly class RouteLoader implements RouteLoaderInterface
      * @param ActionRouteLoaderInterface[] $loaders
      */
     public function __construct(
-        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionConfigurationRegistryInterface $actionConfigurationRegistry,
         iterable $loaders,
     ) {
         Assert::allIsInstanceOf($loaders, ActionRouteLoaderInterface::class);
@@ -45,7 +45,7 @@ readonly class RouteLoader implements RouteLoaderInterface
     {
         $routeCollection = new RouteCollection();
 
-        foreach ($this->actionConfigurationRepository->all() as $actionConfiguration) {
+        foreach ($this->actionConfigurationRegistry->all() as $actionConfiguration) {
             $this->loadAction($routeCollection, $actionConfiguration);
         }
 
@@ -73,6 +73,6 @@ readonly class RouteLoader implements RouteLoaderInterface
 
         return $this->loaderByAction[$action]
             ??
-            throw new CrudEngineUnsupportedActionException($actionConfiguration);
+            throw CrudEngineUnsupportedActionException::forActionConfiguration($actionConfiguration);
     }
 }

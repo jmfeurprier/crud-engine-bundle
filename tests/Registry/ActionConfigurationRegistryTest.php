@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Tests\Configuration\Repository;
+namespace Jmf\CrudEngine\Tests\Registry;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepository;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistry;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use PHPUnit\Framework\TestCase;
 
-final class ActionConfigurationRepositoryTest extends TestCase
+final class ActionConfigurationRegistryTest extends TestCase
 {
-    private ActionConfigurationRepository $actionConfigurationRepository;
+    private ActionConfigurationRegistry $actionConfigurationRegistry;
 
     public function testGetReturnsConfiguration(): void
     {
@@ -26,7 +26,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
             ],
         );
 
-        $result = $this->actionConfigurationRepository->get(Article::class, 'create');
+        $result = $this->actionConfigurationRegistry->get(Article::class, 'create');
 
         self::assertSame($actionConfiguration, $result);
     }
@@ -37,14 +37,14 @@ final class ActionConfigurationRepositoryTest extends TestCase
 
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
-        $this->actionConfigurationRepository->get(Article::class, 'create');
+        $this->actionConfigurationRegistry->get(Article::class, 'create');
     }
 
     public function testTryGetReturnsNullForUnknown(): void
     {
         $this->givenConfiguration([]);
 
-        $result = $this->actionConfigurationRepository->tryGet(Article::class, 'unknown');
+        $result = $this->actionConfigurationRegistry->tryGet(Article::class, 'unknown');
 
         self::assertNull($result);
     }
@@ -63,7 +63,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
             ],
         );
 
-        $result = $this->actionConfigurationRepository->all();
+        $result = $this->actionConfigurationRegistry->all();
 
         $all = iterator_to_array($result, false);
 
@@ -77,7 +77,7 @@ final class ActionConfigurationRepositoryTest extends TestCase
      */
     private function givenConfiguration(array $configuration): void
     {
-        $this->actionConfigurationRepository = new ActionConfigurationRepository(
+        $this->actionConfigurationRegistry = new ActionConfigurationRegistry(
             $configuration,
         );
     }

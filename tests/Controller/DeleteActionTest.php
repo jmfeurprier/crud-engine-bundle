@@ -11,7 +11,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionCo
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Controller\DeleteAction;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class DeleteActionTest extends TestCase
 {
-    private ActionConfigurationRepositoryInterface&Stub $actionConfigurationRepository;
+    private ActionConfigurationRegistryInterface&Stub $actionConfigurationRegistry;
 
     private ActionHelperResolver&Stub $actionHelperResolver;
 
@@ -51,7 +51,7 @@ final class DeleteActionTest extends TestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->actionConfigurationRepository = $this->createStub(ActionConfigurationRepositoryInterface::class);
+        $this->actionConfigurationRegistry = $this->createStub(ActionConfigurationRegistryInterface::class);
         $this->actionHelperResolver          = $this->createStub(ActionHelperResolver::class);
         $this->defaultActionHelper           = $this->createStub(DeleteActionHelperInterface::class);
         $this->entityFinder                  = $this->createStub(EntityFinder::class);
@@ -64,7 +64,7 @@ final class DeleteActionTest extends TestCase
     {
         $actionConfiguration = $this->givenActionConfiguration(stdClass::class, 'delete');
 
-        $this->actionConfigurationRepository
+        $this->actionConfigurationRegistry
             ->method('get')
             ->willReturn($actionConfiguration)
         ;
@@ -99,7 +99,7 @@ final class DeleteActionTest extends TestCase
     {
         $actionConfiguration = $this->givenActionConfiguration(stdClass::class, 'delete');
 
-        $this->actionConfigurationRepository
+        $this->actionConfigurationRegistry
             ->method('get')
             ->willReturn($actionConfiguration)
         ;
@@ -134,7 +134,7 @@ final class DeleteActionTest extends TestCase
     {
         $actionConfiguration = $this->givenActionConfiguration(stdClass::class, 'delete');
 
-        $this->actionConfigurationRepository
+        $this->actionConfigurationRegistry
             ->method('get')
             ->willReturn($actionConfiguration)
         ;
@@ -178,7 +178,7 @@ final class DeleteActionTest extends TestCase
     private function createAction(): DeleteAction
     {
         return new DeleteAction(
-            $this->actionConfigurationRepository,
+            $this->actionConfigurationRegistry,
             $this->actionHelperResolver,
             $this->defaultActionHelper,
             $this->entityFinder,

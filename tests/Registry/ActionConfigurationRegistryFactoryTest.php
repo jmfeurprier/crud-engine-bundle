@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Tests\Configuration\Repository;
+namespace Jmf\CrudEngine\Tests\Registry;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryFactory;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationHydrator;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistryFactory;
+use Jmf\CrudEngine\Registry\ActionConfigurationHydrator;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use PHPUnit\Framework\TestCase;
 
-final class ActionConfigurationRepositoryFactoryTest extends TestCase
+final class ActionConfigurationRegistryFactoryTest extends TestCase
 {
     public function testCreateBuildsRepositoryFromHydratedConfigurations(): void
     {
@@ -32,12 +32,12 @@ final class ActionConfigurationRepositoryFactoryTest extends TestCase
             )
         ;
 
-        $actionConfigurationRepositoryFactory = new ActionConfigurationRepositoryFactory(
+        $actionConfigurationRegistryFactory = new ActionConfigurationRegistryFactory(
             $resolvedConfigurations,
             $hydrator,
         );
 
-        $result = $actionConfigurationRepositoryFactory->create();
+        $result = $actionConfigurationRegistryFactory->create();
 
         self::assertSame(
             $actionConfiguration,

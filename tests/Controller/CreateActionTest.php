@@ -11,7 +11,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionCo
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Controller\CreateAction;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperInterface;
@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class CreateActionTest extends TestCase
 {
-    private ActionConfigurationRepositoryInterface & Stub $actionConfigurationRepository;
+    private ActionConfigurationRegistryInterface & Stub $actionConfigurationRegistry;
 
     private ActionHelperResolver & Stub $actionHelperResolver;
 
@@ -52,7 +52,7 @@ final class CreateActionTest extends TestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->actionConfigurationRepository = $this->createStub(ActionConfigurationRepositoryInterface::class);
+        $this->actionConfigurationRegistry = $this->createStub(ActionConfigurationRegistryInterface::class);
         $this->actionHelperResolver          = $this->createStub(ActionHelperResolver::class);
         $this->defaultActionHelper           = $this->createStub(CreateActionHelperInterface::class);
         $this->formCreator                   = $this->createStub(FormCreator::class);
@@ -65,7 +65,7 @@ final class CreateActionTest extends TestCase
     {
         $actionConfiguration = $this->givenActionConfiguration(stdClass::class, 'create');
 
-        $this->actionConfigurationRepository
+        $this->actionConfigurationRegistry
             ->method('get')
             ->willReturn($actionConfiguration)
         ;
@@ -111,7 +111,7 @@ final class CreateActionTest extends TestCase
     {
         $actionConfiguration = $this->givenActionConfiguration(stdClass::class, 'create');
 
-        $this->actionConfigurationRepository
+        $this->actionConfigurationRegistry
             ->method('get')
             ->willReturn($actionConfiguration)
         ;
@@ -159,7 +159,7 @@ final class CreateActionTest extends TestCase
     private function createAction(): CreateAction
     {
         return new CreateAction(
-            $this->actionConfigurationRepository,
+            $this->actionConfigurationRegistry,
             $this->actionHelperResolver,
             $this->defaultActionHelper,
             $this->formCreator,

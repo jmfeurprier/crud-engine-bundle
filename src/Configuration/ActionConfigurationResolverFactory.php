@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Configuration;
 
+use Jmf\CrudEngine\Configuration\Resolution\Action\CreateActionConfigResolver;
+use Jmf\CrudEngine\Configuration\Resolution\Action\DeleteActionConfigResolver;
+use Jmf\CrudEngine\Configuration\Resolution\Action\IndexActionConfigResolver;
+use Jmf\CrudEngine\Configuration\Resolution\Action\ReadActionConfigResolver;
+use Jmf\CrudEngine\Configuration\Resolution\Action\UpdateActionConfigResolver;
 use Jmf\CrudEngine\Configuration\Resolution\ConfigurationValueResolver;
 use Jmf\CrudEngine\Configuration\Resolution\FormConfigurationResolver;
 use Jmf\CrudEngine\Configuration\Resolution\MapResolver;
@@ -40,29 +45,48 @@ final readonly class ActionConfigurationResolverFactory
             $schemaValueExpander,
         );
 
-        return new ActionConfigurationResolver(
+        $formConfigurationResolver = new FormConfigurationResolver(
             $configurationValueResolver,
             $mapResolver,
             $patternsResolver,
-            new FormConfigurationResolver(
-                $configurationValueResolver,
-                $mapResolver,
-                $patternsResolver,
-            ),
-            new RouteConfigurationResolver(
-                $configurationValueResolver,
-                $mapResolver,
-                $overridableConfigurationValueResolver,
-            ),
-            new RedirectionConfigurationResolver(
-                $configurationValueResolver,
-                $mapResolver,
-            ),
-            new ViewConfigurationResolver(
-                $configurationValueResolver,
-                $mapResolver,
-                $overridableConfigurationValueResolver,
-            ),
+        );
+
+        $routeConfigurationResolver = new RouteConfigurationResolver(
+            $configurationValueResolver,
+            $mapResolver,
+            $overridableConfigurationValueResolver,
+        );
+
+        $redirectionConfigurationResolver = new RedirectionConfigurationResolver(
+            $configurationValueResolver,
+            $mapResolver,
+        );
+
+        $viewConfigurationResolver = new ViewConfigurationResolver(
+            $configurationValueResolver,
+            $mapResolver,
+            $overridableConfigurationValueResolver,
+        );
+
+        $partResolvers = [
+            $configurationValueResolver,
+            $mapResolver,
+            $patternsResolver,
+            $formConfigurationResolver,
+            $routeConfigurationResolver,
+            $redirectionConfigurationResolver,
+            $viewConfigurationResolver,
+        ];
+
+        return new ActionConfigurationResolver(
+            $mapResolver,
+            [
+                new CreateActionConfigResolver(...$partResolvers),
+                new DeleteActionConfigResolver(...$partResolvers),
+                new IndexActionConfigResolver(...$partResolvers),
+                new ReadActionConfigResolver(...$partResolvers),
+                new UpdateActionConfigResolver(...$partResolvers),
+            ],
         );
     }
 

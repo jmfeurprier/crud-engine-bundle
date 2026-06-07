@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Repository;
+namespace Jmf\CrudEngine\Registry;
 
 use Jmf\CrudEngine\Configuration\ActionConfigurationResolver;
 
 /**
  * @phpstan-import-type ResolvedConfigurations from ActionConfigurationResolver
  */
-readonly class ActionConfigurationRepositoryFactory
+readonly class ActionConfigurationRegistryFactory
 {
     /**
      * @param ResolvedConfigurations $resolvedConfigurations
@@ -20,9 +20,9 @@ readonly class ActionConfigurationRepositoryFactory
     ) {
     }
 
-    public function create(): ActionConfigurationRepositoryInterface
+    public function create(): ActionConfigurationRegistryInterface
     {
-        return new ActionConfigurationRepository(
+        return new ActionConfigurationRegistry(
             $this->actionConfigurationHydrator->hydrate($this->resolvedConfigurations),
         );
     }

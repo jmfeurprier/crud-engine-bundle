@@ -12,7 +12,7 @@ readonly class UpdateActionRouteLoader extends ActionRouteLoaderBase
     #[Override]
     public function getActionName(): string
     {
-        return 'update';
+        return UpdateAction::ACTION;
     }
 
     #[Override]

@@ -12,7 +12,7 @@ readonly class CreateActionRouteLoader extends ActionRouteLoaderBase
     #[Override]
     public function getActionName(): string
     {
-        return 'create';
+        return CreateAction::ACTION;
     }
 
     #[Override]

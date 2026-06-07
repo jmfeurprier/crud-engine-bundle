@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Repository;
+namespace Jmf\CrudEngine\Registry;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Override;
 
-readonly class ActionConfigurationRepository implements ActionConfigurationRepositoryInterface
+readonly class ActionConfigurationRegistry implements ActionConfigurationRegistryInterface
 {
     /**
      * @param array<class-string, array<non-empty-string, ActionConfiguration>> $config

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Repository;
+namespace Jmf\CrudEngine\Registry;
 
 use Jmf\CrudEngine\Configuration\ActionConfigurationResolver;
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
@@ -12,6 +12,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionCo
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
+use Jmf\CrudEngine\Configuration\Resolution\Action\ActionConfigResolverInterface;
 use Jmf\CrudEngine\Model\EntityAction;
 use Webmozart\Assert\Assert;
 
@@ -20,7 +21,7 @@ use Webmozart\Assert\Assert;
  * {@see ActionConfiguration} DTO graph.
  *
  * @phpstan-import-type ResolvedConfigurations from ActionConfigurationResolver
- * @phpstan-import-type ResolvedAction from ActionConfigurationResolver
+ * @phpstan-import-type ResolvedAction from ActionConfigResolverInterface
  */
 readonly class ActionConfigurationHydrator
 {
@@ -68,12 +69,22 @@ readonly class ActionConfigurationHydrator
             sprintf('Unknown view fallback mode "%s".', $view['fallback']),
         );
 
-        $formFallbackMode = FormFallbackMode::tryFrom($form['fallback']);
+        $formConfiguration = null;
 
-        Assert::notNull(
-            $formFallbackMode,
-            sprintf('Unknown form fallback mode "%s".', $form['fallback']),
-        );
+        if (null !== $form) {
+            $formFallbackMode = FormFallbackMode::tryFrom($form['fallback']);
+
+            Assert::notNull(
+                $formFallbackMode,
+                sprintf('Unknown form fallback mode "%s".', $form['fallback']),
+            );
+
+            $formConfiguration = new ActionFormConfiguration(
+                formTypeClass:          $form['typeClass'],
+                suggestedFormTypeClass: $form['suggestedClass'],
+                formFallbackMode:       $formFallbackMode,
+            );
+        }
 
         return new ActionConfiguration(
             entityAction:             new EntityAction(
@@ -81,13 +92,7 @@ readonly class ActionConfigurationHydrator
                                           $action,
                                       ),
             helperClass:              $resolvedAction['helperClass'],
-            formConfiguration:        null === $form
-                                          ? null
-                                          : new ActionFormConfiguration(
-                                              formTypeClass:          $form['typeClass'],
-                                              suggestedFormTypeClass: $form['suggestedClass'],
-                                              formFallbackMode:       $formFallbackMode,
-                                          ),
+            formConfiguration:        $formConfiguration,
             redirectionConfiguration: null === $redirection
                                           ? null
                                           : new ActionRedirectionConfiguration(

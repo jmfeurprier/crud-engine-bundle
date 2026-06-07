@@ -12,7 +12,7 @@ readonly class DeleteActionRouteLoader extends ActionRouteLoaderBase
     #[Override]
     public function getActionName(): string
     {
-        return 'delete';
+        return DeleteAction::ACTION;
     }
 
     #[Override]

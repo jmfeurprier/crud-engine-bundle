@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine;
 
 use Jmf\CrudEngine\Configuration\ActionConfigurationResolverFactory;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepository;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryFactory;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistry;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistryFactory;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
+use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
 use Jmf\CrudEngine\Routing\RouteLoader;
 use Override;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -37,6 +38,7 @@ class JmfCrudEngineBundle extends AbstractBundle
      * @param array<string, mixed> $config
      *
      * @throws CrudEngineConfigurationException
+     * @throws CrudEngineUnsupportedActionException
      */
     #[Override]
     public function loadExtension(
@@ -58,14 +60,14 @@ class JmfCrudEngineBundle extends AbstractBundle
         // container is the cache (rebuilt only on config change / cache:clear). The
         // factory hydrates that array into the repository when the service is created.
         $configurator->services()
-            ->set(ActionConfigurationRepositoryFactory::class)
+            ->set(ActionConfigurationRegistryFactory::class)
             ->autowire()
             ->arg('$resolvedConfigurations', $this->getResolvedConfigurations($config))
         ;
 
         $configurator->services()
-            ->set(ActionConfigurationRepository::class)
-            ->factory([service(ActionConfigurationRepositoryFactory::class), 'create'])
+            ->set(ActionConfigurationRegistry::class)
+            ->factory([service(ActionConfigurationRegistryFactory::class), 'create'])
         ;
 
         $configurator->services()
@@ -80,6 +82,7 @@ class JmfCrudEngineBundle extends AbstractBundle
      * @return array<class-string, array<non-empty-string, array<string, mixed>>>
      *
      * @throws CrudEngineConfigurationException
+     * @throws CrudEngineUnsupportedActionException
      */
     private function getResolvedConfigurations(
         array $config,

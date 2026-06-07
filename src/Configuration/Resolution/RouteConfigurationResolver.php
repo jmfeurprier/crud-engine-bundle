@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Configuration\Resolution;
 
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -17,17 +16,6 @@ readonly class RouteConfigurationResolver
      * @var non-empty-string
      */
     private const string DEFAULT_NAME = "{{ entity_key }}.{{ action_key }}";
-
-    /**
-     * @var array<non-empty-string, non-empty-string>
-     */
-    private const array DEFAULT_PATHS = [
-        'create' => "{{ entitydashkeys }}/create",
-        'delete' => "{{ entitydashkeys }}/{id}/delete",
-        'index'  => "{{ entitydashkeys }}",
-        'read'   => "{{ entitydashkeys }}/{id}",
-        'update' => "{{ entitydashkeys }}/{id}/update",
-    ];
 
     public function __construct(
         private ConfigurationValueResolver $configurationValueResolver,
@@ -42,11 +30,11 @@ readonly class RouteConfigurationResolver
      * @param class-string                              $entityClass
      * @param non-empty-string                          $action
      * @param array<string, mixed>                      $actionConfig
+     * @param non-empty-string                          $defaultPath
      *
      * @return ResolvedRoute
      *
      * @throws CrudEngineInvalidConfigurationException
-     * @throws CrudEngineMissingConfigurationException
      */
     public function resolve(
         array $schema,
@@ -54,6 +42,7 @@ readonly class RouteConfigurationResolver
         string $entityClass,
         string $action,
         array $actionConfig,
+        string $defaultPath,
     ): array {
         $routeConfig = $this->mapResolver->resolve($actionConfig, 'route');
         $schemaRoute = $this->mapResolver->resolve($schema, 'route');
@@ -69,7 +58,7 @@ readonly class RouteConfigurationResolver
                 entityClass: $entityClass,
                 action:      $action,
             ),
-            'path'         => $this->resolvePath($routeConfig, $schemaRoute, $keys, $entityClass, $action),
+            'path'         => $this->resolvePath($routeConfig, $schemaRoute, $keys, $entityClass, $action, $defaultPath),
             'requirements' => $this->resolveRequirements($routeConfig),
         ];
     }
@@ -80,11 +69,11 @@ readonly class RouteConfigurationResolver
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
      * @param non-empty-string                          $action
+     * @param non-empty-string                          $defaultPath
      *
      * @return non-empty-string
      *
      * @throws CrudEngineInvalidConfigurationException
-     * @throws CrudEngineMissingConfigurationException
      */
     private function resolvePath(
         array $routeConfig,
@@ -92,6 +81,7 @@ readonly class RouteConfigurationResolver
         array $keys,
         string $entityClass,
         string $action,
+        string $defaultPath,
     ): string {
         if (array_key_exists('path', $routeConfig)) {
             Assert::stringNotEmpty($routeConfig['path']);
@@ -99,22 +89,16 @@ readonly class RouteConfigurationResolver
             return $routeConfig['path'];
         }
 
-        /** @var array<non-empty-string, non-empty-string> $paths */
-        $paths = array_merge(
-            self::DEFAULT_PATHS,
-            $this->mapResolver->resolve($schemaRoute, 'paths'),
-        );
+        $schemaPaths = $this->mapResolver->resolve($schemaRoute, 'paths');
 
-        if (!array_key_exists($action, $paths)) {
-            throw new CrudEngineMissingConfigurationException(
-                $entityClass,
-                $action,
-                'route.path',
-            );
-        }
+        $pattern = array_key_exists($action, $schemaPaths)
+            ? $schemaPaths[$action]
+            : $defaultPath;
+
+        Assert::stringNotEmpty($pattern);
 
         $path = $this->configurationValueResolver->resolve(
-            $paths[$action],
+            $pattern,
             $keys,
             $entityClass,
             $action,

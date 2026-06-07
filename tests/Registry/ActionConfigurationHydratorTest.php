@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Tests\Configuration\Repository;
+namespace Jmf\CrudEngine\Tests\Registry;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\Form\FormFallbackMode;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationHydrator;
+use Jmf\CrudEngine\Registry\ActionConfigurationHydrator;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
@@ -48,11 +48,19 @@ final class ActionConfigurationHydratorTest extends TestCase
         $actionConfiguration = $this->hydrate()[Article::class]['index'];
 
         self::assertSame(ViewFallbackMode::FAIL, $actionConfiguration->getViewConfiguration()->getViewFallbackMode());
-        self::assertSame(FormFallbackMode::FAIL, $actionConfiguration->getFormConfiguration()->getFormFallbackMode());
 
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
         $actionConfiguration->getRedirectionConfiguration();
+    }
+
+    public function testHydratesActionWithoutForm(): void
+    {
+        $actionConfiguration = $this->hydrate()[Article::class]['index'];
+
+        $this->expectException(CrudEngineMissingConfigurationException::class);
+
+        $actionConfiguration->getFormConfiguration();
     }
 
     /**
@@ -87,11 +95,7 @@ final class ActionConfigurationHydratorTest extends TestCase
                         ],
                     ],
                     'index'  => [
-                        'form'        => [
-                            'typeClass'      => null,
-                            'suggestedClass' => 'App\\Form\\Article\\IndexType',
-                            'fallback'       => 'fail',
-                        ],
+                        'form'        => null,
                         'helperClass' => null,
                         'route'       => [
                             'name'         => 'article.index',

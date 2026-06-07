@@ -11,7 +11,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionCo
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Routing\IndexActionRouteLoader;
@@ -24,12 +24,12 @@ use Symfony\Component\Routing\RouteCollection;
 
 final class RouteLoaderTest extends TestCase
 {
-    private ActionConfigurationRepositoryInterface&Stub $actionConfigurationRepository;
+    private ActionConfigurationRegistryInterface&Stub $actionConfigurationRegistry;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->actionConfigurationRepository = $this->createStub(ActionConfigurationRepositoryInterface::class);
+        $this->actionConfigurationRegistry = $this->createStub(ActionConfigurationRegistryInterface::class);
     }
 
     public function testInvokeReturnsRouteCollection(): void
@@ -41,13 +41,13 @@ final class RouteLoaderTest extends TestCase
             routePath:   'foo/bar',
         );
 
-        $this->actionConfigurationRepository
+        $this->actionConfigurationRegistry
             ->method('all')
             ->willReturn([$actionConfiguration])
         ;
 
         $routeLoader = new RouteLoader(
-            $this->actionConfigurationRepository,
+            $this->actionConfigurationRegistry,
             [new IndexActionRouteLoader()],
         );
 
@@ -60,13 +60,13 @@ final class RouteLoaderTest extends TestCase
 
     public function testInvokeReturnsEmptyCollectionWhenNoConfigurations(): void
     {
-        $this->actionConfigurationRepository
+        $this->actionConfigurationRegistry
             ->method('all')
             ->willReturn([])
         ;
 
         $routeLoader = new RouteLoader(
-            $this->actionConfigurationRepository,
+            $this->actionConfigurationRegistry,
             [new IndexActionRouteLoader()],
         );
 
@@ -85,13 +85,13 @@ final class RouteLoaderTest extends TestCase
             routePath:   'foo/bar',
         );
 
-        $this->actionConfigurationRepository
+        $this->actionConfigurationRegistry
             ->method('all')
             ->willReturn([$actionConfiguration])
         ;
 
         $routeLoader = new RouteLoader(
-            $this->actionConfigurationRepository,
+            $this->actionConfigurationRegistry,
             [new IndexActionRouteLoader()],
         );
 

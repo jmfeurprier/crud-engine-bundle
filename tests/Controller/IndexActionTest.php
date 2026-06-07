@@ -11,7 +11,7 @@ use Jmf\CrudEngine\Configuration\Entities\Action\Redirection\ActionRedirectionCo
 use Jmf\CrudEngine\Configuration\Entities\Action\Route\ActionRouteConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Configuration\Entities\Action\View\ViewFallbackMode;
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
 use Jmf\CrudEngine\Controller\IndexAction;
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class IndexActionTest extends TestCase
 {
-    private ActionConfigurationRepositoryInterface & Stub $actionConfigurationRepository;
+    private ActionConfigurationRegistryInterface & Stub $actionConfigurationRegistry;
 
     private ActionHelperResolver & Stub $actionHelperResolver;
 
@@ -43,7 +43,7 @@ final class IndexActionTest extends TestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->actionConfigurationRepository = $this->createStub(ActionConfigurationRepositoryInterface::class);
+        $this->actionConfigurationRegistry = $this->createStub(ActionConfigurationRegistryInterface::class);
         $this->actionHelperResolver          = $this->createStub(ActionHelperResolver::class);
         $this->defaultActionHelper           = $this->createStub(IndexActionHelperInterface::class);
         $this->objectManagerResolver         = $this->createStub(EntityManagerResolver::class);
@@ -54,7 +54,7 @@ final class IndexActionTest extends TestCase
     {
         $actionConfiguration = $this->givenActionConfiguration(stdClass::class, 'index');
 
-        $this->actionConfigurationRepository
+        $this->actionConfigurationRegistry
             ->method('get')
             ->willReturn($actionConfiguration)
         ;
@@ -126,7 +126,7 @@ final class IndexActionTest extends TestCase
     private function createAction(): IndexAction
     {
         return new IndexAction(
-            $this->actionConfigurationRepository,
+            $this->actionConfigurationRegistry,
             $this->actionHelperResolver,
             $this->defaultActionHelper,
             $this->objectManagerResolver,

@@ -12,7 +12,7 @@ readonly class IndexActionRouteLoader extends ActionRouteLoaderBase
     #[Override]
     public function getActionName(): string
     {
-        return 'index';
+        return IndexAction::ACTION;
     }
 
     #[Override]

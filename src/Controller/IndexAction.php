@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Controller;
 
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
@@ -27,11 +27,13 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 readonly class IndexAction
 {
+    public const string ACTION = 'index';
+
     /**
      * @psalm-param IndexActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionConfigurationRegistryInterface $actionConfigurationRegistry,
         private ActionHelperResolver $actionHelperResolver,
         private IndexActionHelperInterface $defaultActionHelper,
         private EntityManagerResolver $objectManagerResolver,
@@ -55,7 +57,7 @@ readonly class IndexAction
         Request $request,
         string $entityClass,
     ): Response {
-        $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'index');
+        $actionConfiguration = $this->actionConfigurationRegistry->get($entityClass, self::ACTION);
         $actionHelper        = $this->actionHelperResolver->resolve(
             IndexActionHelperInterface::class,
             $actionConfiguration,

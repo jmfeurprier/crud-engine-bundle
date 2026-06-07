@@ -52,9 +52,16 @@ final class ActionConfigurationResolverTest extends TestCase
         self::assertSame('provide', $article['index']['view']['fallback']);
         self::assertSame([], $article['index']['view']['variables']);
 
-        self::assertNull($article['index']['form']['typeClass']);
-        self::assertSame('App\\Form\\Article\\CreateType', $article['create']['form']['suggestedClass']);
-        self::assertSame('provide', $article['index']['form']['fallback']);
+        self::assertNull($article['index']['form']);
+        self::assertNull($article['read']['form']);
+        self::assertNull($article['delete']['form']);
+
+        $createForm = $article['create']['form'];
+        self::assertNotNull($createForm);
+        self::assertNull($createForm['typeClass']);
+        self::assertSame('App\\Form\\Article\\CreateType', $createForm['suggestedClass']);
+        self::assertSame('provide', $createForm['fallback']);
+
         self::assertNull($article['index']['helperClass']);
 
         self::assertNull($article['index']['redirection']);
@@ -110,7 +117,9 @@ final class ActionConfigurationResolverTest extends TestCase
 
         $create = $resolved[Article::class]['create'];
 
-        self::assertSame(ArticleType::class, $create['form']['typeClass']);
+        $createForm = $create['form'];
+        self::assertNotNull($createForm);
+        self::assertSame(ArticleType::class, $createForm['typeClass']);
         self::assertSame('/blog/new', $create['route']['path']);
         self::assertSame(['id' => '\d+'], $create['route']['requirements']);
         self::assertSame('blog/new.html.twig', $create['view']['path']);
@@ -179,6 +188,8 @@ final class ActionConfigurationResolverTest extends TestCase
             ],
         );
 
-        self::assertSame('fail', $resolved[Article::class]['create']['form']['fallback']);
+        $createForm = $resolved[Article::class]['create']['form'];
+        self::assertNotNull($createForm);
+        self::assertSame('fail', $createForm['fallback']);
     }
 }

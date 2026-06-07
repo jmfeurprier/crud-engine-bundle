@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Controller;
 
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
@@ -37,11 +37,13 @@ use Throwable;
 #[AsController]
 readonly class UpdateAction
 {
+    public const string ACTION = 'update';
+
     /**
      * @psalm-param UpdateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionConfigurationRegistryInterface $actionConfigurationRegistry,
         private ActionHelperResolver $actionHelperResolver,
         private UpdateActionHelperInterface $defaultActionHelper,
         private EntityFinder $entityFinder,
@@ -75,9 +77,9 @@ readonly class UpdateAction
         string $entityClass,
         string $id,
     ): Response {
-        $actionConfiguration = $this->actionConfigurationRepository->get(
+        $actionConfiguration = $this->actionConfigurationRegistry->get(
             $entityClass,
-            'update',
+            self::ACTION,
         );
 
         $actionHelper = $this->actionHelperResolver->resolve(

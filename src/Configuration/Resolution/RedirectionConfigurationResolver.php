@@ -13,24 +13,6 @@ use Webmozart\Assert\Assert;
  */
 readonly class RedirectionConfigurationResolver
 {
-    /**
-     * @var array<non-empty-string, array{route: non-empty-string, parameters: array<string, non-empty-string>}>
-     */
-    private const array DEFAULT_REDIRECTIONS = [
-        'create' => [
-            'route'      => "{{ entity_key }}.read",
-            'parameters' => ['id' => '{{ _entity.id }}'],
-        ],
-        'delete' => [
-            'route'      => "{{ entity_key }}.index",
-            'parameters' => [],
-        ],
-        'update' => [
-            'route'      => "{{ entity_key }}.read",
-            'parameters' => ['id' => '{{ _entity.id }}'],
-        ],
-    ];
-
     public function __construct(
         private ConfigurationValueResolver $configurationValueResolver,
         private MapResolver $mapResolver,
@@ -38,13 +20,14 @@ readonly class RedirectionConfigurationResolver
     }
 
     /**
-     * @param array<string, mixed>                      $schema
-     * @param array<non-empty-string, non-empty-string> $keys
-     * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
-     * @param array<string, mixed>                      $actionConfig
+     * @param array<string, mixed>                                                        $schema
+     * @param array<non-empty-string, non-empty-string>                                   $keys
+     * @param class-string                                                                $entityClass
+     * @param non-empty-string                                                            $action
+     * @param array<string, mixed>                                                        $actionConfig
+     * @param array{route: non-empty-string, parameters: array<string, non-empty-string>} $defaultRedirection
      *
-     * @return ResolvedRedirection|null
+     * @return ResolvedRedirection
      *
      * @throws CrudEngineInvalidConfigurationException
      * @throws CrudEngineMissingConfigurationException
@@ -55,7 +38,8 @@ readonly class RedirectionConfigurationResolver
         string $entityClass,
         string $action,
         array $actionConfig,
-    ): ?array {
+        array $defaultRedirection,
+    ): array {
         if (array_key_exists('redirection', $actionConfig)) {
             $redirectionConfig = $actionConfig['redirection'];
             Assert::isMap($redirectionConfig);
@@ -77,26 +61,18 @@ readonly class RedirectionConfigurationResolver
             ];
         }
 
-        /** @var array<non-empty-string, array{route: non-empty-string, parameters: array<string, non-empty-string>}> $redirections */
-        $redirections = array_merge(
-            self::DEFAULT_REDIRECTIONS,
-            $this->mapResolver->resolve(
-                $schema,
-                'redirection',
-            ),
-        );
+        $schemaRedirections = $this->mapResolver->resolve($schema, 'redirection');
 
-        if (!array_key_exists($action, $redirections)) {
-            return null;
-        }
+        $redirection = array_key_exists($action, $schemaRedirections)
+            ? $schemaRedirections[$action]
+            : $defaultRedirection;
 
-        $schemaRedirection = $redirections[$action];
-        Assert::isMap($schemaRedirection);
-        Assert::keyExists($schemaRedirection, 'route');
-        Assert::stringNotEmpty($schemaRedirection['route']);
+        Assert::isMap($redirection);
+        Assert::keyExists($redirection, 'route');
+        Assert::stringNotEmpty($redirection['route']);
 
         $route = $this->configurationValueResolver->resolve(
-            $schemaRedirection['route'],
+            $redirection['route'],
             $keys,
             $entityClass,
             $action,
@@ -105,7 +81,7 @@ readonly class RedirectionConfigurationResolver
 
         return [
             'route'      => $route,
-            'parameters' => $this->getStringMap($schemaRedirection, 'parameters'),
+            'parameters' => $this->getStringMap($redirection, 'parameters'),
             'fragment'   => null,
         ];
     }

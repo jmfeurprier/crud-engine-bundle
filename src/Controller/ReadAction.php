@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Controller;
 
-use Jmf\CrudEngine\Configuration\Repository\ActionConfigurationRepositoryInterface;
+use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperNotAnObjectException;
@@ -28,11 +28,13 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 readonly class ReadAction
 {
+    public const string ACTION = 'read';
+
     /**
      * @psalm-param ReadActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
-        private ActionConfigurationRepositoryInterface $actionConfigurationRepository,
+        private ActionConfigurationRegistryInterface $actionConfigurationRegistry,
         private ActionHelperResolver $actionHelperResolver,
         private ReadActionHelperInterface $defaultActionHelper,
         private EntityFinder $entityFinder,
@@ -58,7 +60,7 @@ readonly class ReadAction
         string $id,
         string $entityClass,
     ): Response {
-        $actionConfiguration = $this->actionConfigurationRepository->get($entityClass, 'read');
+        $actionConfiguration = $this->actionConfigurationRegistry->get($entityClass, self::ACTION);
         $actionHelper        = $this->actionHelperResolver->resolve(
             ReadActionHelperInterface::class,
             $actionConfiguration,

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Repository;
+namespace Jmf\CrudEngine\Registry;
 
 use Jmf\CrudEngine\Configuration\Entities\Action\ActionConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 
-interface ActionConfigurationRepositoryInterface
+interface ActionConfigurationRegistryInterface
 {
     /**
      * @param class-string     $entityClass

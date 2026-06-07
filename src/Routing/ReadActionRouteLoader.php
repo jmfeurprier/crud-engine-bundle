@@ -12,7 +12,7 @@ readonly class ReadActionRouteLoader extends ActionRouteLoaderBase
     #[Override]
     public function getActionName(): string
     {
-        return 'read';
+        return ReadAction::ACTION;
     }
 
     #[Override]
