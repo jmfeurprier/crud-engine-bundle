@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Registry;
 
-use Jmf\CrudEngine\Configuration\Action\Form\ActionFormConfiguration;
-use Jmf\CrudEngine\Configuration\Action\Form\FormFallbackMode;
-use Jmf\CrudEngine\Configuration\Action\Redirection\ActionRedirectionConfiguration;
-use Jmf\CrudEngine\Configuration\Action\Route\ActionRouteConfiguration;
-use Jmf\CrudEngine\Configuration\Action\View\ActionViewConfiguration;
-use Jmf\CrudEngine\Configuration\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Configuration\ActionConfigurationResolver;
 use Jmf\CrudEngine\Configuration\Resolution\Action\ActionConfigResolverInterface;
+use Jmf\CrudEngine\Form\FormFallbackMode;
 use Jmf\CrudEngine\Model\ActionConfiguration;
 use Jmf\CrudEngine\Model\EntityAction;
+use Jmf\CrudEngine\View\ViewFallbackMode;
 use Webmozart\Assert\Assert;
 
 /**

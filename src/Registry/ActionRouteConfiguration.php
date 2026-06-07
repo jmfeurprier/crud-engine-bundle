@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Action\Route;
+namespace Jmf\CrudEngine\Registry;
 
 readonly class ActionRouteConfiguration
 {

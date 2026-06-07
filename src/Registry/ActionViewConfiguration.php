@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Action\View;
+namespace Jmf\CrudEngine\Registry;
+
+use Jmf\CrudEngine\View\ViewFallbackMode;
 
 readonly class ActionViewConfiguration
 {

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Registry;
 
-use Jmf\CrudEngine\Configuration\Action\Form\FormFallbackMode;
-use Jmf\CrudEngine\Configuration\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Form\FormFallbackMode;
 use Jmf\CrudEngine\Registry\ActionConfigurationHydrator;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
+use Jmf\CrudEngine\View\ViewFallbackMode;
 use PHPUnit\Framework\TestCase;
 
 final class ActionConfigurationHydratorTest extends TestCase

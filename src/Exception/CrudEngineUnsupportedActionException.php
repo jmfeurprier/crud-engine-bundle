@@ -7,21 +7,10 @@ namespace Jmf\CrudEngine\Exception;
 use Jmf\CrudEngine\Model\ActionConfiguration;
 use Jmf\CrudEngine\Model\EntityAction;
 
+// @todo Refactor / Split.
 class CrudEngineUnsupportedActionException extends CrudEngineRuntimeException
 {
-    private function __construct(
-        private readonly EntityAction $entityAction,
-        private readonly ?ActionConfiguration $actionConfiguration = null,
-    ) {
-        parent::__construct(
-            message: sprintf(
-                         'Unsupported CRUD action "%s" for entity class %s.',
-                         $this->entityAction->getAction(),
-                         $this->entityAction->getEntityClass(),
-                     ),
-        );
-    }
-
+    // @xxx
     public static function forActionConfiguration(
         ActionConfiguration $actionConfiguration,
     ): self {
@@ -31,6 +20,7 @@ class CrudEngineUnsupportedActionException extends CrudEngineRuntimeException
         );
     }
 
+    // @xxx
     /**
      * @param class-string     $entityClass
      * @param non-empty-string $action
@@ -41,6 +31,19 @@ class CrudEngineUnsupportedActionException extends CrudEngineRuntimeException
     ): self {
         return new self(
             new EntityAction($entityClass, $action),
+        );
+    }
+
+    private function __construct(
+        private readonly EntityAction $entityAction,
+        private readonly ?ActionConfiguration $actionConfiguration = null,
+    ) {
+        parent::__construct(
+            message: sprintf(
+                         'Unsupported CRUD action "%s" for entity class %s.',
+                         $this->entityAction->getAction(),
+                         $this->entityAction->getEntityClass(),
+                     ),
         );
     }
 

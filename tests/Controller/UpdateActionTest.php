@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Controller;
 
-use Jmf\CrudEngine\Configuration\Action\Form\ActionFormConfiguration;
-use Jmf\CrudEngine\Configuration\Action\Form\FormFallbackMode;
-use Jmf\CrudEngine\Configuration\Action\Redirection\ActionRedirectionConfiguration;
-use Jmf\CrudEngine\Configuration\Action\Route\ActionRouteConfiguration;
-use Jmf\CrudEngine\Configuration\Action\View\ActionViewConfiguration;
-use Jmf\CrudEngine\Configuration\Action\View\ViewFallbackMode;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperResolver;
 use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperInterface;
 use Jmf\CrudEngine\Controller\UpdateAction;
 use Jmf\CrudEngine\Form\FormCreator;
+use Jmf\CrudEngine\Form\FormFallbackMode;
 use Jmf\CrudEngine\Model\ActionConfiguration;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityFinder;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Jmf\CrudEngine\Redirection\RedirectionGenerator;
 use Jmf\CrudEngine\Registry\ActionConfigurationRegistryInterface;
+use Jmf\CrudEngine\Registry\ActionFormConfiguration;
+use Jmf\CrudEngine\Registry\ActionRedirectionConfiguration;
+use Jmf\CrudEngine\Registry\ActionRouteConfiguration;
+use Jmf\CrudEngine\Registry\ActionViewConfiguration;
+use Jmf\CrudEngine\View\ViewFallbackMode;
 use Jmf\CrudEngine\View\ViewRenderer;
 use Override;
 use PHPUnit\Framework\MockObject\Stub;

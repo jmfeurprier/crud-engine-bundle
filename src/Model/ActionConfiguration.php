@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Model;
 
-use Jmf\CrudEngine\Configuration\Action\Form\ActionFormConfiguration;
-use Jmf\CrudEngine\Configuration\Action\Redirection\ActionRedirectionConfiguration;
-use Jmf\CrudEngine\Configuration\Action\Route\ActionRouteConfiguration;
-use Jmf\CrudEngine\Configuration\Action\View\ActionViewConfiguration;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Registry\ActionFormConfiguration;
+use Jmf\CrudEngine\Registry\ActionRedirectionConfiguration;
+use Jmf\CrudEngine\Registry\ActionRouteConfiguration;
+use Jmf\CrudEngine\Registry\ActionViewConfiguration;
 
 readonly class ActionConfiguration
 {

@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Configuration\Action\Form;
+namespace Jmf\CrudEngine\Registry;
 
+use Jmf\CrudEngine\Form\FormFallbackMode;
 use Symfony\Component\Form\FormTypeInterface;
 
 readonly class ActionFormConfiguration
