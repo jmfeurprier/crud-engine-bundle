@@ -11,8 +11,8 @@ namespace Jmf\CrudEngine\Model;
  */
 enum CrudAction: string
 {
-    case Index = 'index';
-    case Read = 'read';
+    case Index  = 'index';
+    case Read   = 'read';
     case Create = 'create';
     case Update = 'update';
     case Delete = 'delete';
