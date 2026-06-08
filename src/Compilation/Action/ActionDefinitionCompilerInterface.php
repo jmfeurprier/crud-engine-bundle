@@ -10,6 +10,7 @@ use Jmf\CrudEngine\Compilation\RouteDefinitionCompiler;
 use Jmf\CrudEngine\Compilation\ViewDefinitionCompiler;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 
 /**
  * Resolves the normalized configuration of a single CRUD action into the array shape consumed by
@@ -32,7 +33,7 @@ use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
  */
 interface ActionDefinitionCompilerInterface
 {
-    public function getActionName(): string;
+    public function getAction(): CrudAction;
 
     /**
      * @param array<string, mixed> $schema

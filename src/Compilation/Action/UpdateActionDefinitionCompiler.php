@@ -10,9 +10,9 @@ use Override;
 readonly class UpdateActionDefinitionCompiler extends ActionDefinitionCompilerBase
 {
     #[Override]
-    public function getActionName(): string
+    public function getAction(): CrudAction
     {
-        return CrudAction::Update->value;
+        return CrudAction::Update;
     }
 
     #[Override]

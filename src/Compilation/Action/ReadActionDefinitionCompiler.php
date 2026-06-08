@@ -10,9 +10,9 @@ use Override;
 readonly class ReadActionDefinitionCompiler extends ActionDefinitionCompilerBase
 {
     #[Override]
-    public function getActionName(): string
+    public function getAction(): CrudAction
     {
-        return CrudAction::Read->value;
+        return CrudAction::Read;
     }
 
     #[Override]

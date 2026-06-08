@@ -10,9 +10,9 @@ use Override;
 readonly class DeleteActionDefinitionCompiler extends ActionDefinitionCompilerBase
 {
     #[Override]
-    public function getActionName(): string
+    public function getAction(): CrudAction
     {
-        return CrudAction::Delete->value;
+        return CrudAction::Delete;
     }
 
     #[Override]

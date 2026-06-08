@@ -10,9 +10,9 @@ use Override;
 readonly class IndexActionDefinitionCompiler extends ActionDefinitionCompilerBase
 {
     #[Override]
-    public function getActionName(): string
+    public function getAction(): CrudAction
     {
-        return CrudAction::Index->value;
+        return CrudAction::Index;
     }
 
     #[Override]

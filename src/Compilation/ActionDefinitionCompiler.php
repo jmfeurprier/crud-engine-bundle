@@ -28,7 +28,7 @@ readonly class ActionDefinitionCompiler
     /**
      * @var array<string, ActionDefinitionCompilerInterface>
      */
-    private array $compilerByAction;
+    private array $actionDefinitionCompilers;
 
     /**
      * @param ActionDefinitionCompilerInterface[] $actionDefinitionCompilers
@@ -42,10 +42,10 @@ readonly class ActionDefinitionCompiler
         $indexed = [];
 
         foreach ($actionDefinitionCompilers as $actionDefinitionCompiler) {
-            $indexed[$actionDefinitionCompiler->getActionName()] = $actionDefinitionCompiler;
+            $indexed[$actionDefinitionCompiler->getAction()->value] = $actionDefinitionCompiler;
         }
 
-        $this->compilerByAction = $indexed;
+        $this->actionDefinitionCompilers = $indexed;
     }
 
     /**
@@ -107,7 +107,7 @@ readonly class ActionDefinitionCompiler
         string $entityClass,
         string $action,
     ): ActionDefinitionCompilerInterface {
-        return $this->compilerByAction[$action]
+        return $this->actionDefinitionCompilers[$action]
             ??
             throw CrudEngineUnsupportedActionException::forAction($entityClass, $action);
     }
