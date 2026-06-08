@@ -16,9 +16,6 @@ use Webmozart\Assert\Assert;
 
 readonly class ViewRenderer
 {
-    /**
-     * @const non-empty-string
-     */
     private const string BUILT_IN_TEMPLATE = '@JmfCrudEngine/%s.html.twig';
 
     public function __construct(
