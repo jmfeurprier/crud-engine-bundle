@@ -15,7 +15,6 @@ use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
-use Throwable;
 use Webmozart\Assert\Assert;
 
 /**
@@ -39,13 +38,16 @@ readonly class ActionDefinitionHydrator
         $hydrated = [];
 
         foreach ($compiledDefinitions as $entityClass => $actions) {
-            foreach ($actions as $action => $compiledAction) {
-                try {
-                    $action = CrudAction::from($action);
-                } catch (Throwable $e) {
+            foreach ($actions as $actionValue => $compiledAction) {
+                $action = CrudAction::tryFrom($actionValue);
+
+                if (null === $action) {
                     // @todo
                     throw new CrudEngineInvalidConfigurationException(
-                        previous: $e,
+                        sprintf(
+                            'Unknown action %s.',
+                            $actionValue,
+                        ),
                     );
                 }
 
