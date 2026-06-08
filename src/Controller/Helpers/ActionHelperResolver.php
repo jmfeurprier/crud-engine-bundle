@@ -40,10 +40,9 @@ readonly class ActionHelperResolver
         ActionHelperInterface $defaultActionHelper,
     ): ActionHelperInterface {
         $actionHelper = $defaultActionHelper;
+        $helperClass  = $actionDefinition->getHelperClass();
 
-        if (null !== $actionDefinition->getHelperClass()) {
-            $helperClass = $actionDefinition->getHelperClass();
-
+        if (null !== $helperClass) {
             try {
                 $actionHelper = $this->container->get($helperClass);
             } catch (NotFoundExceptionInterface) {

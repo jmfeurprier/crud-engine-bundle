@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Compilation\Resolution;
 
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Webmozart\Assert\Assert;
 

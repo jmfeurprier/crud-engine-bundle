@@ -9,7 +9,6 @@ use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Compilation\Resolution\PatternsResolver;
 use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Symfony\Component\Form\FormTypeInterface;
 use Webmozart\Assert\Assert;

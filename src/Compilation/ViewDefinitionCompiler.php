@@ -9,7 +9,6 @@ use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Compilation\Resolution\OverridableConfigurationValueResolver;
 use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Webmozart\Assert\Assert;
 

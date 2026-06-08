@@ -8,7 +8,6 @@ use Jmf\CrudEngine\Compilation\Resolution\ConfigurationValueResolver;
 use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Webmozart\Assert\Assert;
 
