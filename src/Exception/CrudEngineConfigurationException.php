@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
-abstract class CrudEngineConfigurationException extends CrudEngineExceptionBase
+use Exception;
+
+abstract class CrudEngineConfigurationException extends Exception implements CrudEngineExceptionInterface
 {
 }

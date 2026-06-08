@@ -177,6 +177,32 @@ Configuration values and default patterns support the following placeholders:
 | `{{ actionKey }}`  | `create`            | Action name (camel case)           |
 | `{{ action_key }}` | `create`            | Action name (snake case)           |
 
+(`dashkey`/`dashkeys` variants, e.g. `{{ entitydashkeys }}` → `articles`, provide the kebab-case forms used in URLs.)
+
+### Overriding placeholders (`schema.keys`)
+
+These placeholders are not hard-coded — they are themselves defined as Twig patterns under `schema.keys`, and you can override them or add your own:
+
+```yaml
+jmf_crud_engine:
+    schema:
+        keys:
+            # Drop pluralization: route paths become "article/..." instead of "articles/...".
+            entitydashkeys: "{{ entityClass|u.afterLast('\\\\').kebab }}"
+            # Add a custom key, usable as "{{ EntityTitle }}" in any pattern below.
+            # "App\Entity\BlogPost" -> "Blog Post"
+            EntityTitle: "{{ entityClass|u.afterLast('\\\\').snake.replace({'_': ' '}).title(true) }}"
+```
+
+The contract:
+
+- Overrides are **merged over the defaults** — declare only the keys you change.
+- A key pattern may reference exactly two **source variables**: `entityClass` (the FQCN) and `action` (the action name, e.g. `create`), using Twig and the [String component `u.*` filters](https://symfony.com/doc/current/string.html#methods-to-change-the-case-of-a-string).
+- A key **cannot reference another key** (keys resolve only against the source variables). Doing so fails at container build time with a clear error.
+- An unknown placeholder anywhere (a typo such as `{{ entity_keyz }}`) also fails loudly at build time rather than silently rendering empty.
+
+> The runtime placeholder `{{ _entity.id }}` used in `redirection.parameters` is **not** a key: it is resolved later, per request, against the actual entity — so it is unavailable in key/pattern definitions.
+
 ## Action Helpers
 
 Action helpers allow you to customize behavior at specific lifecycle hooks without replacing the entire controller. Create a class implementing the appropriate interface and register it as a Symfony service.

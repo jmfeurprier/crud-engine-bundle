@@ -102,7 +102,13 @@ final readonly class CompilerFactory
 
     private function getTwigEnvironment(): Environment
     {
-        $twigEnvironment = new Environment(new ArrayLoader());
+        // strict_variables makes an unknown placeholder (a typo, or a key referencing another
+        // key) fail at container build time instead of silently rendering to an empty string
+        // (which would surface much later as a broken route/view path).
+        $twigEnvironment = new Environment(
+            new ArrayLoader(),
+            ['strict_variables' => true],
+        );
         $twigEnvironment->addExtension(new StringExtension());
 
         return $twigEnvironment;

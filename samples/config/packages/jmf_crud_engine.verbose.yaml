@@ -1,23 +1,19 @@
 jmf_crud_engine:
 
     schema:
+        # Keys are the reusable naming vocabulary consumed by the patterns below
+        # (form.type, helper, route, view). A full default set already exists
+        # (EntityKey/entity_key/entitydashkeys/ActionKey/..., singular and plural);
+        # values here are merged over those defaults, so only declare the deltas.
+        #
+        # A key pattern may reference the two source variables "entityClass" and "action"
+        # (Twig + the String component "u.*" filters), but NOT another key.
         keys:
-            'ActionKey':      "{{ action|u.camel.title }}"
-            'ActionKeys':     "{{ action|u.camel.title|plural }}"
-            'actionKey':      "{{ action|u.camel }}"
-            'actionKeys':     "{{ action|u.camel|plural }}"
-            'action_key':     "{{ action|u.snake }}"
-            'action_keys':    "{{ action|u.snake|plural }}"
-            'actiondashkey':  "{{ action|u.kebab }}"
-            'actiondashkeys': "{{ action|u.kebab|plural }}"
-            'EntityKey':      "{{ entityClass|u.afterLast('\\\\').camel.title }}"
-            'EntityKeys':     "{{ entityClass|u.afterLast('\\\\').camel.title|plural }}"
-            'entityKey':      "{{ entityClass|u.afterLast('\\\\').camel }}"
-            'entityKeys':     "{{ entityClass|u.afterLast('\\\\').camel|plural }}"
-            'entity_key':     "{{ entityClass|u.afterLast('\\\\').snake }}"
-            'entity_keys':    "{{ entityClass|u.afterLast('\\\\').snake|plural }}"
-            'entitydashkey':  "{{ entityClass|u.afterLast('\\\\').kebab }}"
-            'entitydashkeys': "{{ entityClass|u.afterLast('\\\\').kebab|plural }}"
+            # Example: drop pluralization so route paths read "article/..." not "articles/...".
+            'entitydashkeys': "{{ entityClass|u.afterLast('\\\\').kebab }}"
+            # Example: add a project-specific key, usable as "{{ EntityTitle }}" in any pattern.
+            # "App\Entity\BlogPost" -> "Blog Post"
+            'EntityTitle':    "{{ entityClass|u.afterLast('\\\\').snake.replace({'_': ' '}).title(true) }}"
         form:
             type:
                 # "App\Form\FooBar\UpdateType"

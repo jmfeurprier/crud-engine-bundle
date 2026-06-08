@@ -216,11 +216,25 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
         $keys = [];
 
         foreach ($patterns as $name => $pattern) {
-            $value = $this->configurationValueResolver->resolve(
-                value:        $pattern,
-                keys:         [],
-                entityAction: $entityAction,
-            );
+            // Keys are resolved against the source variables only (no $keys passed): a key may
+            // reference "entityClass" and "action", but not another key. Referencing a key would
+            // raise an "unknown variable" error under strict_variables; rethrow it as guidance.
+            try {
+                $value = $this->configurationValueResolver->resolve(
+                    value:        $pattern,
+                    keys:         [],
+                    entityAction: $entityAction,
+                );
+            } catch (CrudEngineInvalidConfigurationException $e) {
+                throw new CrudEngineInvalidConfigurationException(
+                    message:  sprintf(
+                        'Failed resolving schema key "%s" (pattern "%s"). A key may only reference the source variables "entityClass" and "action", not other keys.',
+                        $name,
+                        $pattern,
+                    ),
+                    previous: $e,
+                );
+            }
 
             Assert::stringNotEmpty($value);
 

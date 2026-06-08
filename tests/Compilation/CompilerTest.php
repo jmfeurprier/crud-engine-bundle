@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Tests\Compilation;
 
 use Jmf\CrudEngine\Compilation\Compiler;
 use Jmf\CrudEngine\Compilation\CompilerFactory;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
 use Override;
@@ -191,5 +192,75 @@ final class CompilerTest extends TestCase
         $createForm = $compiled[Article::class]['create']['form'];
         self::assertNotNull($createForm);
         self::assertSame('fail', $createForm['fallback']);
+    }
+
+    public function testOverridingAKeyAffectsEveryPatternConsumingIt(): void
+    {
+        $compiled = $this->compiler->compile(
+            [
+                'schema'   => [
+                    'keys' => [
+                        // Drop pluralization for the kebab-case key used in route paths.
+                        'entitydashkeys' => "{{ entityClass|u.afterLast('\\\\').kebab }}",
+                    ],
+                ],
+                'entities' => [
+                    Article::class => [
+                        'actions' => [
+                            'index'  => [],
+                            'create' => [],
+                        ],
+                    ],
+                ],
+            ],
+        );
+
+        $article = $compiled[Article::class];
+
+        self::assertSame('article', $article['index']['route']['path']);
+        self::assertSame('article/create', $article['create']['route']['path']);
+    }
+
+    public function testUnknownPlaceholderFailsLoudly(): void
+    {
+        $this->expectException(CrudEngineInvalidConfigurationException::class);
+
+        $this->compiler->compile(
+            [
+                'schema'   => [
+                    'route' => [
+                        // "entity_keyz" is a typo: no such key/variable.
+                        'name' => '{{ entity_keyz }}.{{ action }}',
+                    ],
+                ],
+                'entities' => [
+                    Article::class => [
+                        'actions' => ['index' => []],
+                    ],
+                ],
+            ],
+        );
+    }
+
+    public function testKeyReferencingAnotherKeyFailsLoudly(): void
+    {
+        $this->expectException(CrudEngineInvalidConfigurationException::class);
+        $this->expectExceptionMessage('Failed resolving schema key "BadKey"');
+
+        $this->compiler->compile(
+            [
+                'schema'   => [
+                    'keys' => [
+                        // Keys may reference source variables only, not other keys.
+                        'BadKey' => '{{ EntityKey }}',
+                    ],
+                ],
+                'entities' => [
+                    Article::class => [
+                        'actions' => ['index' => []],
+                    ],
+                ],
+            ],
+        );
     }
 }
