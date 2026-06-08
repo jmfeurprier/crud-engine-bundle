@@ -21,7 +21,7 @@ use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
 /**
- * Builds a {@see Compiler} (and its per-concern part resolvers) with a
+ * Builds a {@see Compiler} (and its per-concern part compilers) with a
  * self-contained placeholder expander (a minimal Twig environment), for use at container
  * build time where no DI services exist.
  */
@@ -64,7 +64,7 @@ final readonly class CompilerFactory
             $overridableConfigurationValueResolver,
         );
 
-        $partResolvers = [
+        $sharedDependencies = [
             $configurationValueResolver,
             $mapResolver,
             $patternsResolver,
@@ -77,11 +77,11 @@ final readonly class CompilerFactory
         return new Compiler(
             $mapResolver,
             [
-                new CreateActionDefinitionCompiler(...$partResolvers),
-                new DeleteActionDefinitionCompiler(...$partResolvers),
-                new IndexActionDefinitionCompiler(...$partResolvers),
-                new ReadActionDefinitionCompiler(...$partResolvers),
-                new UpdateActionDefinitionCompiler(...$partResolvers),
+                new CreateActionDefinitionCompiler(...$sharedDependencies),
+                new DeleteActionDefinitionCompiler(...$sharedDependencies),
+                new IndexActionDefinitionCompiler(...$sharedDependencies),
+                new ReadActionDefinitionCompiler(...$sharedDependencies),
+                new UpdateActionDefinitionCompiler(...$sharedDependencies),
             ],
         );
     }

@@ -14,11 +14,11 @@ use Jmf\CrudEngine\Model\EntityAction;
 use Webmozart\Assert\Assert;
 
 /**
- * Resolves the bundle configuration array into a normalized, fully-expanded array, once, at
+ * Compiles the bundle configuration array into a normalized, fully-expanded array, once, at
  * container build time. The entities/actions traversal lives here; each action is delegated to its
- * dedicated {@see ActionDefinitionCompilerInterface} (which composes only the section resolvers that
+ * dedicated {@see ActionDefinitionCompilerInterface} (which composes only the section compilers that
  * action needs). Placeholders that depend only on the entity class and the action are expanded by
- * the part resolvers; request-time placeholders (e.g. redirection parameters referencing the
+ * the part compilers; request-time placeholders (e.g. redirection parameters referencing the
  * entity) are kept verbatim.
  *
  * @phpstan-import-type CompiledAction from ActionDefinitionCompilerInterface
@@ -85,8 +85,14 @@ readonly class Compiler
 
             foreach ($actionsConfig as $actionValue => $actionConfig) {
                 Assert::stringNotEmpty($actionValue);
+
                 $action = CrudAction::tryFrom($actionValue);
-                Assert::isInstanceOf($action, CrudAction::class);
+
+                if (null === $action) {
+                    throw new CrudEngineInvalidConfigurationException(
+                        sprintf('Unknown CRUD action "%s" for entity class %s.', $actionValue, $entityClass),
+                    );
+                }
 
                 Assert::isMap($actionConfig);
 

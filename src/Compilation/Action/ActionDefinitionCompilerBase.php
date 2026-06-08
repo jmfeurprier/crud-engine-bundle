@@ -19,7 +19,7 @@ use Override;
 use Webmozart\Assert\Assert;
 
 /**
- * Shared template for the per-action config resolvers. Subclasses fill in the per-action specifics
+ * Shared template for the per-action compilers. Subclasses fill in the per-action specifics
  * via the hooks below; the section work and the key/helper resolution stay here, shared.
  *
  * @phpstan-import-type CompiledForm from FormDefinitionCompiler

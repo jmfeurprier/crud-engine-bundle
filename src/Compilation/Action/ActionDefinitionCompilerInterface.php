@@ -14,7 +14,7 @@ use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 
 /**
- * Resolves the normalized configuration of a single CRUD action into the array shape consumed by
+ * Compiles the normalized configuration of a single CRUD action into the array shape consumed by
  * {@see \Jmf\CrudEngine\Registry\ActionDefinitionHydrator}. One implementation
  * per action declares (by composition) which sections it carries — e.g. only create/update build a
  * form, only create/update/delete build a redirection.

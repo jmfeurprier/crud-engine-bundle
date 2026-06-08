@@ -73,6 +73,6 @@ readonly class RouteLoader implements RouteLoaderInterface
 
         return $this->loaderByAction[$action]
             ??
-            throw CrudEngineUnsupportedActionException::forActionDefinition($actionDefinition);
+            throw new CrudEngineUnsupportedActionException($actionDefinition->getEntityAction());
     }
 }
