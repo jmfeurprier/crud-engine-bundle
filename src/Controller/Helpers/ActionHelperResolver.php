@@ -25,9 +25,9 @@ readonly class ActionHelperResolver
     /**
      * @template T of ActionHelperInterface
      *
-     * @psalm-param class-string<T> $class
+     * @param class-string<T> $class
      *
-     * @psalm-return T
+     * @return T
      *
      * @throws CrudEngineActionHelperNotAnObjectException
      * @throws CrudEngineActionHelperNotFoundException

@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\CrudEngine\Model\CrudAction;
@@ -24,6 +25,7 @@ use Jmf\CrudEngine\View\ViewRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 /**
@@ -76,7 +78,14 @@ readonly class DeleteAction
             $this->defaultActionHelper,
         );
 
-        $entity = $this->entityFinder->find($entityClass, $id);
+        try {
+            $entity = $this->entityFinder->find($entityClass, $id);
+        } catch (CrudEngineEntityNotFoundException $e) {
+            throw new NotFoundHttpException(
+                message:  $e->getMessage(),
+                previous: $e,
+            );
+        }
 
         if ($request->isMethod('POST')) {
             try {

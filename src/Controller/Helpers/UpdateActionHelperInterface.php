@@ -15,8 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 interface UpdateActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @psalm-param E                $entity
-     * @psalm-param FormInterface<E> $form
+     * @param E                $entity
+     * @param FormInterface<E> $form
      */
     public function hookBeforePersist(
         Request $request,
@@ -25,8 +25,8 @@ interface UpdateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @psalm-param E                $entity
-     * @psalm-param FormInterface<E> $form
+     * @param E                $entity
+     * @param FormInterface<E> $form
      *
      * @throws CrudEnginePersistenceException
      */
@@ -38,8 +38,8 @@ interface UpdateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @psalm-param E                $entity
-     * @psalm-param FormInterface<E> $form
+     * @param E                $entity
+     * @param FormInterface<E> $form
      */
     public function hookAfterPersist(
         Request $request,
@@ -48,7 +48,7 @@ interface UpdateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @psalm-param E $entity
+     * @param E $entity
      *
      * @return array<string, mixed>
      */

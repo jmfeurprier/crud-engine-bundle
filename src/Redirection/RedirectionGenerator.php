@@ -66,14 +66,14 @@ readonly class RedirectionGenerator
         ActionDefinition $actionDefinition,
         object $entity,
     ): array {
-        $definitions = $actionDefinition->getRedirectionDefinition()->getParameters();
+        $parameterTemplates = $actionDefinition->getRedirectionDefinition()->getParameters();
         $parameters  = [];
 
-        foreach ($definitions as $key => $definition) {
+        foreach ($parameterTemplates as $key => $parameterTemplate) {
             $parameters[$key] = $this->getRedirectRouteParameter(
                 $actionDefinition,
                 $key,
-                $definition,
+                $parameterTemplate,
                 $entity,
             );
         }
@@ -87,12 +87,12 @@ readonly class RedirectionGenerator
     private function getRedirectRouteParameter(
         ActionDefinition $actionDefinition,
         string $key,
-        string $definition,
+        string $parameterTemplate,
         object $entity,
     ): string {
         try {
             return $this->templateRenderer->renderFromString(
-                $definition,
+                $parameterTemplate,
                 [
                     '_entity' => $entity,
                 ],
@@ -101,7 +101,7 @@ readonly class RedirectionGenerator
             throw new CrudEngineRedirectionParameterRenderingException(
                 actionDefinition: $actionDefinition,
                 key:                 $key,
-                definition:          $definition,
+                definition:          $parameterTemplate,
                 previousException:   $e,
             );
         }

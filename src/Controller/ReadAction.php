@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
@@ -23,6 +24,7 @@ use Jmf\CrudEngine\View\ViewRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @template E of object
@@ -31,7 +33,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 readonly class ReadAction
 {
     /**
-     * @psalm-param ReadActionHelperInterface<E> $defaultActionHelper
+     * @param ReadActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
         private ActionDefinitionRegistryInterface $actionDefinitionRegistry,
@@ -72,7 +74,14 @@ readonly class ReadAction
             $this->defaultActionHelper,
         );
 
-        $entity = $this->entityFinder->find($entityClass, $id);
+        try {
+            $entity = $this->entityFinder->find($entityClass, $id);
+        } catch (CrudEngineEntityNotFoundException $e) {
+            throw new NotFoundHttpException(
+                message:  $e->getMessage(),
+                previous: $e,
+            );
+        }
 
         return $this->viewRenderer->render(
             $actionDefinition,

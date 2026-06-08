@@ -16,12 +16,12 @@ use Throwable;
 interface DeleteActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @psalm-param E $entity
+     * @param E $entity
      */
     public function hookBeforeRemove(object $entity): void;
 
     /**
-     * @psalm-param E $entity
+     * @param E $entity
      *
      * @throws CrudEnginePersistenceException
      */
@@ -31,12 +31,12 @@ interface DeleteActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @psalm-param E $entity
+     * @param E $entity
      */
     public function hookAfterRemove(object $entity): void;
 
     /**
-     * @psalm-param E $entity
+     * @param E $entity
      *
      * @return array<string, mixed>
      */
@@ -46,7 +46,7 @@ interface DeleteActionHelperInterface extends ActionHelperInterface
     ): array;
 
     /**
-     * @psalm-param E $entity
+     * @param E $entity
      *
      * @throws Throwable
      */

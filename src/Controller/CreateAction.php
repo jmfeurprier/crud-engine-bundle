@@ -40,7 +40,7 @@ use Throwable;
 readonly class CreateAction
 {
     /**
-     * @psalm-param CreateActionHelperInterface<E> $defaultActionHelper
+     * @param CreateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
         private ActionDefinitionRegistryInterface $actionDefinitionRegistry,
@@ -54,7 +54,7 @@ readonly class CreateAction
     }
 
     /**
-     * @psalm-param class-string<E> $entityClass
+     * @param class-string<E> $entityClass
      *
      * @throws CrudEngineActionHelperNotAnObjectException
      * @throws CrudEngineActionHelperNotFoundException

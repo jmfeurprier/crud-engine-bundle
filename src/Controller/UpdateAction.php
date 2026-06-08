@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineFormCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineFormRequestHandlingException;
 use Jmf\CrudEngine\Exception\CrudEngineFormViewCreationException;
@@ -31,6 +32,7 @@ use Jmf\CrudEngine\View\ViewRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 /**
@@ -40,7 +42,7 @@ use Throwable;
 readonly class UpdateAction
 {
     /**
-     * @psalm-param UpdateActionHelperInterface<E> $defaultActionHelper
+     * @param UpdateActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
         private ActionDefinitionRegistryInterface $actionDefinitionRegistry,
@@ -89,7 +91,14 @@ readonly class UpdateAction
             $this->defaultActionHelper,
         );
 
-        $entity = $this->entityFinder->find($entityClass, $id);
+        try {
+            $entity = $this->entityFinder->find($entityClass, $id);
+        } catch (CrudEngineEntityNotFoundException $e) {
+            throw new NotFoundHttpException(
+                message:  $e->getMessage(),
+                previous: $e,
+            );
+        }
 
         $form = $this->formCreator->create($actionDefinition, $entity);
 

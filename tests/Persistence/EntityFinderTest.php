@@ -11,7 +11,7 @@ use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityNotFoundException;
 
 final class EntityFinderTest extends TestCase
 {
@@ -27,7 +27,7 @@ final class EntityFinderTest extends TestCase
 
     public function testThrowsNotFoundWhenMissing(): void
     {
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(CrudEngineEntityNotFoundException::class);
 
         $this->createEntityFinder($this->givenObjectManager(null))->find(stdClass::class, '1');
     }

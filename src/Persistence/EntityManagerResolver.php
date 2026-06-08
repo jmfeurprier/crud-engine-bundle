@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Persistence;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
 
@@ -26,7 +27,7 @@ readonly class EntityManagerResolver
     {
         $objectManager = $this->managerRegistry->getManagerForClass($entityClass);
 
-        if (null === $objectManager) {
+        if (!$objectManager instanceof ObjectManager) {
             throw new CrudEngineEntityManagerNotFoundException($entityClass);
         }
 

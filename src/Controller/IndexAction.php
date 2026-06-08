@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 readonly class IndexAction
 {
     /**
-     * @psalm-param IndexActionHelperInterface<E> $defaultActionHelper
+     * @param IndexActionHelperInterface<E> $defaultActionHelper
      */
     public function __construct(
         private ActionDefinitionRegistryInterface $actionDefinitionRegistry,

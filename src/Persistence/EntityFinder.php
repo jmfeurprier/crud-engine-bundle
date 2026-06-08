@@ -6,8 +6,8 @@ namespace Jmf\CrudEngine\Persistence;
 
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityNotFoundException;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 readonly class EntityFinder
@@ -22,12 +22,12 @@ readonly class EntityFinder
      *
      * @param class-string<E> $entityClass
      *
-     * @psalm-return E
+     * @return E
      *
      * @throws CrudEngineEntityManagerNotFoundException
      * @throws CrudEngineEntityManagerTypeMismatchException
      * @throws CrudEnginePersistenceException
-     * @throws NotFoundHttpException
+     * @throws CrudEngineEntityNotFoundException
      */
     public function find(
         string $entityClass,
@@ -41,6 +41,6 @@ readonly class EntityFinder
             throw new CrudEnginePersistenceException($entityClass, $e);
         }
 
-        return $entity ?? throw new NotFoundHttpException();
+        return $entity ?? throw new CrudEngineEntityNotFoundException($entityClass, $id);
     }
 }

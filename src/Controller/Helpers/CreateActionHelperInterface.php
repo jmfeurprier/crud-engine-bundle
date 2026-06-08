@@ -16,9 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 interface CreateActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @psalm-param class-string<E> $entityClass
+     * @param class-string<E> $entityClass
      *
-     * @psalm-return E
+     * @return E
      *
      * @throws CrudEngineInstantiationFailureException
      */
@@ -28,8 +28,8 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): object;
 
     /**
-     * @psalm-param E                $entity
-     * @psalm-param FormInterface<E> $form
+     * @param E                $entity
+     * @param FormInterface<E> $form
      */
     public function hookBeforePersist(
         Request $request,
@@ -38,8 +38,8 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @psalm-param E                $entity
-     * @psalm-param FormInterface<E> $form
+     * @param E                $entity
+     * @param FormInterface<E> $form
      *
      * @throws CrudEnginePersistenceException
      */
@@ -51,8 +51,8 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @psalm-param E                $entity
-     * @psalm-param FormInterface<E> $form
+     * @param E                $entity
+     * @param FormInterface<E> $form
      */
     public function hookAfterPersist(
         Request $request,
@@ -61,9 +61,9 @@ interface CreateActionHelperInterface extends ActionHelperInterface
     ): void;
 
     /**
-     * @psalm-param E $entity
+     * @param E $entity
      *
-     * @psalm-return array<string, mixed>
+     * @return array<string, mixed>
      */
     public function getViewVariables(
         Request $request,

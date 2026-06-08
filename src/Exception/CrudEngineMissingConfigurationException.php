@@ -33,7 +33,7 @@ class CrudEngineMissingConfigurationException extends CrudEngineConfigurationExc
 
         $tokens[] = 'for entity class %s';
 
-        if (null !== $this->action) {
+        if ($this->action instanceof CrudAction) {
             $tokens[] = 'and action "%s"';
         }
 
@@ -53,7 +53,7 @@ class CrudEngineMissingConfigurationException extends CrudEngineConfigurationExc
 
         $vars[] = $this->entityClass;
 
-        if (null !== $this->action) {
+        if ($this->action instanceof CrudAction) {
             $vars[] = $this->action->value;
         }
 

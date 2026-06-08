@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface ReadActionHelperInterface extends ActionHelperInterface
 {
     /**
-     * @psalm-param E $entity
+     * @param E $entity
      *
      * @return array<string, mixed>
      */
