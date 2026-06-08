@@ -12,6 +12,7 @@ use Jmf\CrudEngine\Exception\CrudEngineActionHelperRetrievalException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionParameterRenderingException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\CrudEngine\Model\CrudAction;
@@ -54,6 +55,7 @@ readonly class DeleteAction
      * @throws CrudEngineActionHelperTypeMismatchException
      * @throws CrudEngineConfigurationException
      * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineEntityManagerTypeMismatchException
      * @throws CrudEngineRedirectionParameterRenderingException
      * @throws CrudEngineViewRenderingException
      * @throws Throwable

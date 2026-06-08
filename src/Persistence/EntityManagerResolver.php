@@ -7,6 +7,7 @@ namespace Jmf\CrudEngine\Persistence;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
 
 readonly class EntityManagerResolver
 {
@@ -19,6 +20,7 @@ readonly class EntityManagerResolver
      * @param class-string $entityClass
      *
      * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineEntityManagerTypeMismatchException
      */
     public function resolve(string $entityClass): EntityManagerInterface
     {
@@ -32,7 +34,6 @@ readonly class EntityManagerResolver
             return $objectManager;
         }
 
-        // @xxx
-        throw new CrudEngineEntityManagerNotFoundException($entityClass);
+        throw new CrudEngineEntityManagerTypeMismatchException($entityClass, $objectManager::class);
     }
 }

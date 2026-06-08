@@ -12,6 +12,7 @@ use Jmf\CrudEngine\Exception\CrudEngineActionHelperRetrievalException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
 use Jmf\CrudEngine\Model\CrudAction;
@@ -49,6 +50,7 @@ readonly class IndexAction
      * @throws CrudEngineActionHelperTypeMismatchException
      * @throws CrudEngineConfigurationException
      * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineEntityManagerTypeMismatchException
      * @throws CrudEngineMissingViewException
      * @throws CrudEngineViewRenderingException
      */
@@ -85,6 +87,7 @@ readonly class IndexAction
      * @return E[]
      *
      * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineEntityManagerTypeMismatchException
      */
     private function getEntities(
         Request $request,

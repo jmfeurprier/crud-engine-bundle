@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Persistence;
 
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -24,6 +25,7 @@ readonly class EntityFinder
      * @psalm-return E
      *
      * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineEntityManagerTypeMismatchException
      * @throws CrudEnginePersistenceException
      * @throws NotFoundHttpException
      */

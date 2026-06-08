@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Form;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineFormFieldException;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
@@ -38,6 +39,7 @@ class CrudEngineEntityType extends AbstractType
      * @param array<string, mixed> $options
      *
      * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineEntityManagerTypeMismatchException
      * @throws CrudEngineFormFieldException
      */
     #[Override]
@@ -129,6 +131,7 @@ class CrudEngineEntityType extends AbstractType
      * @return ClassMetadata<object>
      *
      * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineEntityManagerTypeMismatchException
      */
     private function getClassMetadata(string $entityClass): ClassMetadata
     {

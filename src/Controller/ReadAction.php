@@ -12,6 +12,7 @@ use Jmf\CrudEngine\Exception\CrudEngineActionHelperRetrievalException;
 use Jmf\CrudEngine\Exception\CrudEngineActionHelperTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineEntityManagerNotFoundException;
+use Jmf\CrudEngine\Exception\CrudEngineEntityManagerTypeMismatchException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;
 use Jmf\CrudEngine\Exception\CrudEngineViewRenderingException;
@@ -50,6 +51,7 @@ readonly class ReadAction
      * @throws CrudEngineActionHelperTypeMismatchException
      * @throws CrudEngineConfigurationException
      * @throws CrudEngineEntityManagerNotFoundException
+     * @throws CrudEngineEntityManagerTypeMismatchException
      * @throws CrudEngineMissingViewException
      * @throws CrudEnginePersistenceException
      * @throws CrudEngineViewRenderingException
