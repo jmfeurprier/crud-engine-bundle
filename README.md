@@ -320,7 +320,7 @@ The built-in templates are intentionally minimal — they exist to get pages ren
 
 ### Missing form types
 
-For `create`/`update`, when no form type is configured (`formType`) or discovered (via the `schema.formType` patterns), the behavior is controlled by `schema.form.fallback`:
+For `create`/`update`, when no form type is configured (`form.type`) or discovered (via the `schema.form.type` patterns), the behavior is controlled by `schema.form.fallback`:
 
 | Value               | Behavior                                                                                          |
 |---------------------|---------------------------------------------------------------------------------------------------|

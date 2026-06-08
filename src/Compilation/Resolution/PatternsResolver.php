@@ -9,8 +9,8 @@ use Webmozart\Assert\Assert;
 readonly class PatternsResolver
 {
     /**
-     * @param array<string, mixed> $config
-     * @param non-empty-string $key
+     * @param array<string, mixed>   $config
+     * @param non-empty-string       $key
      * @param list<non-empty-string> $default
      *
      * @return list<non-empty-string>

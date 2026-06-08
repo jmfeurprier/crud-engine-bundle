@@ -23,8 +23,7 @@ class JmfCrudEngineBundle extends AbstractBundle
     protected string $extensionAlias = 'jmf_crud_engine';
 
     public function __construct(
-        private readonly CompilerFactory $actionDefinitionCompilerFactory = new CompilerFactory(
-        ),
+        private readonly CompilerFactory $actionDefinitionCompilerFactory = new CompilerFactory(),
     ) {
     }
 
@@ -67,7 +66,12 @@ class JmfCrudEngineBundle extends AbstractBundle
 
         $configurator->services()
             ->set(ActionDefinitionRegistry::class)
-            ->factory([service(ActionDefinitionRegistryFactory::class), 'create'])
+            ->factory(
+                [
+                    service(ActionDefinitionRegistryFactory::class),
+                    'create',
+                ],
+            )
         ;
 
         $configurator->services()

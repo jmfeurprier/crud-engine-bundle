@@ -13,7 +13,6 @@ use Jmf\CrudEngine\Compilation\RouteDefinitionCompiler;
 use Jmf\CrudEngine\Compilation\ViewDefinitionCompiler;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
-use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Override;
 use Webmozart\Assert\Assert;

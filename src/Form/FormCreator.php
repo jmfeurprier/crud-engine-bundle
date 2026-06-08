@@ -29,7 +29,7 @@ readonly class FormCreator
         object $entity,
     ): FormInterface {
         $formDefinition = $actionDefinition->getFormDefinition();
-        $formTypeClass     = $formDefinition->getFormTypeClass();
+        $formTypeClass  = $formDefinition->getFormTypeClass();
 
         if (null !== $formTypeClass) {
             return $this->createForm($actionDefinition, $formTypeClass, $entity);
