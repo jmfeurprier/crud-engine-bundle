@@ -76,30 +76,6 @@ final class RouteLoaderTest extends TestCase
         self::assertCount(0, $routeCollection->all());
     }
 
-    public function testInvokeThrowsOnUnsupportedAction(): void
-    {
-        $actionDefinition = $this->givenActionDefinition(
-            entityClass: stdClass::class,
-            action:      'unsupported',
-            routeName:   'foo.unsupported',
-            routePath:   'foo/bar',
-        );
-
-        $this->actionDefinitionRegistry
-            ->method('all')
-            ->willReturn([$actionDefinition])
-        ;
-
-        $routeLoader = new RouteLoader(
-            $this->actionDefinitionRegistry,
-            [new IndexActionRouteLoader()],
-        );
-
-        $this->expectException(CrudEngineUnsupportedActionException::class);
-
-        $routeLoader->__invoke();
-    }
-
     /**
      * @param class-string     $entityClass
      * @param non-empty-string $action

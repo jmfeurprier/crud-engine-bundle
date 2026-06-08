@@ -38,7 +38,6 @@ interface ActionDefinitionCompilerInterface
     /**
      * @param array<string, mixed> $schema
      * @param class-string         $entityClass
-     * @param non-empty-string     $action
      * @param array<string, mixed> $actionConfig
      *
      * @return CompiledAction
@@ -49,7 +48,7 @@ interface ActionDefinitionCompilerInterface
     public function compile(
         array $schema,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         array $actionConfig,
     ): array;
 }

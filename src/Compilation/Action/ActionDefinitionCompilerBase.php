@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Compilation\RouteDefinitionCompiler;
 use Jmf\CrudEngine\Compilation\ViewDefinitionCompiler;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Override;
 use Webmozart\Assert\Assert;
 
@@ -71,7 +72,7 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
     final public function compile(
         array $schema,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         array $actionConfig,
     ): array {
         $keys = $this->resolveKeys($schema, $entityClass, $action);
@@ -147,7 +148,6 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
      * @param array<string, mixed>                      $actionConfig
      *
      * @return CompiledForm|null
@@ -158,7 +158,7 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
         array $schema,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         array $actionConfig,
     ): ?array {
         if (!$this->hasForm()) {
@@ -178,7 +178,6 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
      * @param array<string, mixed>                      $actionConfig
      *
      * @return CompiledRedirection|null
@@ -190,7 +189,7 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
         array $schema,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         array $actionConfig,
     ): ?array {
         $default = $this->getDefaultRedirection();
@@ -212,7 +211,6 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
     /**
      * @param array<string, mixed> $schema
      * @param class-string         $entityClass
-     * @param non-empty-string     $action
      *
      * @return array<non-empty-string, non-empty-string>
      *
@@ -221,7 +219,7 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
     private function resolveKeys(
         array $schema,
         string $entityClass,
-        string $action,
+        CrudAction $action,
     ): array {
         /** @var array<non-empty-string, non-empty-string> $patterns */
         $patterns = array_merge(
@@ -251,7 +249,6 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
      * @param array<string, mixed>                      $actionConfig
      *
      * @return class-string|null
@@ -262,7 +259,7 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
         array $schema,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         array $actionConfig,
     ): ?string {
         if (array_key_exists('helper', $actionConfig)) {

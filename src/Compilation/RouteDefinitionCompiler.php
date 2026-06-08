@@ -8,6 +8,7 @@ use Jmf\CrudEngine\Compilation\Resolution\ConfigurationValueResolver;
 use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Compilation\Resolution\OverridableConfigurationValueResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Webmozart\Assert\Assert;
 
 /**
@@ -31,7 +32,6 @@ readonly class RouteDefinitionCompiler
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
      * @param array<string, mixed>                      $actionConfig
      * @param non-empty-string                          $defaultPath
      *
@@ -43,7 +43,7 @@ readonly class RouteDefinitionCompiler
         array $schema,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         array $actionConfig,
         string $defaultPath,
     ): array {
@@ -61,7 +61,14 @@ readonly class RouteDefinitionCompiler
                 entityClass: $entityClass,
                 action:      $action,
             ),
-            'path'         => $this->resolvePath($routeConfig, $schemaRoute, $keys, $entityClass, $action, $defaultPath),
+            'path'         => $this->resolvePath(
+                $routeConfig,
+                $schemaRoute,
+                $keys,
+                $entityClass,
+                $action,
+                $defaultPath,
+            ),
             'requirements' => $this->resolveRequirements($routeConfig),
         ];
     }
@@ -71,7 +78,6 @@ readonly class RouteDefinitionCompiler
      * @param array<string, mixed>                      $schemaRoute
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
      * @param non-empty-string                          $defaultPath
      *
      * @return non-empty-string
@@ -83,7 +89,7 @@ readonly class RouteDefinitionCompiler
         array $schemaRoute,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         string $defaultPath,
     ): string {
         if (array_key_exists('path', $routeConfig)) {
@@ -94,8 +100,8 @@ readonly class RouteDefinitionCompiler
 
         $schemaPaths = $this->mapResolver->resolve($schemaRoute, 'paths');
 
-        $pattern = array_key_exists($action, $schemaPaths)
-            ? $schemaPaths[$action]
+        $pattern = array_key_exists($action->value, $schemaPaths)
+            ? $schemaPaths[$action->value]
             : $defaultPath;
 
         Assert::stringNotEmpty($pattern);

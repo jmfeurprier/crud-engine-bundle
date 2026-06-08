@@ -9,6 +9,7 @@ use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Compilation\Resolution\OverridableConfigurationValueResolver;
 use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Webmozart\Assert\Assert;
 
 /**
@@ -32,7 +33,6 @@ readonly class ViewDefinitionCompiler
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
      * @param array<string, mixed>                      $actionConfig
      *
      * @return CompiledView
@@ -43,7 +43,7 @@ readonly class ViewDefinitionCompiler
         array $schema,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         array $actionConfig,
     ): array {
         $viewConfig = $this->mapResolver->resolve($actionConfig, 'view');
@@ -70,7 +70,6 @@ readonly class ViewDefinitionCompiler
      * @param array<string, mixed>                      $viewConfig
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
      *
      * @return array<non-empty-string, list<non-empty-string>>
      *
@@ -81,7 +80,7 @@ readonly class ViewDefinitionCompiler
         array $viewConfig,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
     ): array {
         $variables = [];
 

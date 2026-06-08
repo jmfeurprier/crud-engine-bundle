@@ -9,6 +9,8 @@ use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
+use Jmf\CrudEngine\Model\CrudAction;
+use Throwable;
 use Webmozart\Assert\Assert;
 
 /**
@@ -83,9 +85,22 @@ readonly class Compiler
 
             foreach ($actionsConfig as $action => $actionConfig) {
                 Assert::stringNotEmpty($action);
+
+                try {
+                    $action = CrudAction::from($action);
+                } catch (Throwable $e) {
+                    // @todo
+                    throw new CrudEngineInvalidConfigurationException(
+                        previous: $e,
+                    );
+                }
+
                 Assert::isMap($actionConfig);
 
-                $compiled[$entityClass][$action] = $this->getCompiler($entityClass, $action)->compile(
+                $compiled[$entityClass][$action->value] = $this->getCompiler(
+                    $entityClass,
+                    $action,
+                )->compile(
                     $schema,
                     $entityClass,
                     $action,
@@ -98,16 +113,15 @@ readonly class Compiler
     }
 
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
+     * @param class-string $entityClass
      *
      * @throws CrudEngineUnsupportedActionException
      */
     private function getCompiler(
         string $entityClass,
-        string $action,
+        CrudAction $action,
     ): ActionDefinitionCompilerInterface {
-        return $this->actionDefinitionCompilers[$action]
+        return $this->actionDefinitionCompilers[$action->value]
             ??
             throw CrudEngineUnsupportedActionException::forAction($entityClass, $action);
     }

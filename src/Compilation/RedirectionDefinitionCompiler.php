@@ -8,6 +8,7 @@ use Jmf\CrudEngine\Compilation\Resolution\ConfigurationValueResolver;
 use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Webmozart\Assert\Assert;
 
 /**
@@ -25,7 +26,6 @@ readonly class RedirectionDefinitionCompiler
      * @param array<string, mixed>                                                        $schema
      * @param array<non-empty-string, non-empty-string>                                   $keys
      * @param class-string                                                                $entityClass
-     * @param non-empty-string                                                            $action
      * @param array<string, mixed>                                                        $actionConfig
      * @param array{route: non-empty-string, parameters: array<string, non-empty-string>} $defaultRedirection
      *
@@ -38,7 +38,7 @@ readonly class RedirectionDefinitionCompiler
         array $schema,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         array $actionConfig,
         array $defaultRedirection,
     ): array {
@@ -65,8 +65,8 @@ readonly class RedirectionDefinitionCompiler
 
         $schemaRedirections = $this->mapResolver->resolve($schema, 'redirection');
 
-        $redirection = array_key_exists($action, $schemaRedirections)
-            ? $schemaRedirections[$action]
+        $redirection = array_key_exists($action->value, $schemaRedirections)
+            ? $schemaRedirections[$action->value]
             : $defaultRedirection;
 
         Assert::isMap($redirection);

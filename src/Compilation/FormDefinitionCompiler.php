@@ -9,6 +9,7 @@ use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Compilation\Resolution\PatternsResolver;
 use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Symfony\Component\Form\FormTypeInterface;
 use Webmozart\Assert\Assert;
 
@@ -37,7 +38,6 @@ readonly class FormDefinitionCompiler
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
      * @param array<string, mixed>                      $actionConfig
      *
      * @return CompiledForm
@@ -48,7 +48,7 @@ readonly class FormDefinitionCompiler
         array $schema,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         array $actionConfig,
     ): array {
         return [
@@ -62,7 +62,6 @@ readonly class FormDefinitionCompiler
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
      * @param array<string, mixed>                      $actionConfig
      *
      * @return class-string<FormTypeInterface>|null
@@ -73,7 +72,7 @@ readonly class FormDefinitionCompiler
         array $schema,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
         array $actionConfig,
     ): ?string {
         if (array_key_exists('form', $actionConfig)) {
@@ -110,7 +109,6 @@ readonly class FormDefinitionCompiler
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
      * @param class-string                              $entityClass
-     * @param non-empty-string                          $action
      *
      * @return non-empty-string
      *
@@ -120,7 +118,7 @@ readonly class FormDefinitionCompiler
         array $schema,
         array $keys,
         string $entityClass,
-        string $action,
+        CrudAction $action,
     ): string {
         $patterns = $this->resolveTypePatterns($schema);
 

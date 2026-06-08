@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Tests\Registry;
 
 use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Registry\ActionDefinitionHydrator;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
@@ -18,7 +19,7 @@ final class ActionDefinitionHydratorTest extends TestCase
         $actionDefinition = $this->hydrate()[Article::class]['create'];
 
         self::assertSame(Article::class, $actionDefinition->getEntityAction()->getEntityClass());
-        self::assertSame('create', $actionDefinition->getEntityAction()->getAction());
+        self::assertSame(CrudAction::Create, $actionDefinition->getEntityAction()->getAction());
         self::assertNull($actionDefinition->getHelperClass());
 
         $formDefinition = $actionDefinition->getFormDefinition();
