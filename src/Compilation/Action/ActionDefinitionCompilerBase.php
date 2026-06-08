@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Compilation\Action;
 
-use Jmf\CrudEngine\Compilation\ConfigurationValueResolver;
 use Jmf\CrudEngine\Compilation\FormDefinitionCompiler;
-use Jmf\CrudEngine\Compilation\MapResolver;
-use Jmf\CrudEngine\Compilation\PatternsResolver;
 use Jmf\CrudEngine\Compilation\RedirectionDefinitionCompiler;
+use Jmf\CrudEngine\Compilation\Resolution\ConfigurationValueResolver;
+use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
+use Jmf\CrudEngine\Compilation\Resolution\PatternsResolver;
 use Jmf\CrudEngine\Compilation\RouteDefinitionCompiler;
 use Jmf\CrudEngine\Compilation\ViewDefinitionCompiler;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;

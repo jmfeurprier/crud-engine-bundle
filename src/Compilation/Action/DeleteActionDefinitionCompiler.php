@@ -21,11 +21,8 @@ readonly class DeleteActionDefinitionCompiler extends ActionDefinitionCompilerBa
         return "{{ entitydashkeys }}/{id}/delete";
     }
 
-    /**
-     * @return array{route: non-empty-string, parameters: array<string, non-empty-string>}
-     */
     #[Override]
-    protected function getDefaultRedirection(): ?array
+    protected function getDefaultRedirection(): array
     {
         return [
             'route'      => "{{ entity_key }}.index",

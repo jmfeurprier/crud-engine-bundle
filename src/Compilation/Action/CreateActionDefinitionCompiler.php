@@ -9,8 +9,6 @@ use Override;
 
 readonly class CreateActionDefinitionCompiler extends ActionDefinitionCompilerBase
 {
-    use RedirectsToReadDefaultTrait;
-
     #[Override]
     public function getActionName(): string
     {
@@ -27,5 +25,16 @@ readonly class CreateActionDefinitionCompiler extends ActionDefinitionCompilerBa
     protected function hasForm(): bool
     {
         return true;
+    }
+
+    #[Override]
+    protected function getDefaultRedirection(): array
+    {
+        return [
+            'route'      => "{{ entity_key }}.read",
+            'parameters' => [
+                'id' => '{{ _entity.id }}',
+            ],
+        ];
     }
 }
