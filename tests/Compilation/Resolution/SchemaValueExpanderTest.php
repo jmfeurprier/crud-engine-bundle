@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Tests\Compilation;
+namespace Jmf\CrudEngine\Tests\Compilation\Resolution;
 
 use Jmf\CrudEngine\Compilation\Resolution\SchemaValueExpander;
 use Jmf\TemplateRendering\TemplateRenderer;

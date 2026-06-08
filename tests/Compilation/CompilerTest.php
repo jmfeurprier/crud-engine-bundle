@@ -11,19 +11,19 @@ use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
 use Override;
 use PHPUnit\Framework\TestCase;
 
-final class ActionDefinitionCompilerTest extends TestCase
+final class CompilerTest extends TestCase
 {
-    private Compiler $resolver;
+    private Compiler $compiler;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->resolver = (new CompilerFactory())->create();
+        $this->compiler = (new CompilerFactory())->create();
     }
 
     public function testResolvesDefaults(): void
     {
-        $resolved = $this->resolver->compile(
+        $compiled = $this->compiler->compile(
             [
                 'entities' => [
                     Article::class => [
@@ -39,7 +39,7 @@ final class ActionDefinitionCompilerTest extends TestCase
             ],
         );
 
-        $article = $resolved[Article::class];
+        $article = $compiled[Article::class];
 
         self::assertSame('article.index', $article['index']['route']['name']);
         self::assertSame('articles', $article['index']['route']['path']);
@@ -86,7 +86,7 @@ final class ActionDefinitionCompilerTest extends TestCase
 
     public function testActionOverridesWin(): void
     {
-        $resolved = $this->resolver->compile(
+        $compiled = $this->compiler->compile(
             [
                 'entities' => [
                     Article::class => [
@@ -115,7 +115,7 @@ final class ActionDefinitionCompilerTest extends TestCase
             ],
         );
 
-        $create = $resolved[Article::class]['create'];
+        $create = $compiled[Article::class]['create'];
 
         $createForm = $create['form'];
         self::assertNotNull($createForm);
@@ -136,7 +136,7 @@ final class ActionDefinitionCompilerTest extends TestCase
 
     public function testSchemaPathOverrideMergesWithDefaults(): void
     {
-        $resolved = $this->resolver->compile(
+        $compiled = $this->compiler->compile(
             [
                 'schema'   => [
                     'route' => [
@@ -158,7 +158,7 @@ final class ActionDefinitionCompilerTest extends TestCase
             ],
         );
 
-        $article = $resolved[Article::class];
+        $article = $compiled[Article::class];
 
         // Overridden path for index, default kept for read (merge, not replace).
         self::assertSame('custom-index', $article['index']['route']['path']);
@@ -171,7 +171,7 @@ final class ActionDefinitionCompilerTest extends TestCase
 
     public function testResolvesFormFallbackOverride(): void
     {
-        $resolved = $this->resolver->compile(
+        $compiled = $this->compiler->compile(
             [
                 'schema'   => [
                     'form' => [
@@ -188,7 +188,7 @@ final class ActionDefinitionCompilerTest extends TestCase
             ],
         );
 
-        $createForm = $resolved[Article::class]['create']['form'];
+        $createForm = $compiled[Article::class]['create']['form'];
         self::assertNotNull($createForm);
         self::assertSame('fail', $createForm['fallback']);
     }
