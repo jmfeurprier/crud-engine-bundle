@@ -10,6 +10,7 @@ use Jmf\CrudEngine\Compilation\Resolution\PatternsResolver;
 use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Model\CrudAction;
+use Jmf\CrudEngine\Model\EntityAction;
 use Symfony\Component\Form\FormTypeInterface;
 use Webmozart\Assert\Assert;
 
@@ -37,7 +38,6 @@ readonly class FormDefinitionCompiler
     /**
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
-     * @param class-string                              $entityClass
      * @param array<string, mixed>                      $actionConfig
      *
      * @return CompiledForm
@@ -47,13 +47,21 @@ readonly class FormDefinitionCompiler
     public function compile(
         array $schema,
         array $keys,
-        string $entityClass,
-        CrudAction $action,
+        EntityAction $entityAction,
         array $actionConfig,
     ): array {
         return [
-            'typeClass'      => $this->resolveTypeClass($schema, $keys, $entityClass, $action, $actionConfig),
-            'suggestedClass' => $this->resolveSuggestedClass($schema, $keys, $entityClass, $action),
+            'typeClass'      => $this->resolveTypeClass(
+                $schema,
+                $keys,
+                $entityAction,
+                $actionConfig,
+            ),
+            'suggestedClass' => $this->resolveSuggestedClass(
+                $schema,
+                $keys,
+                $entityAction,
+            ),
             'fallback'       => $this->resolveFallback($schema),
         ];
     }
@@ -61,7 +69,6 @@ readonly class FormDefinitionCompiler
     /**
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
-     * @param class-string                              $entityClass
      * @param array<string, mixed>                      $actionConfig
      *
      * @return class-string<FormTypeInterface>|null
@@ -71,8 +78,7 @@ readonly class FormDefinitionCompiler
     private function resolveTypeClass(
         array $schema,
         array $keys,
-        string $entityClass,
-        CrudAction $action,
+        EntityAction $entityAction,
         array $actionConfig,
     ): ?string {
         if (array_key_exists('form', $actionConfig)) {
@@ -91,7 +97,11 @@ readonly class FormDefinitionCompiler
         }
 
         foreach ($this->resolveTypePatterns($schema) as $pattern) {
-            $class = $this->configurationValueResolver->resolve($pattern, $keys, $entityClass, $action);
+            $class = $this->configurationValueResolver->resolve(
+                $pattern,
+                $keys,
+                $entityAction,
+            );
 
             if (class_exists($class) && is_subclass_of($class, FormTypeInterface::class)) {
                 return $class;
@@ -108,7 +118,6 @@ readonly class FormDefinitionCompiler
      *
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
-     * @param class-string                              $entityClass
      *
      * @return non-empty-string
      *
@@ -117,8 +126,7 @@ readonly class FormDefinitionCompiler
     private function resolveSuggestedClass(
         array $schema,
         array $keys,
-        string $entityClass,
-        CrudAction $action,
+        EntityAction $entityAction,
     ): string {
         $patterns = $this->resolveTypePatterns($schema);
 
@@ -129,8 +137,7 @@ readonly class FormDefinitionCompiler
         $suggested = $this->configurationValueResolver->resolve(
             $pattern,
             $keys,
-            $entityClass,
-            $action,
+            $entityAction,
         );
 
         Assert::stringNotEmpty($suggested);

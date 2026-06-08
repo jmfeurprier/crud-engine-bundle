@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Compilation\Resolution;
 
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
-use Jmf\CrudEngine\Model\CrudAction;
+use Jmf\CrudEngine\Model\EntityAction;
 
 readonly class ConfigurationValueResolver
 {
@@ -17,22 +17,20 @@ readonly class ConfigurationValueResolver
     /**
      * @param non-empty-string                          $value
      * @param array<non-empty-string, non-empty-string> $keys
-     * @param class-string                              $entityClass
      *
      * @throws CrudEngineInvalidConfigurationException
      */
     public function resolve(
         string $value,
         array $keys,
-        string $entityClass,
-        CrudAction $action,
+        EntityAction $entityAction,
     ): string {
         return $this->schemaValueExpander->expand(
             $value,
             $keys,
             [
-                'entityClass' => $entityClass,
-                'action'      => $action->value,
+                'entityClass' => $entityAction->getEntityClass(),
+                'action'      => $entityAction->getAction()->value,
             ],
         );
     }

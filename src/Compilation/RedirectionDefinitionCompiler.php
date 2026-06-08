@@ -9,6 +9,7 @@ use Jmf\CrudEngine\Compilation\Resolution\MapResolver;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Model\CrudAction;
+use Jmf\CrudEngine\Model\EntityAction;
 use Webmozart\Assert\Assert;
 
 /**
@@ -25,7 +26,6 @@ readonly class RedirectionDefinitionCompiler
     /**
      * @param array<string, mixed>                                                        $schema
      * @param array<non-empty-string, non-empty-string>                                   $keys
-     * @param class-string                                                                $entityClass
      * @param array<string, mixed>                                                        $actionConfig
      * @param array{route: non-empty-string, parameters: array<string, non-empty-string>} $defaultRedirection
      *
@@ -37,8 +37,7 @@ readonly class RedirectionDefinitionCompiler
     public function compile(
         array $schema,
         array $keys,
-        string $entityClass,
-        CrudAction $action,
+        EntityAction $entityAction,
         array $actionConfig,
         array $defaultRedirection,
     ): array {
@@ -48,8 +47,8 @@ readonly class RedirectionDefinitionCompiler
 
             if (!array_key_exists('route', $redirectionConfig)) {
                 throw new CrudEngineMissingConfigurationException(
-                    $entityClass,
-                    $action,
+                    $entityAction->getEntityClass(),
+                    $entityAction->getAction(),
                     'redirection.route',
                 );
             }
@@ -65,8 +64,8 @@ readonly class RedirectionDefinitionCompiler
 
         $schemaRedirections = $this->mapResolver->resolve($schema, 'redirection');
 
-        $redirection = array_key_exists($action->value, $schemaRedirections)
-            ? $schemaRedirections[$action->value]
+        $redirection = array_key_exists($entityAction->getAction()->value, $schemaRedirections)
+            ? $schemaRedirections[$entityAction->getAction()->value]
             : $defaultRedirection;
 
         Assert::isMap($redirection);
@@ -76,8 +75,7 @@ readonly class RedirectionDefinitionCompiler
         $route = $this->configurationValueResolver->resolve(
             $redirection['route'],
             $keys,
-            $entityClass,
-            $action,
+            $entityAction,
         );
         Assert::stringNotEmpty($route);
 

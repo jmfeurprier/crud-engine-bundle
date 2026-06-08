@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Exception;
 
 use Jmf\CrudEngine\Definition\ActionDefinition;
-use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 
 // @todo Refactor / Split.
@@ -22,20 +21,7 @@ class CrudEngineUnsupportedActionException extends CrudEngineRuntimeException
     }
 
     // @xxx
-
-    /**
-     * @param class-string $entityClass
-     */
-    public static function forAction(
-        string $entityClass,
-        CrudAction $action,
-    ): self {
-        return new self(
-            new EntityAction($entityClass, $action),
-        );
-    }
-
-    private function __construct(
+    public function __construct(
         private readonly EntityAction $entityAction,
         private readonly ?ActionDefinition $actionDefinition = null,
     ) {

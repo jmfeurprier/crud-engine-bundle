@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Compilation\Resolution;
 
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Model\CrudAction;
+use Jmf\CrudEngine\Model\EntityAction;
 use Webmozart\Assert\Assert;
 
 readonly class OverridableConfigurationValueResolver
@@ -25,7 +26,6 @@ readonly class OverridableConfigurationValueResolver
      * @param non-empty-string                          $schemaKey
      * @param non-empty-string                          $default
      * @param array<non-empty-string, non-empty-string> $keys
-     * @param class-string                              $entityClass
      *
      * @return non-empty-string
      *
@@ -38,8 +38,7 @@ readonly class OverridableConfigurationValueResolver
         string $schemaKey,
         string $default,
         array $keys,
-        string $entityClass,
-        CrudAction $action,
+        EntityAction $entityAction,
     ): string {
         if (array_key_exists($configKey, $config)) {
             Assert::stringNotEmpty($config[$configKey]);
@@ -59,8 +58,8 @@ readonly class OverridableConfigurationValueResolver
             $pattern,
             $keys,
             [
-                'entityClass' => $entityClass,
-                'action'      => $action->value,
+                'entityClass' => $entityAction->getEntityClass(),
+                'action'      => $entityAction->getAction()->value,
             ],
         );
 

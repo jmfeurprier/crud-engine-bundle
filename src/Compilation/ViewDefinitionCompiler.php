@@ -10,6 +10,7 @@ use Jmf\CrudEngine\Compilation\Resolution\OverridableConfigurationValueResolver;
 use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Model\CrudAction;
+use Jmf\CrudEngine\Model\EntityAction;
 use Webmozart\Assert\Assert;
 
 /**
@@ -32,7 +33,6 @@ readonly class ViewDefinitionCompiler
     /**
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
-     * @param class-string                              $entityClass
      * @param array<string, mixed>                      $actionConfig
      *
      * @return CompiledView
@@ -42,8 +42,7 @@ readonly class ViewDefinitionCompiler
     public function compile(
         array $schema,
         array $keys,
-        string $entityClass,
-        CrudAction $action,
+        EntityAction $entityAction,
         array $actionConfig,
     ): array {
         $viewConfig = $this->mapResolver->resolve($actionConfig, 'view');
@@ -57,10 +56,14 @@ readonly class ViewDefinitionCompiler
                 'path',
                 self::DEFAULT_PATH,
                 $keys,
-                $entityClass,
-                $action,
+                $entityAction,
             ),
-            'variables' => $this->resolveVariables($schemaView, $viewConfig, $keys, $entityClass, $action),
+            'variables' => $this->resolveVariables(
+                $schemaView,
+                $viewConfig,
+                $keys,
+                $entityAction,
+            ),
             'fallback'  => $this->resolveFallback($schemaView),
         ];
     }
@@ -69,7 +72,6 @@ readonly class ViewDefinitionCompiler
      * @param array<string, mixed>                      $schemaView
      * @param array<string, mixed>                      $viewConfig
      * @param array<non-empty-string, non-empty-string> $keys
-     * @param class-string                              $entityClass
      *
      * @return array<non-empty-string, list<non-empty-string>>
      *
@@ -79,8 +81,7 @@ readonly class ViewDefinitionCompiler
         array $schemaView,
         array $viewConfig,
         array $keys,
-        string $entityClass,
-        CrudAction $action,
+        EntityAction $entityAction,
     ): array {
         $variables = [];
 
@@ -93,8 +94,7 @@ readonly class ViewDefinitionCompiler
                 $value = $this->configurationValueResolver->resolve(
                     $value,
                     $keys,
-                    $entityClass,
-                    $action,
+                    $entityAction,
                 );
 
                 Assert::stringNotEmpty($value);

@@ -11,6 +11,7 @@ use Jmf\CrudEngine\Compilation\ViewDefinitionCompiler;
 use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Model\CrudAction;
+use Jmf\CrudEngine\Model\EntityAction;
 
 /**
  * Resolves the normalized configuration of a single CRUD action into the array shape consumed by
@@ -37,7 +38,6 @@ interface ActionDefinitionCompilerInterface
 
     /**
      * @param array<string, mixed> $schema
-     * @param class-string         $entityClass
      * @param array<string, mixed> $actionConfig
      *
      * @return CompiledAction
@@ -47,8 +47,7 @@ interface ActionDefinitionCompilerInterface
      */
     public function compile(
         array $schema,
-        string $entityClass,
-        CrudAction $action,
+        EntityAction $entityAction,
         array $actionConfig,
     ): array;
 }
