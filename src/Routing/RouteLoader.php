@@ -31,7 +31,7 @@ readonly class RouteLoader implements RouteLoaderInterface
         $indexed = [];
 
         foreach ($loaders as $loader) {
-            $indexed[$loader->getActionName()] = $loader;
+            $indexed[$loader->getAction()->value] = $loader;
         }
 
         $this->loaderByAction = $indexed;
@@ -69,7 +69,7 @@ readonly class RouteLoader implements RouteLoaderInterface
     private function getLoader(
         ActionDefinition $actionDefinition,
     ): ActionRouteLoaderInterface {
-        $action = $actionDefinition->getEntityAction()->getAction();
+        $action = $actionDefinition->getEntityAction()->getAction()->value;
 
         return $this->loaderByAction[$action]
             ??

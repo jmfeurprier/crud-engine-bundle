@@ -12,7 +12,10 @@ use Jmf\CrudEngine\Definition\FormDefinition;
 use Jmf\CrudEngine\Definition\RedirectionDefinition;
 use Jmf\CrudEngine\Definition\RouteDefinition;
 use Jmf\CrudEngine\Definition\ViewDefinition;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
+use Throwable;
 use Webmozart\Assert\Assert;
 
 /**
@@ -28,17 +31,32 @@ readonly class ActionDefinitionHydrator
      * @param CompiledDefinitions $compiledDefinitions
      *
      * @return array<class-string, array<non-empty-string, ActionDefinition>>
+     *
+     * @throws CrudEngineInvalidConfigurationException
      */
     public function hydrate(array $compiledDefinitions): array
     {
         $hydrated = [];
 
         foreach ($compiledDefinitions as $entityClass => $actions) {
-            foreach ($actions as $action => $resolvedAction) {
-                $hydrated[$entityClass][$action] = $this->hydrateAction(
+            foreach ($actions as $action => $compiledAction) {
+                try {
+                    $action = CrudAction::from($action);
+                } catch (Throwable $e) {
+                    // @todo
+                    throw new CrudEngineInvalidConfigurationException(
+                        previous: $e,
+                    );
+                }
+
+                $entityAction = new EntityAction(
                     $entityClass,
                     $action,
-                    $resolvedAction,
+                );
+
+                $hydrated[$entityClass][$action->value] = $this->hydrateEntityAction(
+                    $entityAction,
+                    $compiledAction,
                 );
             }
         }
@@ -47,19 +65,16 @@ readonly class ActionDefinitionHydrator
     }
 
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
-     * @param CompiledAction   $resolvedAction
+     * @param CompiledAction $compiledAction
      */
-    private function hydrateAction(
-        string $entityClass,
-        string $action,
-        array $resolvedAction,
+    private function hydrateEntityAction(
+        EntityAction $entityAction,
+        array $compiledAction,
     ): ActionDefinition {
-        $form        = $resolvedAction['form'];
-        $route       = $resolvedAction['route'];
-        $redirection = $resolvedAction['redirection'];
-        $view        = $resolvedAction['view'];
+        $form        = $compiledAction['form'];
+        $route       = $compiledAction['route'];
+        $redirection = $compiledAction['redirection'];
+        $view        = $compiledAction['view'];
 
         $viewFallbackMode = FallbackMode::tryFrom($view['fallback']);
 
@@ -81,34 +96,31 @@ readonly class ActionDefinitionHydrator
             $formDefinition = new FormDefinition(
                 formTypeClass:          $form['typeClass'],
                 suggestedFormTypeClass: $form['suggestedClass'],
-                fallbackMode:       $formFallbackMode,
+                fallbackMode:           $formFallbackMode,
             );
         }
 
         return new ActionDefinition(
-            entityAction:             new EntityAction(
-                                          $entityClass,
-                                          $action,
-                                      ),
-            helperClass:              $resolvedAction['helperClass'],
+            entityAction:          $entityAction,
+            helperClass:           $compiledAction['helperClass'],
             formDefinition:        $formDefinition,
             redirectionDefinition: null === $redirection
-                                          ? null
-                                          : new RedirectionDefinition(
-                                              route:      $redirection['route'],
-                                              parameters: $redirection['parameters'],
-                                              fragment:   $redirection['fragment'],
-                                          ),
+                                       ? null
+                                       : new RedirectionDefinition(
+                                           route:      $redirection['route'],
+                                           parameters: $redirection['parameters'],
+                                           fragment:   $redirection['fragment'],
+                                       ),
             routeDefinition:       new RouteDefinition(
-                                          name:         $route['name'],
-                                          path:         $route['path'],
-                                          requirements: $route['requirements'],
-                                      ),
+                                       name:         $route['name'],
+                                       path:         $route['path'],
+                                       requirements: $route['requirements'],
+                                   ),
             viewDefinition:        new ViewDefinition(
-                                          path:             $view['path'],
-                                          variables:        $view['variables'],
-                                          fallbackMode: $viewFallbackMode,
-                                      ),
+                                       path:         $view['path'],
+                                       variables:    $view['variables'],
+                                       fallbackMode: $viewFallbackMode,
+                                   ),
         );
     }
 }

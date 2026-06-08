@@ -17,7 +17,7 @@ final class CrudEngineFormRequestHandlingException extends CrudEngineRuntimeExce
             message:  sprintf(
                           'Failed handling the form request for entity "%s" for action "%s".',
                           $entityAction->getEntityClass(),
-                          $entityAction->getAction(),
+                          $entityAction->getAction()->value,
                       ),
             previous: $previous,
         );

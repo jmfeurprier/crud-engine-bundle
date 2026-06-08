@@ -63,8 +63,12 @@ readonly class DeleteAction
         string $entityClass,
         string $id,
     ): Response {
-        $actionDefinition = $this->actionDefinitionRegistry->get($entityClass, CrudAction::Delete->value);
-        $actionHelper        = $this->actionHelperResolver->resolve(
+        $actionDefinition = $this->actionDefinitionRegistry->get(
+            $entityClass,
+            CrudAction::Delete,
+        );
+
+        $actionHelper = $this->actionHelperResolver->resolve(
             DeleteActionHelperInterface::class,
             $actionDefinition,
             $this->defaultActionHelper,

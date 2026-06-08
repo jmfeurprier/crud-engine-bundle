@@ -14,6 +14,7 @@ use Jmf\CrudEngine\Definition\RedirectionDefinition;
 use Jmf\CrudEngine\Definition\RouteDefinition;
 use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Form\FormCreator;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityFinder;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
@@ -190,7 +191,7 @@ final class UpdateActionTest extends TestCase
         return new ActionDefinition(
             entityAction:             new EntityAction(
                                           $entityClass,
-                                          $action,
+                                          CrudAction::from($action),
                                       ),
             helperClass:              null,
             formDefinition:        new FormDefinition(

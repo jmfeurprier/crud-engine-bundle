@@ -17,7 +17,7 @@ final class CrudEngineFormViewCreationException extends CrudEngineRuntimeExcepti
             message:  sprintf(
                           'Failed creating the form view for entity "%s" for action "%s".',
                           $entityAction->getEntityClass(),
-                          $entityAction->getAction(),
+                          $entityAction->getAction()->value,
                       ),
             previous: $previous,
         );

@@ -11,9 +11,9 @@ use Override;
 readonly class CreateActionRouteLoader extends ActionRouteLoaderBase
 {
     #[Override]
-    public function getActionName(): string
+    public function getAction(): CrudAction
     {
-        return CrudAction::Create->value;
+        return CrudAction::Create;
     }
 
     #[Override]

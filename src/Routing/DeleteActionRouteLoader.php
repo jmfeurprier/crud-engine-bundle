@@ -11,9 +11,9 @@ use Override;
 readonly class DeleteActionRouteLoader extends ActionRouteLoaderBase
 {
     #[Override]
-    public function getActionName(): string
+    public function getAction(): CrudAction
     {
-        return CrudAction::Delete->value;
+        return CrudAction::Delete;
     }
 
     #[Override]

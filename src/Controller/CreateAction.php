@@ -77,7 +77,7 @@ readonly class CreateAction
     ): Response {
         $actionDefinition = $this->actionDefinitionRegistry->get(
             $entityClass,
-            CrudAction::Create->value,
+            CrudAction::Create,
         );
 
         $actionHelper = $this->actionHelperResolver->resolve(

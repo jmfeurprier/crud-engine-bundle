@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Definition\FormDefinition;
 use Jmf\CrudEngine\Definition\RedirectionDefinition;
 use Jmf\CrudEngine\Definition\RouteDefinition;
 use Jmf\CrudEngine\Definition\ViewDefinition;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityFinder;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
@@ -51,12 +52,12 @@ final class DeleteActionTest extends TestCase
     protected function setUp(): void
     {
         $this->actionDefinitionRegistry = $this->createStub(ActionDefinitionRegistryInterface::class);
-        $this->actionHelperResolver          = $this->createStub(ActionHelperResolver::class);
-        $this->defaultActionHelper           = $this->createStub(DeleteActionHelperInterface::class);
-        $this->entityFinder                  = $this->createStub(EntityFinder::class);
-        $this->objectManagerResolver         = $this->createStub(EntityManagerResolver::class);
-        $this->redirectionGenerator          = $this->createStub(RedirectionGenerator::class);
-        $this->viewRenderer                  = $this->createStub(ViewRenderer::class);
+        $this->actionHelperResolver     = $this->createStub(ActionHelperResolver::class);
+        $this->defaultActionHelper      = $this->createStub(DeleteActionHelperInterface::class);
+        $this->entityFinder             = $this->createStub(EntityFinder::class);
+        $this->objectManagerResolver    = $this->createStub(EntityManagerResolver::class);
+        $this->redirectionGenerator     = $this->createStub(RedirectionGenerator::class);
+        $this->viewRenderer             = $this->createStub(ViewRenderer::class);
     }
 
     public function testInvokeRendersViewOnGet(): void
@@ -196,30 +197,30 @@ final class DeleteActionTest extends TestCase
         string $action,
     ): ActionDefinition {
         return new ActionDefinition(
-            entityAction:             new EntityAction(
-                                          $entityClass,
-                                          $action,
-                                      ),
-            helperClass:              null,
+            entityAction:          new EntityAction(
+                                       $entityClass,
+                                       CrudAction::from($action),
+                                   ),
+            helperClass:           null,
             formDefinition:        new FormDefinition(
-                                          formTypeClass:          null,
-                                          suggestedFormTypeClass: 'StubFormType',
-                                          fallbackMode:       FallbackMode::PROVIDE,
-                                      ),
+                                       formTypeClass:          null,
+                                       suggestedFormTypeClass: 'StubFormType',
+                                       fallbackMode:           FallbackMode::PROVIDE,
+                                   ),
             redirectionDefinition: new RedirectionDefinition(
-                                          route:      '',
-                                          parameters: [],
-                                      ),
+                                       route:      '',
+                                       parameters: [],
+                                   ),
             routeDefinition:       new RouteDefinition(
-                                          name:         '',
-                                          path:         '',
-                                          requirements: [],
-                                      ),
+                                       name:         '',
+                                       path:         '',
+                                       requirements: [],
+                                   ),
             viewDefinition:        new ViewDefinition(
-                                          path:             '',
-                                          variables:        [],
-                                          fallbackMode: FallbackMode::PROVIDE,
-                                      ),
+                                       path:         '',
+                                       variables:    [],
+                                       fallbackMode: FallbackMode::PROVIDE,
+                                   ),
         );
     }
 }

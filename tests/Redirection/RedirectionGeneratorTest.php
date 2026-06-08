@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
+namespace Jmf\CrudEngine\Tests\Redirection;
 
 use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Definition\FallbackMode;
@@ -11,6 +11,7 @@ use Jmf\CrudEngine\Definition\RedirectionDefinition;
 use Jmf\CrudEngine\Definition\RouteDefinition;
 use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineRedirectionException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Redirection\RedirectionGenerator;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
@@ -61,11 +62,11 @@ final class RedirectionGeneratorTest extends TestCase
     private function givenActionDefinition(): ActionDefinition
     {
         return new ActionDefinition(
-            entityAction:             new EntityAction(
-                                          Article::class,
-                                          'create',
-                                      ),
-            helperClass:              null,
+            entityAction:          new EntityAction(
+                                       Article::class,
+                                       CrudAction::Create,
+                                   ),
+            helperClass:           null,
             formDefinition:        new FormDefinition(null, 'StubFormType', FallbackMode::PROVIDE),
             redirectionDefinition: new RedirectionDefinition('article.index', []),
             routeDefinition:       new RouteDefinition('', '', []),

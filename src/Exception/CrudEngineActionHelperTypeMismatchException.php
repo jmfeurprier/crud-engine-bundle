@@ -22,7 +22,7 @@ class CrudEngineActionHelperTypeMismatchException extends CrudEngineRuntimeExcep
                          'Action Helper %s for Entity %s and Action %s does not implement/extend %s',
                          $this->actualClass,
                          $this->actionDefinition->getEntityAction()->getEntityClass(),
-                         $this->actionDefinition->getEntityAction()->getAction(),
+                         $this->actionDefinition->getEntityAction()->getAction()->value,
                          $this->expectedClass,
                      ),
         );

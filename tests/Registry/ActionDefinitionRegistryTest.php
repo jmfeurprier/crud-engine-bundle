@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Tests\Registry;
 
 use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Registry\ActionDefinitionRegistry;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +27,7 @@ final class ActionDefinitionRegistryTest extends TestCase
             ],
         );
 
-        $result = $this->actionDefinitionRegistry->get(Article::class, 'create');
+        $result = $this->actionDefinitionRegistry->get(Article::class, CrudAction::Create);
 
         self::assertSame($actionDefinition, $result);
     }
@@ -37,14 +38,14 @@ final class ActionDefinitionRegistryTest extends TestCase
 
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
-        $this->actionDefinitionRegistry->get(Article::class, 'create');
+        $this->actionDefinitionRegistry->get(Article::class, CrudAction::Create);
     }
 
     public function testTryGetReturnsNullForUnknown(): void
     {
         $this->givenDefinitions([]);
 
-        $result = $this->actionDefinitionRegistry->tryGet(Article::class, 'unknown');
+        $result = $this->actionDefinitionRegistry->tryGet(Article::class, CrudAction::Create);
 
         self::assertNull($result);
     }

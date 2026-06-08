@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
+namespace Jmf\CrudEngine\Tests\Form;
 
 use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Definition\FallbackMode;
@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Exception\CrudEngineFormCreationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FormCreator;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
@@ -57,7 +58,10 @@ final class FormCreatorTest extends TestCase
                 CrudEngineEntityType::class,
                 $article,
                 [
-                    'entity_action'             => new EntityAction(Article::class, 'create'),
+                    'entity_action'             => new EntityAction(
+                        Article::class,
+                        CrudAction::Create,
+                    ),
                     'suggested_form_type_class' => 'StubFormType',
                 ],
             )
@@ -106,17 +110,17 @@ final class FormCreatorTest extends TestCase
         FallbackMode $formFallbackMode,
     ): ActionDefinition {
         return new ActionDefinition(
-            entityAction:             new EntityAction(
-                                          Article::class,
-                                          'create',
-                                      ),
-            helperClass:              null,
+            entityAction:          new EntityAction(
+                                       Article::class,
+                                       CrudAction::Create,
+                                   ),
+            helperClass:           null,
             formDefinition:        new FormDefinition(
-                                          formTypeClass:          $formTypeClass,
-                                          suggestedFormTypeClass: 'StubFormType',
-                                          fallbackMode:       $formFallbackMode,
+                                       formTypeClass:          $formTypeClass,
+                                       suggestedFormTypeClass: 'StubFormType',
+                                       fallbackMode:           $formFallbackMode,
 
-                                      ),
+                                   ),
             redirectionDefinition: null,
             routeDefinition:       new RouteDefinition('', '', []),
             viewDefinition:        new ViewDefinition('', [], FallbackMode::PROVIDE),

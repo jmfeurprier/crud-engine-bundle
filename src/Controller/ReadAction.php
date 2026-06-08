@@ -59,8 +59,12 @@ readonly class ReadAction
         string $id,
         string $entityClass,
     ): Response {
-        $actionDefinition = $this->actionDefinitionRegistry->get($entityClass, CrudAction::Read->value);
-        $actionHelper        = $this->actionHelperResolver->resolve(
+        $actionDefinition = $this->actionDefinitionRegistry->get(
+            $entityClass,
+            CrudAction::Read,
+        );
+
+        $actionHelper = $this->actionHelperResolver->resolve(
             ReadActionHelperInterface::class,
             $actionDefinition,
             $this->defaultActionHelper,

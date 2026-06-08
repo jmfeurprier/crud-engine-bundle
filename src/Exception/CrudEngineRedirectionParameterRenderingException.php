@@ -22,7 +22,7 @@ class CrudEngineRedirectionParameterRenderingException extends CrudEngineRuntime
                           $this->key,
                           $this->definition,
                           $this->actionDefinition->getEntityAction()->getEntityClass(),
-                          $this->actionDefinition->getEntityAction()->getAction(),
+                          $this->actionDefinition->getEntityAction()->getAction()->value,
                       ),
             previous: $previousException,
         );

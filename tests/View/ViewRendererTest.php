@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
+namespace Jmf\CrudEngine\Tests\View;
 
 use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Definition\FallbackMode;
@@ -11,6 +11,7 @@ use Jmf\CrudEngine\Definition\RedirectionDefinition;
 use Jmf\CrudEngine\Definition\RouteDefinition;
 use Jmf\CrudEngine\Definition\ViewDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineMissingViewException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\View\ViewRenderer;
 use Jmf\TemplateRendering\TemplateRenderer;
@@ -80,30 +81,30 @@ final class ViewRendererTest extends TestCase
         FallbackMode $fallback,
     ): ActionDefinition {
         return new ActionDefinition(
-            entityAction:             new EntityAction(
-                                          stdClass::class,
-                                          'read',
-                                      ),
-            helperClass:              null,
+            entityAction:          new EntityAction(
+                                       stdClass::class,
+                                       CrudAction::Read,
+                                   ),
+            helperClass:           null,
             formDefinition:        new FormDefinition(
-                                          formTypeClass:          null,
-                                          suggestedFormTypeClass: 'StubFormType',
-                                          fallbackMode:       FallbackMode::PROVIDE,
-                                      ),
+                                       formTypeClass:          null,
+                                       suggestedFormTypeClass: 'StubFormType',
+                                       fallbackMode:           FallbackMode::PROVIDE,
+                                   ),
             redirectionDefinition: new RedirectionDefinition(
-                                          route:      '',
-                                          parameters: [],
-                                      ),
+                                       route:      '',
+                                       parameters: [],
+                                   ),
             routeDefinition:       new RouteDefinition(
-                                          name:         '',
-                                          path:         '',
-                                          requirements: [],
-                                      ),
+                                       name:         '',
+                                       path:         '',
+                                       requirements: [],
+                                   ),
             viewDefinition:        new ViewDefinition(
-                                          path:             $viewPath,
-                                          variables:        [],
-                                          fallbackMode: $fallback,
-                                      ),
+                                       path:         $viewPath,
+                                       variables:    [],
+                                       fallbackMode: $fallback,
+                                   ),
         );
     }
 }

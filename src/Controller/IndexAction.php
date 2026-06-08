@@ -56,8 +56,12 @@ readonly class IndexAction
         Request $request,
         string $entityClass,
     ): Response {
-        $actionDefinition = $this->actionDefinitionRegistry->get($entityClass, CrudAction::Index->value);
-        $actionHelper        = $this->actionHelperResolver->resolve(
+        $actionDefinition = $this->actionDefinitionRegistry->get(
+            $entityClass,
+            CrudAction::Index,
+        );
+
+        $actionHelper = $this->actionHelperResolver->resolve(
             IndexActionHelperInterface::class,
             $actionDefinition,
             $this->defaultActionHelper,

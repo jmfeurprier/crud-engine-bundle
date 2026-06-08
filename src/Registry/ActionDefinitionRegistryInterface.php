@@ -6,29 +6,28 @@ namespace Jmf\CrudEngine\Registry;
 
 use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 
 interface ActionDefinitionRegistryInterface
 {
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
+     * @param class-string $entityClass
      *
      * @throws CrudEngineConfigurationException
      */
     public function get(
         string $entityClass,
-        string $action,
+        CrudAction $action,
     ): ActionDefinition;
 
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
+     * @param class-string $entityClass
      *
      * @throws CrudEngineConfigurationException
      */
     public function tryGet(
         string $entityClass,
-        string $action,
+        CrudAction $action,
     ): ?ActionDefinition;
 
     /**

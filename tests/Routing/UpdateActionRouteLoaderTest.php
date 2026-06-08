@@ -11,6 +11,7 @@ use Jmf\CrudEngine\Definition\FormDefinition;
 use Jmf\CrudEngine\Definition\RedirectionDefinition;
 use Jmf\CrudEngine\Definition\RouteDefinition;
 use Jmf\CrudEngine\Definition\ViewDefinition;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Routing\UpdateActionRouteLoader;
 use Override;
@@ -84,22 +85,22 @@ final class UpdateActionRouteLoaderTest extends TestCase
         );
 
         $viewDefinition = new ViewDefinition(
-            path:             $viewPath,
-            variables:        [],
+            path:         $viewPath,
+            variables:    [],
             fallbackMode: FallbackMode::PROVIDE,
         );
 
         return new ActionDefinition(
-            entityAction:             new EntityAction(
-                                          $entityClass,
-                                          $action,
-                                      ),
-            helperClass:              null,
+            entityAction:          new EntityAction(
+                                       $entityClass,
+                                       CrudAction::from($action),
+                                   ),
+            helperClass:           null,
             formDefinition:        new FormDefinition(
-                                          formTypeClass:          null,
-                                          suggestedFormTypeClass: 'StubFormType',
-                                          fallbackMode:       FallbackMode::PROVIDE,
-                                      ),
+                                       formTypeClass:          null,
+                                       suggestedFormTypeClass: 'StubFormType',
+                                       fallbackMode:           FallbackMode::PROVIDE,
+                                   ),
             redirectionDefinition: $redirectionDefinition,
             routeDefinition:       $routeDefinition,
             viewDefinition:        $viewDefinition,

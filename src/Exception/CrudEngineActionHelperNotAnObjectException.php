@@ -15,7 +15,7 @@ class CrudEngineActionHelperNotAnObjectException extends CrudEngineRuntimeExcept
             message: sprintf(
                          'Retrieved Action Helper for Entity %s and Action %s is not an object.',
                          $this->actionDefinition->getEntityAction()->getEntityClass(),
-                         $this->actionDefinition->getEntityAction()->getAction(),
+                         $this->actionDefinition->getEntityAction()->getAction()->value,
                      ),
         );
     }

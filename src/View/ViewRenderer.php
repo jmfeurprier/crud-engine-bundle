@@ -56,7 +56,7 @@ readonly class ViewRenderer
 
             $viewPath = sprintf(
                 self::BUILT_IN_TEMPLATE,
-                $actionDefinition->getEntityAction()->getAction(),
+                $actionDefinition->getEntityAction()->getAction()->value,
             );
 
             $parameters['_crud_engine'] = $this->getProvidedContext(
@@ -91,7 +91,7 @@ readonly class ViewRenderer
     ): array {
         return [
             'entityClass' => $actionDefinition->getEntityAction()->getEntityClass(),
-            'action'      => $actionDefinition->getEntityAction()->getAction(),
+            'action'      => $actionDefinition->getEntityAction()->getAction()->value,
             'viewPath'    => $viewPath,
         ];
     }

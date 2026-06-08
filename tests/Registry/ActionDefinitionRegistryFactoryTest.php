@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Tests\Registry;
 
 use Jmf\CrudEngine\Definition\ActionDefinition;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Registry\ActionDefinitionHydrator;
 use Jmf\CrudEngine\Registry\ActionDefinitionRegistryFactory;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
@@ -41,7 +42,7 @@ final class ActionDefinitionRegistryFactoryTest extends TestCase
 
         self::assertSame(
             $actionDefinition,
-            $result->get(Article::class, 'create'),
+            $result->get(Article::class, CrudAction::Create),
         );
     }
 }

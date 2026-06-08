@@ -17,7 +17,7 @@ class CrudEngineViewRenderingException extends CrudEngineRuntimeException
             message:  sprintf(
                           'Failed rendering CRUD view for class %s and action "%s".',
                           $this->actionDefinition->getEntityAction()->getEntityClass(),
-                          $this->actionDefinition->getEntityAction()->getAction(),
+                          $this->actionDefinition->getEntityAction()->getAction()->value,
                       ),
             previous: $previousException,
         );

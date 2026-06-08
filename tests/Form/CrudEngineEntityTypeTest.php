@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\FieldMapping;
 use Jmf\CrudEngine\Exception\CrudEngineFormFieldException;
 use Jmf\CrudEngine\Form\CrudEngineEntityType;
 use Jmf\CrudEngine\Form\FieldGenerator;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityManagerResolver;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
@@ -95,7 +96,10 @@ final class CrudEngineEntityTypeTest extends TestCase
         (new CrudEngineEntityType($entityManagerResolver, new FieldGenerator()))->buildForm(
             $builder,
             [
-                'entity_action'             => new EntityAction(Article::class, 'create'),
+                'entity_action'             => new EntityAction(
+                    Article::class,
+                    CrudAction::Create,
+                ),
                 'suggested_form_type_class' => 'StubFormType',
             ],
         );
@@ -131,7 +135,12 @@ final class CrudEngineEntityTypeTest extends TestCase
         $metadata = $this->createStub(ClassMetadata::class);
         $metadata->method('getName')->willReturn(Article::class);
         $metadata->method('getIdentifierFieldNames')->willReturn(['id']);
-        $metadata->method('getFieldNames')->willReturn(['id', 'title']);
+        $metadata->method('getFieldNames')->willReturn(
+            [
+                'id',
+                'title',
+            ],
+        );
         $metadata->method('getFieldMapping')->willThrowException(new RuntimeException('boom'));
 
         $entityManager = $this->createStub(EntityManagerInterface::class);
@@ -145,7 +154,10 @@ final class CrudEngineEntityTypeTest extends TestCase
         (new CrudEngineEntityType($entityManagerResolver, new FieldGenerator()))->buildForm(
             $this->createStub(FormBuilderInterface::class),
             [
-                'entity_action'             => new EntityAction(Article::class, 'create'),
+                'entity_action'             => new EntityAction(
+                    Article::class,
+                    CrudAction::Create,
+                ),
                 'suggested_form_type_class' => 'StubFormType',
             ],
         );

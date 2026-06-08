@@ -7,12 +7,11 @@ namespace Jmf\CrudEngine\Model;
 readonly class EntityAction
 {
     /**
-     * @param class-string     $entityClass
-     * @param non-empty-string $action
+     * @param class-string $entityClass
      */
     public function __construct(
         private string $entityClass,
-        private string $action,
+        private CrudAction $action,
     ) {
     }
 
@@ -24,10 +23,7 @@ readonly class EntityAction
         return $this->entityClass;
     }
 
-    /**
-     * @return non-empty-string
-     */
-    public function getAction(): string
+    public function getAction(): CrudAction
     {
         return $this->action;
     }

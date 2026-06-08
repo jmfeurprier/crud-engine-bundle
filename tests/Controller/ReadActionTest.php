@@ -13,6 +13,7 @@ use Jmf\CrudEngine\Definition\FormDefinition;
 use Jmf\CrudEngine\Definition\RedirectionDefinition;
 use Jmf\CrudEngine\Definition\RouteDefinition;
 use Jmf\CrudEngine\Definition\ViewDefinition;
+use Jmf\CrudEngine\Model\CrudAction;
 use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Persistence\EntityFinder;
 use Jmf\CrudEngine\Registry\ActionDefinitionRegistryInterface;
@@ -97,7 +98,7 @@ final class ReadActionTest extends TestCase
         return new ActionDefinition(
             entityAction:             new EntityAction(
                                           $entityClass,
-                                          $action,
+                                          CrudAction::from($action),
                                       ),
             helperClass:              null,
             formDefinition:        new FormDefinition(

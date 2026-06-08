@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Exception;
 
+use Jmf\CrudEngine\Model\CrudAction;
+
 class CrudEngineMissingConfigurationException extends CrudEngineConfigurationException
 {
     public function __construct(
         private readonly string $entityClass,
-        private readonly ?string $action = null,
+        private readonly ?CrudAction $action = null,
         private readonly ?string $configurationKey = null,
     ) {
         parent::__construct(
@@ -52,7 +54,7 @@ class CrudEngineMissingConfigurationException extends CrudEngineConfigurationExc
         $vars[] = $this->entityClass;
 
         if (null !== $this->action) {
-            $vars[] = $this->action;
+            $vars[] = $this->action->value;
         }
 
         return $vars;
@@ -63,7 +65,7 @@ class CrudEngineMissingConfigurationException extends CrudEngineConfigurationExc
         return $this->entityClass;
     }
 
-    public function getAction(): ?string
+    public function getAction(): ?CrudAction
     {
         return $this->action;
     }

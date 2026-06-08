@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jmf\CrudEngine\Tests\Controller\Dependencies;
+namespace Jmf\CrudEngine\Tests\Persistence;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Jmf\CrudEngine\Exception\CrudEnginePersistenceException;

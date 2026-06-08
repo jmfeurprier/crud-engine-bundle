@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Registry;
 
 use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
+use Jmf\CrudEngine\Model\CrudAction;
 use Override;
 
 readonly class ActionDefinitionRegistry implements ActionDefinitionRegistryInterface
@@ -21,7 +22,7 @@ readonly class ActionDefinitionRegistry implements ActionDefinitionRegistryInter
     #[Override]
     public function get(
         string $entityClass,
-        string $action,
+        CrudAction $action,
     ): ActionDefinition {
         return $this->tryGet($entityClass, $action)
             ??
@@ -34,9 +35,9 @@ readonly class ActionDefinitionRegistry implements ActionDefinitionRegistryInter
     #[Override]
     public function tryGet(
         string $entityClass,
-        string $action,
+        CrudAction $action,
     ): ?ActionDefinition {
-        return $this->definitions[$entityClass][$action] ?? null;
+        return $this->definitions[$entityClass][$action->value] ?? null;
     }
 
     #[Override]

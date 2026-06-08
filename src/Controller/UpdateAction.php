@@ -78,7 +78,7 @@ readonly class UpdateAction
     ): Response {
         $actionDefinition = $this->actionDefinitionRegistry->get(
             $entityClass,
-            CrudAction::Update->value,
+            CrudAction::Update,
         );
 
         $actionHelper = $this->actionHelperResolver->resolve(

@@ -20,7 +20,7 @@ class CrudEngineActionHelperNotFoundException extends CrudEngineRuntimeException
                          'Action Helper %s for Entity %s and Action %s not found.',
                          $this->helperClass,
                          $this->actionDefinition->getEntityAction()->getEntityClass(),
-                         $this->actionDefinition->getEntityAction()->getAction(),
+                         $this->actionDefinition->getEntityAction()->getAction()->value,
                      ),
         );
     }

@@ -11,9 +11,9 @@ use Override;
 readonly class IndexActionRouteLoader extends ActionRouteLoaderBase
 {
     #[Override]
-    public function getActionName(): string
+    public function getAction(): CrudAction
     {
-        return CrudAction::Index->value;
+        return CrudAction::Index;
     }
 
     #[Override]

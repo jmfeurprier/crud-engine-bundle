@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Registry;
 
 use Jmf\CrudEngine\Compilation\Compiler;
+use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 
 /**
  * @phpstan-import-type CompiledDefinitions from Compiler
@@ -20,6 +21,9 @@ readonly class ActionDefinitionRegistryFactory
     ) {
     }
 
+    /**
+     * @throws CrudEngineInvalidConfigurationException
+     */
     public function create(): ActionDefinitionRegistryInterface
     {
         return new ActionDefinitionRegistry(

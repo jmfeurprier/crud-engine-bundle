@@ -17,7 +17,7 @@ final class CrudEngineFormFieldException extends CrudEngineRuntimeException
             message:  sprintf(
                           'Failed building a form field for entity "%s" for action "%s".',
                           $entityAction->getEntityClass(),
-                          $entityAction->getAction(),
+                          $entityAction->getAction()->value,
                       ),
             previous: $previous,
         );

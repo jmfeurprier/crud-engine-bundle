@@ -22,7 +22,7 @@ class CrudEngineActionHelperRetrievalException extends CrudEngineRuntimeExceptio
                           'Failed retrieving Action Helper %s for Entity %s and Action %s from container.',
                           $this->helperClass,
                           $this->actionDefinition->getEntityAction()->getEntityClass(),
-                          $this->actionDefinition->getEntityAction()->getAction(),
+                          $this->actionDefinition->getEntityAction()->getAction()->value,
                       ),
             previous: $previous,
         );
