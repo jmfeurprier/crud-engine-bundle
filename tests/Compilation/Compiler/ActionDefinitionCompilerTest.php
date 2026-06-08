@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Compilation;
 
-use Jmf\CrudEngine\Compilation\ActionDefinitionCompiler;
-use Jmf\CrudEngine\Compilation\ActionDefinitionCompilerFactory;
+use Jmf\CrudEngine\Compilation\Compiler;
+use Jmf\CrudEngine\Compilation\CompilerFactory;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use Jmf\CrudEngine\Tests\Fixtures\ArticleType;
 use Override;
@@ -13,12 +13,12 @@ use PHPUnit\Framework\TestCase;
 
 final class ActionDefinitionCompilerTest extends TestCase
 {
-    private ActionDefinitionCompiler $resolver;
+    private Compiler $resolver;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->resolver = (new ActionDefinitionCompilerFactory())->create();
+        $this->resolver = (new CompilerFactory())->create();
     }
 
     public function testResolvesDefaults(): void

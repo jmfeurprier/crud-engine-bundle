@@ -23,7 +23,7 @@ use Webmozart\Assert\Assert;
  *
  * @phpstan-type CompiledDefinitions array<class-string, array<non-empty-string, CompiledAction>>
  */
-readonly class ActionDefinitionCompiler
+readonly class Compiler
 {
     /**
      * @var array<string, ActionDefinitionCompilerInterface>

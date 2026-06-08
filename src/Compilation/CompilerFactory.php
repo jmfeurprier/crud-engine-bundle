@@ -21,13 +21,13 @@ use Twig\Extra\String\StringExtension;
 use Twig\Loader\ArrayLoader;
 
 /**
- * Builds an {@see ActionDefinitionCompiler} (and its per-concern part resolvers) with a
+ * Builds a {@see Compiler} (and its per-concern part resolvers) with a
  * self-contained placeholder expander (a minimal Twig environment), for use at container
  * build time where no DI services exist.
  */
-final readonly class ActionDefinitionCompilerFactory
+final readonly class CompilerFactory
 {
-    public function create(): ActionDefinitionCompiler
+    public function create(): Compiler
     {
         $mapResolver         = new MapResolver();
         $patternsResolver    = new PatternsResolver();
@@ -74,7 +74,7 @@ final readonly class ActionDefinitionCompilerFactory
             $viewDefinitionCompiler,
         ];
 
-        return new ActionDefinitionCompiler(
+        return new Compiler(
             $mapResolver,
             [
                 new CreateActionDefinitionCompiler(...$partResolvers),

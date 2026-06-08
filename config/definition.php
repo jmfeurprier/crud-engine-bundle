@@ -81,7 +81,7 @@ return static function (DefinitionConfigurator $definition): void {
         ->fixXmlConfig('entity', 'entities')
         ->children()
 
-            // Defaults for the patterns below live in ActionDefinitionCompiler; the
+            // Defaults for the patterns below live in Compiler; the
             // values here only override them. Maps (keys/route.paths/redirection) are
             // merged with the defaults, scalars/lists (route.name/view.path/form.type/
             // helper) replace them.

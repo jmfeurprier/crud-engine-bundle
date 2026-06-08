@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine;
 
-use Jmf\CrudEngine\Compilation\ActionDefinitionCompilerFactory;
+use Jmf\CrudEngine\Compilation\CompilerFactory;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
@@ -23,7 +23,7 @@ class JmfCrudEngineBundle extends AbstractBundle
     protected string $extensionAlias = 'jmf_crud_engine';
 
     public function __construct(
-        private readonly ActionDefinitionCompilerFactory $actionDefinitionCompilerFactory = new ActionDefinitionCompilerFactory(
+        private readonly CompilerFactory $actionDefinitionCompilerFactory = new CompilerFactory(
         ),
     ) {
     }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Registry;
 
-use Jmf\CrudEngine\Compilation\ActionDefinitionCompiler;
+use Jmf\CrudEngine\Compilation\Compiler;
 
 /**
- * @phpstan-import-type CompiledDefinitions from ActionDefinitionCompiler
+ * @phpstan-import-type CompiledDefinitions from Compiler
  */
 readonly class ActionDefinitionRegistryFactory
 {

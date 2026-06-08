@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine\Registry;
 
 use Jmf\CrudEngine\Compilation\Action\ActionDefinitionCompilerInterface;
-use Jmf\CrudEngine\Compilation\ActionDefinitionCompiler;
+use Jmf\CrudEngine\Compilation\Compiler;
 use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Definition\FallbackMode;
 use Jmf\CrudEngine\Definition\FormDefinition;
@@ -19,7 +19,7 @@ use Webmozart\Assert\Assert;
  * Maps the normalized, resolved configuration array into the immutable
  * {@see ActionDefinition} DTO graph.
  *
- * @phpstan-import-type CompiledDefinitions from ActionDefinitionCompiler
+ * @phpstan-import-type CompiledDefinitions from Compiler
  * @phpstan-import-type CompiledAction from ActionDefinitionCompilerInterface
  */
 readonly class ActionDefinitionHydrator
