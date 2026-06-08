@@ -129,17 +129,6 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
     }
 
     /**
-     * The conventional redirection for this action, applied after a successful mutation. Null means
-     * the action has no redirection (index/read).
-     *
-     * @return array{route: non-empty-string, parameters: array<string, non-empty-string>}|null
-     */
-    protected function getDefaultRedirection(): ?array
-    {
-        return null;
-    }
-
-    /**
      * @param array<string, mixed>                      $schema
      * @param array<non-empty-string, non-empty-string> $keys
      * @param array<string, mixed>                      $actionConfig
@@ -195,6 +184,17 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
             $actionConfig,
             $default,
         );
+    }
+
+    /**
+     * The conventional redirection for this action, applied after a successful mutation. Null means
+     * the action has no redirection (index/read).
+     *
+     * @return array{route: non-empty-string, parameters: array<string, non-empty-string>}|null
+     */
+    protected function getDefaultRedirection(): ?array
+    {
+        return null;
     }
 
     /**
