@@ -41,15 +41,7 @@ readonly class ActionDefinitionHydrator
             foreach ($actions as $actionValue => $compiledAction) {
                 $action = CrudAction::tryFrom($actionValue);
 
-                if (null === $action) {
-                    // @todo
-                    throw new CrudEngineInvalidConfigurationException(
-                        sprintf(
-                            'Unknown action %s.',
-                            $actionValue,
-                        ),
-                    );
-                }
+                Assert::isInstanceOf($action, CrudAction::class);
 
                 $entityAction = new EntityAction(
                     $entityClass,

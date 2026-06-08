@@ -10,6 +10,7 @@ use Jmf\CrudEngine\Exception\CrudEngineInvalidConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
 use Jmf\CrudEngine\Model\CrudAction;
+use Jmf\CrudEngine\Model\EntityAction;
 use Throwable;
 use Webmozart\Assert\Assert;
 
@@ -83,17 +84,12 @@ readonly class Compiler
             $actionsConfig = $entityConfig['actions'];
             Assert::isMap($actionsConfig);
 
-            foreach ($actionsConfig as $action => $actionConfig) {
-                Assert::stringNotEmpty($action);
+            foreach ($actionsConfig as $actionValue => $actionConfig) {
+                Assert::stringNotEmpty($actionValue);
+                $action = CrudAction::tryFrom($actionValue);
+                Assert::isInstanceOf($action, CrudAction::class);
 
-                try {
-                    $action = CrudAction::from($action);
-                } catch (Throwable $e) {
-                    // @todo
-                    throw new CrudEngineInvalidConfigurationException(
-                        previous: $e,
-                    );
-                }
+                
 
                 Assert::isMap($actionConfig);
 
