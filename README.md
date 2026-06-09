@@ -203,23 +203,31 @@ The contract:
 
 ## Action Helpers
 
-Action helpers allow you to customize behavior at specific lifecycle hooks without replacing the entire controller. Create a class implementing the appropriate interface and register it as a Symfony service.
+Action helpers allow you to customize behavior at specific lifecycle hooks without replacing the entire controller. Create a class extending the matching `*ActionHelperBase` and register it as a Symfony service. Each base implements the full interface with sensible defaults (the same behavior the bundle uses when no helper is configured), so you override only the hooks you actually need.
 
 If the class name matches a configured default pattern (e.g., `App\Controller\Article\CreateActionHelper`), it is picked up automatically. Otherwise, set `helper` explicitly in the action configuration.
 
 > The configuration (route names/paths, form type and helper auto-discovery, view paths, etc.) is resolved once, at container build time, and cached in the compiled container. As with routes, adding a helper/form-type class that matches a discovery pattern requires a container rebuild (`cache:clear`) to be picked up.
 
-### Create / Update Helper
+### Create Helper
 
 ```php
-use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperInterface;
+use Jmf\CrudEngine\Controller\Helpers\CreateActionHelperBase;
+use Override;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 
-class ArticleCreateActionHelper implements CreateActionHelperInterface
+/**
+ * @extends CreateActionHelperBase<Article>
+ */
+class ArticleCreateActionHelper extends CreateActionHelperBase
 {
     /**
-     * Instantiate the new entity (optional — skipping uses Doctrine Instantiator).
+     * Instantiate the new entity. The base does `new $entityClass()`; override only if the
+     * entity needs constructor arguments. (The zero-config default uses the Doctrine Instantiator.)
      */
-    public function createEntity(): object
+    #[Override]
+    public function createEntity(Request $request, string $entityClass): object
     {
         return new Article();
     }
@@ -227,52 +235,84 @@ class ArticleCreateActionHelper implements CreateActionHelperInterface
     /**
      * Called before the entity is persisted.
      */
-    public function hookBeforePersist(object $entity, array $parameters): void
+    #[Override]
+    public function hookBeforePersist(Request $request, object $entity, FormInterface $form): void
     {
         // e.g. set timestamps, assign an owner
     }
 
     /**
-     * Persist the entity (optional — skipping uses default EntityManager::persist + flush).
-     */
-    public function persist(object $entity): void
-    {
-        // custom persistence logic
-    }
-
-    /**
-     * Called after the entity is persisted.
-     */
-    public function hookAfterPersist(object $entity, array $parameters): void
-    {
-        // e.g. dispatch domain events
-    }
-
-    /**
      * Extra variables passed to the template.
      */
-    public function getViewVariables(object $entity, array $parameters): array
+    #[Override]
+    public function getViewVariables(Request $request, object $entity): array
     {
         return [];
     }
 }
 ```
 
+The base also provides `persist()` (Doctrine `persist` + `flush`) and `hookAfterPersist()` — override them only to change persistence or run post-save side effects.
+
+### Update Helper
+
+```php
+use Jmf\CrudEngine\Controller\Helpers\UpdateActionHelperBase;
+use Override;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * @extends UpdateActionHelperBase<Article>
+ */
+class ArticleUpdateActionHelper extends UpdateActionHelperBase
+{
+    /**
+     * Called before the updated entity is persisted.
+     */
+    #[Override]
+    public function hookBeforePersist(Request $request, object $entity, FormInterface $form): void
+    {
+        // e.g. bump an "updated at" timestamp
+    }
+
+    /**
+     * Extra variables passed to the template.
+     */
+    #[Override]
+    public function getViewVariables(Request $request, object $entity): array
+    {
+        return [];
+    }
+}
+```
+
+Same hooks as the create helper, minus `createEntity` (the entity already exists). The default `persist()` here only `flush`es the already-managed entity; `hookAfterPersist()` is also available for post-save side effects.
+
 ### Index Helper
 
 ```php
-use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperInterface;
+use Doctrine\Persistence\ObjectManager;
+use Jmf\CrudEngine\Controller\Helpers\IndexActionHelperBase;
+use Override;
+use Symfony\Component\HttpFoundation\Request;
 
-class ArticleIndexActionHelper implements IndexActionHelperInterface
+/**
+ * @extends IndexActionHelperBase<Article>
+ */
+class ArticleIndexActionHelper extends IndexActionHelperBase
 {
-    public function getEntities(array $parameters): iterable
+    /**
+     * Return a custom collection. The base does `getRepository($entityClass)->findAll()`.
+     */
+    #[Override]
+    public function getEntities(Request $request, string $entityClass, ObjectManager $objectManager): iterable
     {
-        // return custom entity collection
+        return $objectManager->getRepository($entityClass)->findBy(['published' => true]);
     }
 
-    public function hookBeforeRender(iterable $entities, array $parameters): void { }
-
-    public function getViewVariables(iterable $entities, array $parameters): array
+    #[Override]
+    public function getViewVariables(Request $request): array
     {
         return [];
     }
@@ -282,11 +322,17 @@ class ArticleIndexActionHelper implements IndexActionHelperInterface
 ### Read Helper
 
 ```php
-use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperInterface;
+use Jmf\CrudEngine\Controller\Helpers\ReadActionHelperBase;
+use Override;
+use Symfony\Component\HttpFoundation\Request;
 
-class ArticleReadActionHelper implements ReadActionHelperInterface
+/**
+ * @extends ReadActionHelperBase<Article>
+ */
+class ArticleReadActionHelper extends ReadActionHelperBase
 {
-    public function getViewVariables(object $entity, array $parameters): array
+    #[Override]
+    public function getViewVariables(Request $request, object $entity): array
     {
         return [];
     }
@@ -296,17 +342,30 @@ class ArticleReadActionHelper implements ReadActionHelperInterface
 ### Delete Helper
 
 ```php
-use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperInterface;
+use Jmf\CrudEngine\Controller\Helpers\DeleteActionHelperBase;
+use Override;
+use Symfony\Component\HttpFoundation\Request;
 
-class ArticleDeleteActionHelper implements DeleteActionHelperInterface
+/**
+ * @extends DeleteActionHelperBase<Article>
+ */
+class ArticleDeleteActionHelper extends DeleteActionHelperBase
 {
-    public function hookBeforeRemove(object $entity, array $parameters): void { }
-    public function remove(object $entity): void { }
-    public function hookAfterRemove(object $entity, array $parameters): void { }
-    public function onFailure(object $entity, array $parameters): \Symfony\Component\HttpFoundation\Response { }
-    public function getViewVariables(object $entity, array $parameters): array { return []; }
+    #[Override]
+    public function hookBeforeRemove(object $entity): void
+    {
+        // e.g. guard against deleting a referenced entity
+    }
+
+    #[Override]
+    public function getViewVariables(Request $request, object $entity): array
+    {
+        return [];
+    }
 }
 ```
+
+The base also provides `remove()` (Doctrine `remove` + `flush`), `hookAfterRemove()`, and `onFailure()` (re-throws the failure) — override them as needed.
 
 ## Templates
 
