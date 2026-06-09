@@ -357,20 +357,6 @@ The generic form is a scaffold to be overridden: it maps scalar columns and `enu
 
 To make the fallback visible wherever it renders (including under a custom template), the generated form prepends a disabled, read-only "Generated fallback form" field naming the form type class to implement to replace it.
 
-## Security
-
-Access can be restricted at entity level or per-action using `roles`:
-
-```yaml
-jmf_crud_engine:
-    entities:
-        App\Entity\Article:
-            roles: [ROLE_ADMIN]          # applies to all actions
-            actions:
-                create:
-                    roles: [ROLE_EDITOR] # overrides entity-level roles for this action
-```
-
 ## License
 
 MIT
