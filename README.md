@@ -97,25 +97,21 @@ jmf_crud_engine:
                 - "App\\Form\\{{ EntityKey }}Type"
 
             # What to do when no form type is configured or discovered:
-            #   generic (default) -> build a generic form from the entity's Doctrine metadata
+            #   provide (default) -> build a generic form from the entity's Doctrine metadata
             #   fail              -> throw an exception
-            fallback: generic
+            fallback: provide
 
         # Default view path pattern
         view:
             path: "{{ entity_key }}/{{ action_key }}.html.twig"
 
             # What to do when a view template is not found:
-            #   built_in (default) -> render the bundle's built-in bare template
-            #   fail               -> throw an exception
-            fallback: built_in
+            #   provide (default) -> render the bundle's built-in bare template
+            #   fail              -> throw an exception
+            fallback: provide
 
     entities:
         App\Entity\Aricle:
-            # Roles required for all actions on this entity (optional)
-            roles:
-                - ROLE_ADMIN
-
             actions:
                 index: ~
 
@@ -135,10 +131,6 @@ jmf_crud_engine:
                         parameters:
                             id: "{{ _entity.id }}"  # Twig expression using the entity
                         fragment: section            # Optional URL fragment
-
-                    # Roles required for this action only (optional, overrides entity roles)
-                    roles:
-                        - ROLE_EDITOR
 
                     # Override route configuration (optional)
                     route:
@@ -167,17 +159,23 @@ jmf_crud_engine:
 
 Configuration values and default patterns support the following placeholders:
 
-| Placeholder        | Example (`Article`) | Description                        |
-|--------------------|---------------------|------------------------------------|
-| `{{ EntityKey }}`  | `Article`           | Entity class name                  |
-| `{{ EntityKeys }}` | `Articles`          | Pluralized entity class name       |
-| `{{ entityKey }}`  | `article`           | Camel-cased entity key             |
-| `{{ entity_key }}` | `article`           | Snake-cased entity key             |
-| `{{ ActionKey }}`  | `Create`            | Action name (Pascal case)          |
-| `{{ actionKey }}`  | `create`            | Action name (camel case)           |
-| `{{ action_key }}` | `create`            | Action name (snake case)           |
+Examples use the entity `App\Entity\BlogPost` — a two-word name, so the casing and pluralization differences are actually visible (with a single-word entity like `Article` they'd all look the same):
 
-(`dashkey`/`dashkeys` variants, e.g. `{{ entitydashkeys }}` → `articles`, provide the kebab-case forms used in URLs.)
+| Placeholder            | Example (`BlogPost`) | Description                           |
+|------------------------|----------------------|---------------------------------------|
+| `{{ EntityKey }}`      | `BlogPost`           | Entity name, PascalCase               |
+| `{{ EntityKeys }}`     | `BlogPosts`          | Entity name, pluralized               |
+| `{{ entityKey }}`      | `blogPost`           | Entity name, camelCase                |
+| `{{ entityKeys }}`     | `blogPosts`          | camelCase, pluralized                 |
+| `{{ entity_key }}`     | `blog_post`          | Entity name, snake_case               |
+| `{{ entity_keys }}`    | `blog_posts`         | snake_case, pluralized                |
+| `{{ entitydashkey }}`  | `blog-post`          | Entity name, kebab-case               |
+| `{{ entitydashkeys }}` | `blog-posts`         | kebab-case, pluralized (used in URLs) |
+| `{{ ActionKey }}`      | `Create`             | Action name, PascalCase               |
+| `{{ actionKey }}`      | `create`             | Action name, camelCase                |
+| `{{ action_key }}`     | `create`             | Action name, snake_case               |
+
+(Actions are always single words — `index`, `read`, `create`, `update`, `delete` — so their case variants only differ in capitalization; the `actionKeys`/`actiondashkey`/… variants exist for symmetry with the entity keys.)
 
 ### Overriding placeholders (`schema.keys`)
 
@@ -337,10 +335,10 @@ Forms are passed as `form` (a `FormView` instance).
 
 When the resolved template for an action does not exist, the behavior is controlled by `schema.view.fallback`:
 
-| Value                | Behavior                                                                 |
-|----------------------|--------------------------------------------------------------------------|
-| `built_in` (default) | Renders the bundle's built-in bare template (`@JmfCrudEngine/{action}.html.twig`). |
-| `fail`               | Throws `CrudEngineMissingViewException`.                                  |
+| Value               | Behavior                                                                           |
+|---------------------|------------------------------------------------------------------------------------|
+| `provide` (default) | Renders the bundle's built-in bare template (`@JmfCrudEngine/{action}.html.twig`). |
+| `fail`              | Throws `CrudEngineMissingViewException`.                                           |
 
 The built-in templates are intentionally minimal — they exist to get pages rendering immediately and to be overridden. Providing your own template at the configured path always takes precedence over the built-in one.
 
@@ -348,10 +346,10 @@ The built-in templates are intentionally minimal — they exist to get pages ren
 
 For `create`/`update`, when no form type is configured (`form.type`) or discovered (via the `schema.form.type` patterns), the behavior is controlled by `schema.form.fallback`:
 
-| Value               | Behavior                                                                                          |
-|---------------------|---------------------------------------------------------------------------------------------------|
-| `generic` (default) | Builds a generic form from the entity's Doctrine metadata (`CrudEngineEntityType`).               |
-| `fail`              | Throws `CrudEngineMissingConfigurationException`.                                                  |
+| Value               | Behavior                                                                            |
+|---------------------|-------------------------------------------------------------------------------------|
+| `provide` (default) | Builds a generic form from the entity's Doctrine metadata (`CrudEngineEntityType`). |
+| `fail`              | Throws `CrudEngineMissingConfigurationException`.                                   |
 
 The generic form is a scaffold to be overridden: it maps scalar columns and `enumType` fields, and renders to-one associations as a choice of related entities; it skips identifiers, embeddables, to-many associations, and unmappable column types. Configuring or discovering a real form type always takes precedence.
 
