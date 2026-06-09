@@ -7,25 +7,25 @@ namespace Jmf\CrudEngine\Tests\Registry;
 use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Model\CrudAction;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Registry\ActionDefinitionRegistry;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use PHPUnit\Framework\TestCase;
 
 final class ActionDefinitionRegistryTest extends TestCase
 {
+    /**
+     * @var ActionDefinition[]
+     */
+    private array $actionDefinitions = [];
+
     private ActionDefinitionRegistry $actionDefinitionRegistry;
 
     public function testGetReturnsDefinition(): void
     {
-        $actionDefinition = $this->createStub(ActionDefinition::class);
+        $actionDefinition = $this->givenActionDefinition(Article::class, CrudAction::Create);
 
-        $this->givenDefinitions(
-            [
-                Article::class => [
-                    'create' => $actionDefinition,
-                ],
-            ],
-        );
+        $this->createRepository();
 
         $result = $this->actionDefinitionRegistry->get(Article::class, CrudAction::Create);
 
@@ -34,7 +34,7 @@ final class ActionDefinitionRegistryTest extends TestCase
 
     public function testGetThrowsWhenMissing(): void
     {
-        $this->givenDefinitions([]);
+        $this->createRepository();
 
         $this->expectException(CrudEngineMissingConfigurationException::class);
 
@@ -43,7 +43,7 @@ final class ActionDefinitionRegistryTest extends TestCase
 
     public function testTryGetReturnsNullForUnknown(): void
     {
-        $this->givenDefinitions([]);
+        $this->createRepository();
 
         $result = $this->actionDefinitionRegistry->tryGet(Article::class, CrudAction::Create);
 
@@ -52,17 +52,10 @@ final class ActionDefinitionRegistryTest extends TestCase
 
     public function testAllYieldsEveryDefinition(): void
     {
-        $createActionDefinition = $this->createStub(ActionDefinition::class);
-        $indexActionDefinition  = $this->createStub(ActionDefinition::class);
+        $createActionDefinition = $this->givenActionDefinition(Article::class, CrudAction::Create);
+        $indexActionDefinition  = $this->givenActionDefinition(Article::class, CrudAction::Index);
 
-        $this->givenDefinitions(
-            [
-                Article::class => [
-                    'create' => $createActionDefinition,
-                    'index'  => $indexActionDefinition,
-                ],
-            ],
-        );
+        $this->createRepository();
 
         $result = $this->actionDefinitionRegistry->all();
 
@@ -74,12 +67,29 @@ final class ActionDefinitionRegistryTest extends TestCase
     }
 
     /**
-     * @param array<class-string, array<non-empty-string, ActionDefinition>> $definitions
+     * @param class-string $entityClass
      */
-    private function givenDefinitions(array $definitions): void
+    private function givenActionDefinition(
+        string $entityClass,
+        CrudAction $crudAction,
+    ): ActionDefinition {
+        $actionDefinition = $this->createStub(ActionDefinition::class);
+        $actionDefinition->method('getEntityAction')->willReturn(
+            new EntityAction(
+                $entityClass,
+                $crudAction,
+            ),
+        );
+
+        $this->actionDefinitions[] = $actionDefinition;
+
+        return $actionDefinition;
+    }
+
+    private function createRepository(): void
     {
         $this->actionDefinitionRegistry = new ActionDefinitionRegistry(
-            $definitions,
+            $this->actionDefinitions,
         );
     }
 }

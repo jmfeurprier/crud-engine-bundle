@@ -29,11 +29,11 @@ readonly class ActionDefinitionHydrator
     /**
      * @param CompiledDefinitions $compiledDefinitions
      *
-     * @return array<class-string, array<non-empty-string, ActionDefinition>>
+     * @return ActionDefinition[]
      *
      * @throws CrudEngineInvalidConfigurationException
      */
-    public function hydrate(array $compiledDefinitions): array
+    public function hydrate(array $compiledDefinitions): iterable
     {
         $hydrated = [];
 
@@ -48,7 +48,7 @@ readonly class ActionDefinitionHydrator
                     $action,
                 );
 
-                $hydrated[$entityClass][$action->value] = $this->hydrateEntityAction(
+                $hydrated[] = $this->hydrateEntityAction(
                     $entityAction,
                     $compiledAction,
                 );

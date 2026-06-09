@@ -6,6 +6,7 @@ namespace Jmf\CrudEngine\Tests\Registry;
 
 use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Model\CrudAction;
+use Jmf\CrudEngine\Model\EntityAction;
 use Jmf\CrudEngine\Registry\ActionDefinitionHydrator;
 use Jmf\CrudEngine\Registry\ActionDefinitionRegistryFactory;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
@@ -18,6 +19,12 @@ final class ActionDefinitionRegistryFactoryTest extends TestCase
         $compiledDefinitions = [];
 
         $actionDefinition = $this->createStub(ActionDefinition::class);
+        $actionDefinition->method('getEntityAction')->willReturn(
+            new EntityAction(
+                Article::class,
+                CrudAction::Create,
+            ),
+        );
 
         $hydrator = $this->createMock(ActionDefinitionHydrator::class);
         $hydrator
@@ -26,9 +33,7 @@ final class ActionDefinitionRegistryFactoryTest extends TestCase
             ->with($compiledDefinitions)
             ->willReturn(
                 [
-                    Article::class => [
-                        'create' => $actionDefinition,
-                    ],
+                    $actionDefinition,
                 ],
             )
         ;

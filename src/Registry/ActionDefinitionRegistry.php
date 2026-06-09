@@ -8,15 +8,34 @@ use Jmf\CrudEngine\Definition\ActionDefinition;
 use Jmf\CrudEngine\Exception\CrudEngineMissingConfigurationException;
 use Jmf\CrudEngine\Model\CrudAction;
 use Override;
+use Webmozart\Assert\Assert;
 
 readonly class ActionDefinitionRegistry implements ActionDefinitionRegistryInterface
 {
     /**
-     * @param array<class-string, array<non-empty-string, ActionDefinition>> $definitions
+     * @var array<class-string, non-empty-array<string, ActionDefinition>>
+     */
+    private array $indexed;
+
+    /**
+     * @param ActionDefinition[] $actionDefinitions
      */
     public function __construct(
-        private array $definitions,
+        private iterable $actionDefinitions,
     ) {
+        Assert::allIsInstanceOf($actionDefinitions, ActionDefinition::class);
+
+        $indexed = [];
+
+        foreach ($this->actionDefinitions as $actionDefinition) {
+            $entityAction = $actionDefinition->getEntityAction();
+            $entityClass  = $entityAction->getEntityClass();
+            $action       = $entityAction->getAction()->value;
+
+            $indexed[$entityClass][$action] = $actionDefinition;
+        }
+
+        $this->indexed = $indexed;
     }
 
     #[Override]
@@ -37,14 +56,12 @@ readonly class ActionDefinitionRegistry implements ActionDefinitionRegistryInter
         string $entityClass,
         CrudAction $action,
     ): ?ActionDefinition {
-        return $this->definitions[$entityClass][$action->value] ?? null;
+        return $this->indexed[$entityClass][$action->value] ?? null;
     }
 
     #[Override]
     public function all(): iterable
     {
-        foreach ($this->definitions as $definitionsByAction) {
-            yield from $definitionsByAction;
-        }
+        yield from $this->actionDefinitions;
     }
 }

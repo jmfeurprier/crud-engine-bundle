@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
+use Rector\CodingStyle\Rector\ClassMethod\MakeInheritedMethodVisibilitySameAsParentRector;
 use Rector\CodingStyle\Rector\Encapsed\EncapsedStringsToSprintfRector;
 use Rector\Config\RectorConfig;
 use Rector\Naming\Rector\Assign\RenameVariableToMatchMethodCallReturnTypeRector;
@@ -29,6 +30,11 @@ return RectorConfig::configure()
             CatchExceptionNameMatchingTypeRector::class,
             DocblockReturnArrayFromDirectArrayInstanceRector::class,
             EncapsedStringsToSprintfRector::class,
+            // configureContainer()/configureRoutes() are invoked by MicroKernelTrait via reflection;
+            // keep them protected so PHPStan does not flag the (private) override as unused.
+            MakeInheritedMethodVisibilitySameAsParentRector::class => [
+                $rootPath . 'tests/Functional/TestKernel.php',
+            ],
             PreferPHPUnitThisCallRector::class,
             RenameParamToMatchTypeRector::class,
             RenamePropertyToMatchTypeRector::class,

@@ -35,7 +35,6 @@ final class BundleWiringTest extends KernelTestCase
         return parent::createKernel($options);
     }
 
-    #[Override]
     protected function tearDown(): void
     {
         parent::tearDown();

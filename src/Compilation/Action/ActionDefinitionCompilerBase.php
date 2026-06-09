@@ -228,10 +228,11 @@ abstract readonly class ActionDefinitionCompilerBase implements ActionDefinition
             } catch (CrudEngineInvalidConfigurationException $e) {
                 throw new CrudEngineInvalidConfigurationException(
                     message:  sprintf(
-                        'Failed resolving schema key "%s" (pattern "%s"). A key may only reference the source variables "entityClass" and "action", not other keys.',
-                        $name,
-                        $pattern,
-                    ),
+                                  'Failed resolving schema key "%s" (pattern "%s"). A key may only reference the source variables "entityClass" and "action", not other keys.',
+                                  $name,
+                                  $pattern,
+                              ),
+                    code:     $e->getCode(),
                     previous: $e,
                 );
             }
