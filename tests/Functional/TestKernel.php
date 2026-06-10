@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
  * unit tests cannot reach: services.yaml, the bundle extension (config compilation + dump),
  * config/definition.php (the schema tree) and the route loader.
  */
-final class TestKernel extends Kernel
+class TestKernel extends Kernel
 {
     use MicroKernelTrait;
 
@@ -71,19 +71,7 @@ final class TestKernel extends Kernel
 
         $container->extension('twig', []);
 
-        $container->extension('jmf_crud_engine', [
-            'entities' => [
-                Article::class => [
-                    'actions' => [
-                        'index'  => [],
-                        'read'   => [],
-                        'create' => [],
-                        'update' => [],
-                        'delete' => [],
-                    ],
-                ],
-            ],
-        ]);
+        $container->extension('jmf_crud_engine', $this->crudEngineExtensionConfig());
 
         // No DoctrineBundle here: EntityManagerResolver depends on a ManagerRegistry, but the wiring
         // and route-loader paths never resolve it, so a synthetic placeholder is enough to compile.
@@ -95,5 +83,25 @@ final class TestKernel extends Kernel
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function crudEngineExtensionConfig(): array
+    {
+        return [
+            'entities' => [
+                Article::class => [
+                    'actions' => [
+                        'index'  => [],
+                        'read'   => [],
+                        'create' => [],
+                        'update' => [],
+                        'delete' => [],
+                    ],
+                ],
+            ],
+        ];
     }
 }

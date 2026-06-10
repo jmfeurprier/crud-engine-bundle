@@ -203,6 +203,17 @@ return static function (DefinitionConfigurator $definition): void {
                     ->end()
                 ->end()
             ->end()
+
+            ->arrayNode('paths')
+                ->info('Directories of per-entity files; filename (sans .yaml) prefixed by `namespace` is the FQCN.')
+                ->arrayPrototype()
+                    ->children()
+                        ->scalarNode('path')->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode('namespace')->defaultValue('')->end()
+                    ->end()
+                ->end()
+                ->defaultValue([])
+            ->end()
         ->end()
     ;
 };

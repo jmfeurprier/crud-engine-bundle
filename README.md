@@ -63,7 +63,7 @@ Out of the box, any action whose template is missing renders a built-in **bare**
 
 Prefer to fail loudly instead of falling back? Set `schema.view.fallback: fail` (see [Missing templates](#missing-templates)).
 
-That's it — the bundle automatically registers routes and wires up controllers for all configured actions.
+That's it: the bundle automatically registers routes and wires up controllers for all configured actions.
 
 ## Actions
 
@@ -159,7 +159,7 @@ jmf_crud_engine:
 
 Configuration values and default patterns support the following placeholders:
 
-Examples use the entity `App\Entity\BlogPost` — a two-word name, so the casing and pluralization differences are actually visible (with a single-word entity like `Article` they'd all look the same):
+Examples use the entity `App\Entity\BlogPost`: a two-word name, so the casing and pluralization differences are actually visible (with a single-word entity like `Article` they'd all look the same):
 
 | Placeholder            | Example (`BlogPost`) | Description                           |
 |------------------------|----------------------|---------------------------------------|
@@ -175,11 +175,11 @@ Examples use the entity `App\Entity\BlogPost` — a two-word name, so the casing
 | `{{ actionKey }}`      | `create`             | Action name, camelCase                |
 | `{{ action_key }}`     | `create`             | Action name, snake_case               |
 
-(Actions are always single words — `index`, `read`, `create`, `update`, `delete` — so their case variants only differ in capitalization; the `actionKeys`/`actiondashkey`/… variants exist for symmetry with the entity keys.)
+(Actions are always single words: `index`, `read`, `create`, `update`, `delete`, so their case variants only differ in capitalization; the `actionKeys`/`actiondashkey`/… variants exist for symmetry with the entity keys.)
 
 ### Overriding placeholders (`schema.keys`)
 
-These placeholders are not hard-coded — they are themselves defined as Twig patterns under `schema.keys`, and you can override them or add your own:
+These placeholders are not hard-coded: they are themselves defined as Twig patterns under `schema.keys`, and you can override them or add your own:
 
 ```yaml
 jmf_crud_engine:
@@ -194,12 +194,56 @@ jmf_crud_engine:
 
 The contract:
 
-- Overrides are **merged over the defaults** — declare only the keys you change.
+- Overrides are **merged over the defaults**: declare only the keys you change.
 - A key pattern may reference exactly two **source variables**: `entityClass` (the FQCN) and `action` (the action name, e.g. `create`), using Twig and the [String component `u.*` filters](https://symfony.com/doc/current/string.html#methods-to-change-the-case-of-a-string).
 - A key **cannot reference another key** (keys resolve only against the source variables). Doing so fails at container build time with a clear error.
 - An unknown placeholder anywhere (a typo such as `{{ entity_keyz }}`) also fails loudly at build time rather than silently rendering empty.
 
-> The runtime placeholder `{{ _entity.id }}` used in `redirection.parameters` is **not** a key: it is resolved later, per request, against the actual entity — so it is unavailable in key/pattern definitions.
+> The runtime placeholder `{{ _entity.id }}` used in `redirection.parameters` is **not** a key: it is resolved later, per request, against the actual entity, so it is unavailable in key/pattern definitions.
+
+## Per-entity configuration files (`paths`)
+
+Instead of listing every entity under `entities`, you can keep **one file per entity** in a directory. Each file holds just the entity body (the `actions:` block); the entity FQCN is derived from the **filename** prefixed by a base **namespace**, so there is no `jmf_crud_engine:` / `entities:` / `App\Entity\X:` wrapper to repeat.
+
+By default, this is enabled with **zero configuration**: the bundle loads `<config-dir>/packages/<bundle-alias>/` (i.e. `config/packages/jmf_crud_engine/`) with the base namespace `App\Entity`. Just drop files in:
+
+```yaml
+# config/packages/jmf_crud_engine/Article.yaml   ->   App\Entity\Article
+actions:
+    index:
+    read:
+    create:
+        redirection:
+            route: article.index
+    update:
+        redirection:
+            route: article.index
+    delete:
+        redirection:
+            route: dashboard
+```
+
+The filename (without `.yaml`) is appended to the namespace, so `Article.yaml` → `App\Entity\Article`. Subdirectories map to sub-namespaces (`Blog/Post.yaml` → `App\Entity\Blog\Post`).
+
+### Customizing the directories
+
+Override `paths` to point elsewhere or to scan several directories (each with its own base namespace). A leading empty `namespace` makes the directory layout mirror the full FQCN (`App/Entity/Article.yaml`).
+
+```yaml
+jmf_crud_engine:
+    paths:
+        - path: '%kernel.project_dir%/config/crud'
+          namespace: 'App\Entity'
+        - path: '%kernel.project_dir%/config/crud-admin'
+          namespace: 'App\Entity\Admin'
+```
+
+Setting `paths` explicitly **replaces** the default. `paths` and inline `entities` can be used together, but a given entity class must be defined in exactly one place: declaring it both via a file and inline (or across two scanned directories) throws `CrudEngineDuplicateEntityException` at container build time.
+
+### Notes
+
+- Files support `!php/const ...` (e.g. a route `requirements` value) and the empty-action shorthand (`read:` with no body), exactly like inline config.
+- As with inline config, the result is compiled into the container, so adding/editing/removing a file requires a container rebuild (`cache:clear`) to take effect.
 
 ## Action Helpers
 
@@ -252,7 +296,7 @@ class ArticleCreateActionHelper extends CreateActionHelperBase
 }
 ```
 
-The base also provides `persist()` (Doctrine `persist` + `flush`) and `hookAfterPersist()` — override them only to change persistence or run post-save side effects.
+The base also provides `persist()` (Doctrine `persist` + `flush`) and `hookAfterPersist()`. Override them only to change persistence or run post-save side effects.
 
 ### Update Helper
 
@@ -365,7 +409,7 @@ class ArticleDeleteActionHelper extends DeleteActionHelperBase
 }
 ```
 
-The base also provides `remove()` (Doctrine `remove` + `flush`), `hookAfterRemove()`, and `onFailure()` (re-throws the failure) — override them as needed.
+The base also provides `remove()` (Doctrine `remove` + `flush`), `hookAfterRemove()`, and `onFailure()` (re-throws the failure). Override them as needed.
 
 ## Templates
 
@@ -399,7 +443,7 @@ When the resolved template for an action does not exist, the behavior is control
 | `provide` (default) | Renders the bundle's built-in bare template (`@JmfCrudEngine/{action}.html.twig`). |
 | `fail`              | Throws `CrudEngineMissingViewException`.                                           |
 
-The built-in templates are intentionally minimal — they exist to get pages rendering immediately and to be overridden. Providing your own template at the configured path always takes precedence over the built-in one.
+The built-in templates are intentionally minimal: they exist to get pages rendering immediately and to be overridden. Providing your own template at the configured path always takes precedence over the built-in one.
 
 ### Missing form types
 

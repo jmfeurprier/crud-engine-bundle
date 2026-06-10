@@ -33,10 +33,10 @@ readonly class EntityFinder
         string $entityClass,
         string $id,
     ): object {
-        $objectManager = $this->entityManagerResolver->resolve($entityClass);
+        $entityManager = $this->entityManagerResolver->resolve($entityClass);
 
         try {
-            $entity = $objectManager->find($entityClass, $id);
+            $entity = $entityManager->find($entityClass, $id);
         } catch (Throwable $e) {
             throw new CrudEnginePersistenceException($entityClass, $e);
         }

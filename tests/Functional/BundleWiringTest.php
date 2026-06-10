@@ -40,7 +40,7 @@ final class BundleWiringTest extends KernelTestCase
         parent::tearDown();
 
         // Booting the kernel registers a Symfony exception handler it never removes; restore it so
-        // PHPUnit does not flag the test as risky. (Only the exception handler — PHPUnit owns the
+        // PHPUnit does not flag the test as risky. (Only the exception handler: PHPUnit owns the
         // error handler.)
         restore_exception_handler();
     }

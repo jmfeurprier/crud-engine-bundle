@@ -9,11 +9,13 @@
         "doctrine/orm": "^3.0",
         "jmf/template-rendering": "^1.0|^2.0",
         "symfony/doctrine-bridge": "^7.0|^8.0",
+        "symfony/finder": "^7.0|^8.0",
         "symfony/form": "^7.0|^8.0",
         "symfony/framework-bundle": "^7.0|^8.0",
         "symfony/http-foundation": "^7.0|^8.0",
         "symfony/routing": "^7.0|^8.0",
         "symfony/security-bundle": "^7.0|^8.0",
+        "symfony/yaml": "^7.0|^8.0",
         "twig/extra-bundle": "^3.0",
         "twig/string-extra": "^3.0",
         "webmozart/assert": "^1.0|^2.0"

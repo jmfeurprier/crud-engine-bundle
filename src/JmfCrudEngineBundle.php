@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmf\CrudEngine;
 
 use Jmf\CrudEngine\Compilation\CompilerFactory;
+use Jmf\CrudEngine\Configuration\EntityConfigLoader;
 use Jmf\CrudEngine\Controller\Helpers\ActionHelperInterface;
 use Jmf\CrudEngine\Exception\CrudEngineConfigurationException;
 use Jmf\CrudEngine\Exception\CrudEngineUnsupportedActionException;
@@ -16,6 +17,7 @@ use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 class JmfCrudEngineBundle extends AbstractBundle
@@ -24,6 +26,7 @@ class JmfCrudEngineBundle extends AbstractBundle
 
     public function __construct(
         private readonly CompilerFactory $actionDefinitionCompilerFactory = new CompilerFactory(),
+        private readonly EntityConfigLoader $entityConfigLoader = new EntityConfigLoader(),
     ) {
     }
 
@@ -46,6 +49,9 @@ class JmfCrudEngineBundle extends AbstractBundle
         ContainerBuilder $container,
     ): void {
         $configurator->import('../config/services.yaml');
+
+        // The `entities` config (inline + per-entity files) is assembled by the loader.
+        $config['entities'] = $this->entityConfigLoader->load($config, $container, $this->extensionAlias);
 
         // Action helpers are resolved by class name at runtime through a service locator.
         // Tagging every implementation lets them stay private (their location/visibility

@@ -17,7 +17,7 @@ readonly class OverridableConfigurationValueResolver
 
     /**
      * Resolves a value that may be set on the action, then the schema, then a default
-     * pattern — expanding placeholders unless it comes from the action override.
+     * pattern, expanding placeholders unless it comes from the action override.
      *
      * @param array<string, mixed>                      $config
      * @param non-empty-string                          $configKey

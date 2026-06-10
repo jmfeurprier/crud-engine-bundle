@@ -16,7 +16,7 @@ use Jmf\CrudEngine\Model\EntityAction;
 /**
  * Compiles the normalized configuration of a single CRUD action into the array shape consumed by
  * {@see \Jmf\CrudEngine\Registry\ActionDefinitionHydrator}. One implementation
- * per action declares (by composition) which sections it carries — e.g. only create/update build a
+ * per action declares (by composition) which sections it carries, e.g. only create/update build a
  * form, only create/update/delete build a redirection.
  *
  * @phpstan-import-type CompiledForm from FormDefinitionCompiler
