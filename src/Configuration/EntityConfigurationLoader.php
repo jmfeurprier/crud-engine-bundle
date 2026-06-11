@@ -17,7 +17,7 @@ use Webmozart\Assert\Assert;
  * inline `entities`, and registers a cache-invalidation resource per directory. A class defined more
  * than once (across files, or against an inline entry) is a configuration error.
  */
-final readonly class EntityConfigLoader
+final readonly class EntityConfigurationLoader
 {
     /**
      * @param array<string, mixed> $config         resolved `jmf_crud_engine` config (`paths` + `entities`)
@@ -32,11 +32,15 @@ final readonly class EntityConfigLoader
         ContainerBuilder $container,
         string $extensionAlias,
     ): array {
-        $paths = $this->resolvePaths($config, $container, $extensionAlias);
+        $pathConfigs = $this->resolvePathConfigs(
+            $config,
+            $container,
+            $extensionAlias,
+        );
 
-        $this->registerResources($paths, $container);
+        $this->registerResources($pathConfigs, $container);
 
-        $entitiesFromPaths = $this->loadFromPaths($paths);
+        $entitiesFromPaths = $this->loadFromPaths($pathConfigs);
 
         $inlineEntities = $config['entities'];
         Assert::isArray($inlineEntities);
@@ -55,19 +59,19 @@ final readonly class EntityConfigLoader
      *
      * @return list<array{path: string, namespace: string}> resolved (absolute) directories
      */
-    private function resolvePaths(
+    private function resolvePathConfigs(
         array $config,
         ContainerBuilder $container,
         string $extensionAlias,
     ): array {
-        $paths = $config['paths'];
-        Assert::isArray($paths);
+        $pathConfigs = $config['paths'];
+        Assert::isArray($pathConfigs);
 
-        if ([] === $paths) {
+        if ([] === $pathConfigs) {
             // Default: <config-dir>/packages/<extension alias>, e.g. config/packages/jmf_crud_engine.
             // `.kernel.config_dir` is the build-time materialization of Kernel::getConfigDir(), the
             // only handle a bundle extension has to it; the alias keeps the segment rename-safe.
-            $paths = [
+            $pathConfigs = [
                 [
                     'path'      => '%.kernel.config_dir%/packages/' . $extensionAlias,
                     'namespace' => 'App\\Entity',
@@ -77,7 +81,7 @@ final readonly class EntityConfigLoader
 
         $resolved = [];
 
-        foreach ($paths as $pathConfig) {
+        foreach ($pathConfigs as $pathConfig) {
             Assert::isArray($pathConfig);
             Assert::string($pathConfig['path']);
             Assert::string($pathConfig['namespace']);
@@ -95,13 +99,13 @@ final readonly class EntityConfigLoader
     }
 
     /**
-     * @param list<array{path: string, namespace: string}> $paths
+     * @param list<array{path: string, namespace: string}> $pathConfigs
      */
     private function registerResources(
-        array $paths,
+        array $pathConfigs,
         ContainerBuilder $container,
     ): void {
-        foreach ($paths as $pathConfig) {
+        foreach ($pathConfigs as $pathConfig) {
             if (is_dir($pathConfig['path'])) {
                 // DirectoryResource is mtime-based + recursive, so the compiled container is
                 // rebuilt when a file in the directory is added, removed or edited.
@@ -111,18 +115,18 @@ final readonly class EntityConfigLoader
     }
 
     /**
-     * @param list<array{path: string, namespace: string}> $paths
+     * @param list<array{path: string, namespace: string}> $pathConfigs
      *
      * @return array<string, array<mixed, mixed>>
      *
      * @throws CrudEngineDuplicateEntityException
      */
     private function loadFromPaths(
-        array $paths,
+        array $pathConfigs,
     ): array {
         $entities = [];
 
-        foreach ($paths as $pathConfig) {
+        foreach ($pathConfigs as $pathConfig) {
             $directory = $pathConfig['path'];
 
             if (!is_dir($directory)) {
@@ -166,7 +170,9 @@ final readonly class EntityConfigLoader
     ): array {
         if (isset($entityConfig['actions']) && is_array($entityConfig['actions'])) {
             $entityConfig['actions'] = array_map(
-                static fn (mixed $actionConfig): mixed => $actionConfig ?? [],
+                static fn(
+                    mixed $actionConfig,
+                ): mixed => $actionConfig ?? [],
                 $entityConfig['actions'],
             );
         }

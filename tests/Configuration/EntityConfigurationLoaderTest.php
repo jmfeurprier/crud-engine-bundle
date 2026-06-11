@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Jmf\CrudEngine\Tests\Configuration;
 
-use Jmf\CrudEngine\Configuration\EntityConfigLoader;
+use Jmf\CrudEngine\Configuration\EntityConfigurationLoader;
 use Jmf\CrudEngine\Exception\CrudEngineDuplicateEntityException;
 use Jmf\CrudEngine\Tests\Fixtures\Article;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-final class EntityConfigLoaderTest extends TestCase
+final class EntityConfigurationLoaderTest extends TestCase
 {
     private const string FIXTURES_DIR = __DIR__ . '/../Fixtures/crud_paths';
 
@@ -19,11 +19,11 @@ final class EntityConfigLoaderTest extends TestCase
 
     public function testMapsFilenameAndNamespaceToFqcnAndNormalizesEmptyAction(): void
     {
-        $container = new ContainerBuilder();
+        $containerBuilder = new ContainerBuilder();
 
-        $entities = (new EntityConfigLoader())->load(
+        $entities = (new EntityConfigurationLoader())->load(
             $this->config([['path' => self::FIXTURES_DIR, 'namespace' => self::FIXTURES_NAMESPACE]]),
-            $container,
+            $containerBuilder,
             'jmf_crud_engine',
         );
 
@@ -37,7 +37,7 @@ final class EntityConfigLoaderTest extends TestCase
 
         // The directory is tracked so the compiled container rebuilds on file changes.
         $directoryResources = array_filter(
-            $container->getResources(),
+            $containerBuilder->getResources(),
             static fn (object $resource): bool => $resource instanceof DirectoryResource,
         );
         self::assertNotEmpty($directoryResources);
@@ -45,7 +45,7 @@ final class EntityConfigLoaderTest extends TestCase
 
     public function testInlineEntitiesAreMerged(): void
     {
-        $entities = (new EntityConfigLoader())->load(
+        $entities = (new EntityConfigurationLoader())->load(
             $this->config(
                 [['path' => self::FIXTURES_DIR, 'namespace' => self::FIXTURES_NAMESPACE]],
                 ['App\\Entity\\Other' => ['actions' => ['index' => []]]],
@@ -60,7 +60,7 @@ final class EntityConfigLoaderTest extends TestCase
 
     public function testMissingDirectoryYieldsOnlyInline(): void
     {
-        $entities = (new EntityConfigLoader())->load(
+        $entities = (new EntityConfigurationLoader())->load(
             $this->config([['path' => __DIR__ . '/does-not-exist', 'namespace' => 'App\\Entity']]),
             new ContainerBuilder(),
             'jmf_crud_engine',
@@ -73,7 +73,7 @@ final class EntityConfigLoaderTest extends TestCase
     {
         $this->expectException(CrudEngineDuplicateEntityException::class);
 
-        (new EntityConfigLoader())->load(
+        (new EntityConfigurationLoader())->load(
             $this->config(
                 [['path' => self::FIXTURES_DIR, 'namespace' => self::FIXTURES_NAMESPACE]],
                 [Article::class => ['actions' => ['read' => []]]],
@@ -87,7 +87,7 @@ final class EntityConfigLoaderTest extends TestCase
     {
         $this->expectException(CrudEngineDuplicateEntityException::class);
 
-        (new EntityConfigLoader())->load(
+        (new EntityConfigurationLoader())->load(
             $this->config(
                 [
                     ['path' => self::FIXTURES_DIR, 'namespace' => self::FIXTURES_NAMESPACE],
