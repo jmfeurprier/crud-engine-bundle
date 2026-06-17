@@ -23,7 +23,7 @@ final readonly class EntityConfigurationLoader
      * @param array<string, mixed> $config         resolved `jmf_crud_engine` config (`paths` + `entities`)
      * @param string               $extensionAlias used to derive the default path
      *
-     * @return array<mixed, mixed> entity configs keyed by FQCN
+     * @return array<string, array<mixed, mixed>> entity configs keyed by FQCN
      *
      * @throws CrudEngineDuplicateEntityException
      */
