@@ -23,7 +23,7 @@ final readonly class EntityConfigurationLoader
      * @param array<string, mixed> $config         resolved `jmf_crud_engine` config (`paths` + `entities`)
      * @param string               $extensionAlias used to derive the default path
      *
-     * @return array<string, array<mixed, mixed>> entity configs keyed by FQCN
+     * @return array<string, array<string, mixed>> entity configs keyed by FQCN
      *
      * @throws CrudEngineDuplicateEntityException
      */
@@ -41,11 +41,12 @@ final readonly class EntityConfigurationLoader
         $this->registerResources($pathConfigs, $container);
 
         $entitiesFromPaths = $this->loadFromPaths($pathConfigs);
+        $inlineEntities    = $this->getInlineEntities($config);
 
-        $inlineEntities = $config['entities'];
-        Assert::isArray($inlineEntities);
-
-        $duplicates = array_intersect_key($entitiesFromPaths, $inlineEntities);
+        $duplicates = array_intersect_key(
+            $entitiesFromPaths,
+            $inlineEntities,
+        );
 
         if ([] !== $duplicates) {
             throw new CrudEngineDuplicateEntityException(array_keys($duplicates));
@@ -99,6 +100,21 @@ final readonly class EntityConfigurationLoader
     }
 
     /**
+     * @param array<string, mixed> $config
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private function getInlineEntities(array $config): array
+    {
+        $inlineEntities = $config['entities'];
+
+        Assert::isArray($inlineEntities);
+
+        /** @var array<string, array<string, mixed>> $inlineEntities */
+        return $inlineEntities;
+    }
+
+    /**
      * @param list<array{path: string, namespace: string}> $pathConfigs
      */
     private function registerResources(
@@ -117,7 +133,7 @@ final readonly class EntityConfigurationLoader
     /**
      * @param list<array{path: string, namespace: string}> $pathConfigs
      *
-     * @return array<string, array<mixed, mixed>>
+     * @return array<string, array<string, mixed>>
      *
      * @throws CrudEngineDuplicateEntityException
      */
@@ -148,7 +164,12 @@ final readonly class EntityConfigurationLoader
                 // matching what Symfony's own config loader enables for inline config.
                 $parsed = Yaml::parseFile($file->getRealPath(), Yaml::PARSE_CONSTANT);
 
-                $entities[$entityClass] = is_array($parsed) ? $this->normalizeEntityConfig($parsed) : [];
+                if (is_array($parsed)) {
+                    /** @var array<string, mixed> $parsed */
+                    $entities[$entityClass] = $this->normalizeEntityConfig($parsed);
+                } else {
+                    $entities[$entityClass] = [];
+                }
             }
         }
 
@@ -161,9 +182,9 @@ final readonly class EntityConfigurationLoader
      * turned into [], matching the inline `entities` shape (the compiler fills the rest from the
      * schema).
      *
-     * @param array<mixed, mixed> $entityConfig
+     * @param array<string, mixed> $entityConfig
      *
-     * @return array<mixed, mixed>
+     * @return array<string, mixed>
      */
     private function normalizeEntityConfig(
         array $entityConfig,
