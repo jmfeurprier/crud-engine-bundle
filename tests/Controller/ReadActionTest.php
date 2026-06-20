@@ -111,7 +111,7 @@ final class ReadActionTest extends TestCase
                                           parameters: [],
                                       ),
             routeDefinition:       new RouteDefinition(
-                                          name:         '',
+                                          name:         'route.name',
                                           path:         '',
                                           requirements: [],
                                       ),

@@ -212,7 +212,7 @@ final class DeleteActionTest extends TestCase
                                        parameters: [],
                                    ),
             routeDefinition:       new RouteDefinition(
-                                       name:         '',
+                                       name:         'route.name',
                                        path:         '',
                                        requirements: [],
                                    ),

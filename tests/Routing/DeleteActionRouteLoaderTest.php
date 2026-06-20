@@ -64,6 +64,7 @@ final class DeleteActionRouteLoaderTest extends TestCase
     /**
      * @param class-string     $entityClass
      * @param non-empty-string $action
+     * @param non-empty-string $routeName
      */
     private function givenActionDefinition(
         string $entityClass,

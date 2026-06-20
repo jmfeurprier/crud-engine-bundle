@@ -122,7 +122,7 @@ final class FormCreatorTest extends TestCase
 
                                    ),
             redirectionDefinition: null,
-            routeDefinition:       new RouteDefinition('', '', []),
+            routeDefinition:       new RouteDefinition('route.name', '', []),
             viewDefinition:        new ViewDefinition('', [], FallbackMode::PROVIDE),
         );
     }

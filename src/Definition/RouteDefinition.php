@@ -7,6 +7,7 @@ namespace Jmf\CrudEngine\Definition;
 readonly class RouteDefinition
 {
     /**
+     * @param non-empty-string                          $name
      * @param array<non-empty-string, non-empty-string> $requirements
      */
     public function __construct(
@@ -16,6 +17,9 @@ readonly class RouteDefinition
     ) {
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getName(): string
     {
         return $this->name;

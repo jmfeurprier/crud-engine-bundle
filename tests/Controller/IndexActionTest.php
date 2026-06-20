@@ -108,7 +108,7 @@ final class IndexActionTest extends TestCase
                                        parameters: [],
                                    ),
             routeDefinition:       new RouteDefinition(
-                                       name:         '',
+                                       name:         'route.name',
                                        path:         '',
                                        requirements: [],
                                    ),

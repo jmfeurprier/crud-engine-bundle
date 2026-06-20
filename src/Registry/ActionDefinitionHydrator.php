@@ -65,10 +65,83 @@ readonly class ActionDefinitionHydrator
         EntityAction $entityAction,
         array $compiledAction,
     ): ActionDefinition {
-        $form        = $compiledAction['form'];
-        $route       = $compiledAction['route'];
+        return new ActionDefinition(
+            entityAction:          $entityAction,
+            helperClass:           $compiledAction['helperClass'],
+            formDefinition:        $this->getFormDefinition($compiledAction),
+            redirectionDefinition: $this->getRedirectionDefinition($compiledAction),
+            routeDefinition:       $this->getRouteDefinition($compiledAction),
+            viewDefinition:        $this->getViewDefinition($compiledAction),
+        );
+    }
+
+    /**
+     * @param CompiledAction $compiledAction
+     */
+    private function getFormDefinition(
+        array $compiledAction,
+    ): ?FormDefinition {
+        $form = $compiledAction['form'];
+
+        if (null === $form) {
+            return null;
+        }
+
+        $formFallbackMode = FallbackMode::tryFrom($form['fallback']);
+
+        Assert::notNull(
+            $formFallbackMode,
+            sprintf('Unknown form fallback mode "%s".', $form['fallback']),
+        );
+
+        return new FormDefinition(
+            formTypeClass:          $form['typeClass'],
+            suggestedFormTypeClass: $form['suggestedClass'],
+            fallbackMode:           $formFallbackMode,
+        );
+    }
+
+    /**
+     * @param CompiledAction $compiledAction
+     */
+    private function getRedirectionDefinition(
+        array $compiledAction,
+    ): ?RedirectionDefinition {
         $redirection = $compiledAction['redirection'];
-        $view        = $compiledAction['view'];
+
+        if (null === $redirection) {
+            return null;
+        }
+
+        return new RedirectionDefinition(
+            route:      $redirection['route'],
+            parameters: $redirection['parameters'],
+            fragment:   $redirection['fragment'],
+        );
+    }
+
+    /**
+     * @param CompiledAction $compiledAction
+     */
+    private function getRouteDefinition(
+        array $compiledAction,
+    ): RouteDefinition {
+        $route = $compiledAction['route'];
+
+        return new RouteDefinition(
+            name:         $route['name'],
+            path:         $route['path'],
+            requirements: $route['requirements'],
+        );
+    }
+
+    /**
+     * @param CompiledAction $compiledAction
+     */
+    private function getViewDefinition(
+        array $compiledAction,
+    ): ViewDefinition {
+        $view = $compiledAction['view'];
 
         $viewFallbackMode = FallbackMode::tryFrom($view['fallback']);
 
@@ -77,44 +150,10 @@ readonly class ActionDefinitionHydrator
             sprintf('Unknown view fallback mode "%s".', $view['fallback']),
         );
 
-        $formDefinition = null;
-
-        if (null !== $form) {
-            $formFallbackMode = FallbackMode::tryFrom($form['fallback']);
-
-            Assert::notNull(
-                $formFallbackMode,
-                sprintf('Unknown form fallback mode "%s".', $form['fallback']),
-            );
-
-            $formDefinition = new FormDefinition(
-                formTypeClass:          $form['typeClass'],
-                suggestedFormTypeClass: $form['suggestedClass'],
-                fallbackMode:           $formFallbackMode,
-            );
-        }
-
-        return new ActionDefinition(
-            entityAction:          $entityAction,
-            helperClass:           $compiledAction['helperClass'],
-            formDefinition:        $formDefinition,
-            redirectionDefinition: null === $redirection
-                                       ? null
-                                       : new RedirectionDefinition(
-                                           route:      $redirection['route'],
-                                           parameters: $redirection['parameters'],
-                                           fragment:   $redirection['fragment'],
-                                       ),
-            routeDefinition:       new RouteDefinition(
-                                       name:         $route['name'],
-                                       path:         $route['path'],
-                                       requirements: $route['requirements'],
-                                   ),
-            viewDefinition:        new ViewDefinition(
-                                       path:         $view['path'],
-                                       variables:    $view['variables'],
-                                       fallbackMode: $viewFallbackMode,
-                                   ),
+        return new ViewDefinition(
+            path:         $view['path'],
+            variables:    $view['variables'],
+            fallbackMode: $viewFallbackMode,
         );
     }
 }

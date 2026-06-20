@@ -69,7 +69,7 @@ final class RedirectionGeneratorTest extends TestCase
             helperClass:           null,
             formDefinition:        new FormDefinition(null, 'StubFormType', FallbackMode::PROVIDE),
             redirectionDefinition: new RedirectionDefinition('article.index', []),
-            routeDefinition:       new RouteDefinition('', '', []),
+            routeDefinition:       new RouteDefinition('route.name', '', []),
             viewDefinition:        new ViewDefinition('', [], FallbackMode::PROVIDE),
         );
     }
